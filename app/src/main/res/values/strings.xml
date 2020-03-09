@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">ProHealth</string>
+    <string name="introducir_valor">Introduce tu valor</string>
 </resources>
