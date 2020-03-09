@@ -10,6 +10,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        tvInit.text = "Proyecto ProHealth"
+        tvInit.text = "Proyecto ProHealth V1"
     }
 }
