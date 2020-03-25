@@ -1,5 +1,6 @@
 package com.juan.prohealth
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
@@ -22,6 +23,11 @@ class MainActivity : AppCompatActivity() {
                     calcularTodo(valor)
                 }
             }
+        }
+
+        btnCambiarVentana.setOnClickListener {
+            val calendarioActivity = Intent(this, CalendarioActivity::class.java)
+            startActivity(calendarioActivity)
         }
     }
 
