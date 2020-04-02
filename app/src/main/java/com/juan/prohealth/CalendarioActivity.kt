@@ -29,7 +29,7 @@ class CalendarioActivity : AppCompatActivity() {
         // Itera 7 veces y por cada itearcion marca un dia aleatorio en el calendario
         for (x in 0 until 7) {
             //calendarView.selectedDate = CalendarDay.from(2020, 3, (1 until 31).random())
-            calendarView.setDateSelected(CalendarDay.from(2020, 3, (1 until 31).random()), true)
+            calendarView.setDateSelected(CalendarDay.from(2020, 4, (1 until 31).random()), true)
         }
 
     }
@@ -39,7 +39,7 @@ class CalendarioActivity : AppCompatActivity() {
         calendarView.clearSelection()
         calendarView.selectionMode = MaterialCalendarView.SELECTION_MODE_RANGE
         val diaAleatorio = (1 until 25).random()
-        calendarView.selectRange(CalendarDay.from(2020,3, diaAleatorio), CalendarDay.from(2020,3, diaAleatorio + (1 until 5).random()))
+        calendarView.selectRange(CalendarDay.from(2020,4, diaAleatorio), CalendarDay.from(2020,4, diaAleatorio + (1 until 5).random()))
     }
 
 }

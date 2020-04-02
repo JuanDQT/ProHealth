@@ -11,7 +11,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/calendarView"
         android:layout_width="match_parent"
-        android:layout_height="500dp"
+        android:layout_height="400dp"
         app:mcv_firstDayOfWeek="monday"
         app:mcv_showOtherDates="none"
         app:mcv_selectionColor="#00F"
@@ -24,14 +24,16 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:weightSum="1"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="15dp"
         >
+
         <Button
             android:id="@+id/btnRango"
-            android:layout_weight="0.5"
             android:layout_width="0dp"
-            android:text="Rango"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:text="Rango" />
+
         <Button
             android:id="@+id/btnPuntos"
             android:layout_weight="0.5"
