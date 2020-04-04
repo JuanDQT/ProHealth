@@ -5,9 +5,15 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
+import org.json.JSONArray
+import org.json.JSONObject
 import java.io.InputStream
+import java.nio.charset.StandardCharsets.UTF_8
 
 class MainActivity : AppCompatActivity() {
+
+    val RANGO_AZUL = "rangoBajoAzul.json"
+    val RANGO_ROJO = "rangoAltoRojo.json"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +36,18 @@ class MainActivity : AppCompatActivity() {
             val calendarioActivity = Intent(this, CalendarioActivity::class.java)
             startActivity(calendarioActivity)
         }
+        val randomTest = openJSON()
+
+        randomTest?.let {
+            print(it)
+            val json = JSONObject(it);
+
+            //val nivel30 = json.get("30");
+            val datosArray = json.getJSONArray("30")
+
+            Toast.makeText(this, "[30][0] " + datosArray[0], Toast.LENGTH_LONG).show()
+
+        }
     }
 
     fun calcularTodo(valor: Int) {
@@ -39,8 +57,7 @@ class MainActivity : AppCompatActivity() {
     fun openJSON(): String? {
         var json: String? = null
         json = try {
-            val inputStream: InputStream = com.juan.poesiadecine.Common.context.getAssets()
-                .open(com.juan.poesiadecine.Common.JSON_CONFIG)
+            val inputStream = this.assets.open(RANGO_AZUL)
             val size = inputStream.available()
             val buffer = ByteArray(size)
             inputStream.read(buffer)
