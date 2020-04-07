@@ -24,18 +24,26 @@ class InicioActivity : AppCompatActivity() {
 
             // TODO: Controlar en este if que sea positivo y menor de 7.0
             if (!et_sangre.text.toString().isNullOrEmpty()) {
-                val valorIntroducidoDeSangre = et_sangre.text.toString().toFloat()
-                if (valorIntroducidoDeSangre > 1.0 && valorIntroducidoDeSangre <= 7.0) {
-                    val nomFichero = getFicheroCorrespondiente(valorIntroducidoDeSangre)
-                    val nivelyDias: Map<String, Int> = getNivelCorrespondiente(valorIntroducidoDeSangre)
-
-                    // TODO: ya tenemos el map con los dias y nivel correspondiente a asignar.
-
-
-
+                if(et_sangre.text.toString().length <= 4) {
+                    if(et_sangre.text.toString().contains(".")||et_sangre.text.toString().contains(",")) {
+                        val valorIntroducidoDeSangre = et_sangre.text.toString().toFloat()
+                        if (valorIntroducidoDeSangre > 1.0 && valorIntroducidoDeSangre <= 7.0) {
+                            val nomFichero = getFicheroCorrespondiente(valorIntroducidoDeSangre)
+                            val nivelyDias: Map<String, Int> = getNivelCorrespondiente((valorIntroducidoDeSangre))
+                            // TODO: ya tenemos el map con los dias y nivel correspondiente a asignar.
+                        }else{
+                            Toast.makeText(this, "No se adminten valores negativos", Toast.LENGTH_LONG).show()
+                    }
+                }else{
+                    Toast.makeText(this, "Es necesario que la cifra contenga punto o coma.(pj: nivel de sangre: 1,00)", Toast.LENGTH_LONG).show()
                 }
+            }else{
+                Toast.makeText(this, "El valor no puede ser superior a 4 digitos de tamaño", Toast.LENGTH_LONG).show()
             }
-        }
+        }else{
+                Toast.makeText(this, "El valor introducido no puede estar vacio", Toast.LENGTH_LONG).show()
+            }
+
 
         val randomTest = openJSON()
 
@@ -47,7 +55,7 @@ class InicioActivity : AppCompatActivity() {
 
         }
     }
-
+}
     fun openJSON(): String? {
         var json: String? = null
         json = try {
