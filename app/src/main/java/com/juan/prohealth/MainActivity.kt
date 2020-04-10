@@ -25,6 +25,9 @@ class MainActivity : AppCompatActivity() {
 
         btn_calcular.setOnClickListener {
 
+            // TODO: Posibleblemente haya algo en internet: validar entrada de edittext y convertirla a float.
+            // En caso contrario, crear unica funcion de validacion, definirla en AppContext.
+            
             // TODO: Validar 2 edittext -> Comprobamos que NO esa VACIO, que NO CONTENGA el simbolo negativo - y que su tamaño no sea mas de 4.(1.00 - 7.00) para abarcar 2 decimales
             if(!et_sangre.text.toString().isNullOrEmpty() && !et_nivel.text.toString().isNullOrEmpty()){
                 if(et_sangre.text.toString().length <= 4 && et_nivel.text.toString().length <= 2){
