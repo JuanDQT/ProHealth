@@ -34,7 +34,6 @@ class MainActivity : AppCompatActivity() {
                     if(!et_sangre.text.toString().contains("-")){
                         if(et_sangre.text.toString().contains(".")||et_sangre.text.toString().contains(",")){
 
-                            Toast.makeText(this, "El valor introducido es: " + et_sangre.text, Toast.LENGTH_LONG).show()
                             // Guardamos los valores en sharedPrederences
                             MySharedPreferences.shared.addString("nivel", et_nivel.text.toString())
                             MySharedPreferences.shared.addString("sangre", et_sangre.text.toString())

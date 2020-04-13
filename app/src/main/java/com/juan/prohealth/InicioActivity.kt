@@ -2,6 +2,7 @@ package com.juan.prohealth
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.et_sangre
@@ -24,52 +25,53 @@ class InicioActivity : AppCompatActivity() {
 
             // TODO: Controlar en este if que sea positivo y menor de 7.0
             if (!et_sangre.text.toString().isNullOrEmpty()) {
-                if(et_sangre.text.toString().length <= 4) {
-                    if(et_sangre.text.toString().contains(".")||et_sangre.text.toString().contains(",")) {
-                        val valorIntroducidoDeSangre = et_sangre.text.toString().toFloat()
+                if (et_sangre.text.toString().length <= 4) {
+                    if (et_sangre.text.toString().contains(".") || et_sangre.text.toString().contains(",")) {
+                        val valorIntroducidoDeSangre = et_sangre.text.toString().replace(",", ".").toFloat()
                         if (valorIntroducidoDeSangre > 1.0 && valorIntroducidoDeSangre <= 7.0) {
                             val nomFichero = getFicheroCorrespondiente(valorIntroducidoDeSangre)
+
                             val nivelyDias: Map<String, Int> = getNivelCorrespondiente((valorIntroducidoDeSangre))
-                            // TODO: ya tenemos el map con los dias y nivel correspondiente a asignar.
-                        }else{
-                            Toast.makeText(this, "No se adminten valores negativos", Toast.LENGTH_LONG).show()
+                            val dataNiveles = AppContext.getNivelFromFichero(nomFichero, nivelyDias["nivel"].toString(), nivelyDias["dias"].toString(), ((nivelyDias["nivel"]?:0)  > MySharedPreferences.shared.getNivel().toInt()))
+                            val info =
+                                "Nivel de sangre actual: ${MySharedPreferences.shared.getSangre()}" +
+                                        "\nNuevo nivel de sangre actual: ${valorIntroducidoDeSangre}" +
+                                        "\nNivel actual: ${MySharedPreferences.shared.getNivel()}" +
+                                        "\nNuevo nivel: ${nivelyDias["nivel"]}" +
+                                        "\nDescripcion niveles: ${dataNiveles}" +
+                                        "\nControl de dias: ${nivelyDias["dias"]}";
+                            tvInfo.text = info
+
+                            // Actualizamos la sangre y nivel
+                            MySharedPreferences.shared.addString("sangre", et_sangre.text.toString())
+                            MySharedPreferences.shared.addString("nivel", nivelyDias["nivel"].toString())
+                            pintarValores()
+                        } else {
+                            Toast.makeText(
+                                this,
+                                "No se adminten valores negativos",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
+                    } else {
+                        Toast.makeText(
+                            this,
+                            "Es necesario que la cifra contenga punto o coma.(pj: nivel de sangre: 1,00)",
+                            Toast.LENGTH_LONG
+                        ).show()
                     }
-                }else{
-                    Toast.makeText(this, "Es necesario que la cifra contenga punto o coma.(pj: nivel de sangre: 1,00)", Toast.LENGTH_LONG).show()
+                } else {
+                    Toast.makeText(
+                        this,
+                        "El valor no puede ser superior a 4 digitos de tamaño",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
-            }else{
-                Toast.makeText(this, "El valor no puede ser superior a 4 digitos de tamaño", Toast.LENGTH_LONG).show()
+            } else {
+                Toast.makeText(this, "El valor introducido no puede estar vacio", Toast.LENGTH_LONG)
+                    .show()
             }
-        }else{
-                Toast.makeText(this, "El valor introducido no puede estar vacio", Toast.LENGTH_LONG).show()
-            }
-
-
-        val randomTest = openJSON()
-
-        randomTest?.let {
-            print(it)
-            val json = JSONObject(it);
-            val datosArray = json.getJSONArray("30")
-//            Toast.makeText(this, "[30][0] " + datosArray[0], Toast.LENGTH_LONG).show()
-
         }
-    }
-}
-    fun openJSON(): String? {
-        var json: String? = null
-        json = try {
-            val inputStream = this.assets.open(RANGO_AZUL)
-            val size = inputStream.available()
-            val buffer = ByteArray(size)
-            inputStream.read(buffer)
-            inputStream.close()
-            String(buffer, UTF_8)
-        } catch (ex: Exception) {
-            ex.printStackTrace()
-            return null
-        }
-        return json
     }
 
     fun pintarValores() {
