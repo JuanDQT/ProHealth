@@ -31,17 +31,21 @@ class AppContext : Application() {
             val json = JSONObject(openJSON(fileName));
             val data = arrayListOf<String>()
             for (i in 0 until json.getJSONArray(nivel).length()) {
-                if (json.getJSONArray(nivel).getString(i).isNullOrEmpty())
-                    continue;
+                //if (json.getJSONArray(nivel).getString(i).isNullOrEmpty())
+                  //  continue;
                 data.add(json.getJSONArray(nivel).getString(i))
             }
 
             if (dias == "7") {
-                    // Control de 7 dias, anadimos los controles '3' restantes
-                val moveNivel = nivel.toInt() + if (isSumar) 1 else -1
+                    // Control de 7 dias, anadimos los controles '3' restantes (nivelyDias["nivel"]?:0)  = MySharedPreferences.shared.getNivel().toInt()
+                val moveNivel = nivel.toInt() + if (isSumar) 0 else -1//En control de 7 dias, solo existen 2 posibilidades, que se reste 1 nivel o que se mantenga IGUAL (0)
+
                     for (i in 0 until json.getJSONArray(moveNivel.toString()).length() - 1) {// -1 porque asi coge los 3 restantes, no todos
-                        if (json.getJSONArray(moveNivel.toString()).getString(i).isNullOrEmpty())
-                            continue;
+                        for (i in 0 until json.getJSONArray(moveNivel.toString()).length() - 1) {
+
+                        }
+                       // if (json.getJSONArray(moveNivel.toString()).getString(i).isNullOrEmpty())
+                         //   continue;
                         data.add(json.getJSONArray(moveNivel.toString()).getString(i))
                 }
             }

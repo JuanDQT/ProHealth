@@ -1,14 +1,10 @@
 package com.juan.prohealth
 
-import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.et_sangre
 import kotlinx.android.synthetic.main.inicio_main.*
-import org.json.JSONObject
-import java.nio.charset.StandardCharsets.UTF_8
 
 class InicioActivity : AppCompatActivity() {
 
@@ -20,57 +16,43 @@ class InicioActivity : AppCompatActivity() {
         setContentView(R.layout.inicio_main)
 
         pintarValores()
-
+        /**
+         * Cuando introducimos una NUEVA lectura de Sangre aqui recalculamos los dias de control ( 4 o 7 )
+         * validamos el campo nivel de sangre que recibimos y aplicamos los calculos
+         * para seleccionar los valores de salida e imprimirlos
+         */
         btn_calcular.setOnClickListener {
+            val inputValorSangreText = et_sangre.text.toString()
+            if(validarInputText(inputValorSangreText)){
+                val valorSangreNumerico = inputValorSangreText.replace(",", ".").toFloat()
+                if(valorSangreNumerico in 1.00..7.00){
+                    val nomFichero = getFicheroCorrespondiente(valorSangreNumerico)
 
-            // TODO: Controlar en este if que sea positivo y menor de 7.0
-            if (!et_sangre.text.toString().isNullOrEmpty()) {
-                if (et_sangre.text.toString().length <= 4) {
-                    if (et_sangre.text.toString().contains(".") || et_sangre.text.toString().contains(",")) {
-                        val valorIntroducidoDeSangre = et_sangre.text.toString().replace(",", ".").toFloat()
-                        if (valorIntroducidoDeSangre > 1.0 && valorIntroducidoDeSangre <= 7.0) {
-                            val nomFichero = getFicheroCorrespondiente(valorIntroducidoDeSangre)
+                    val nivelyDias: Map<String, Int> = getNivelCorrespondiente((valorSangreNumerico))
 
-                            val nivelyDias: Map<String, Int> = getNivelCorrespondiente((valorIntroducidoDeSangre))
-                            val dataNiveles = AppContext.getNivelFromFichero(nomFichero, nivelyDias["nivel"].toString(), nivelyDias["dias"].toString(), ((nivelyDias["nivel"]?:0)  > MySharedPreferences.shared.getNivel().toInt()))
-                            val info =
-                                "Nivel de sangre actual: ${MySharedPreferences.shared.getSangre()}" +
-                                        "\nNuevo nivel de sangre actual: ${valorIntroducidoDeSangre}" +
-                                        "\nNivel actual: ${MySharedPreferences.shared.getNivel()}" +
-                                        "\nNuevo nivel: ${nivelyDias["nivel"]}" +
-                                        "\nDescripcion niveles: ${dataNiveles}" +
-                                        "\nControl de dias: ${nivelyDias["dias"]}";
-                            tvInfo.text = info
+                    val dataNiveles = AppContext.getNivelFromFichero(nomFichero, nivelyDias["nivel"].toString(), nivelyDias["dias"].toString(), ((nivelyDias["nivel"]?:0)  == MySharedPreferences.shared.getNivel().toInt()))
+                    val info =
+                        "Nivel de sangre de control anterior: ${MySharedPreferences.shared.getSangre()}" +
+                                "\nNivel de sangre actualizado: ${valorSangreNumerico}" +
+                                "\nNivel de dosis de control anterior: ${MySharedPreferences.shared.getNivel()}" +
+                                "\nNivel de dosis actualizado: ${nivelyDias["nivel"]}" +
+                                "\nDosis diarias de nivel actual: ${dataNiveles}" +
+                                "\nPróximo control en dias: ${nivelyDias["dias"]}";
+                    tvInfo.text = info
 
-                            // Actualizamos la sangre y nivel
-                            MySharedPreferences.shared.addString("sangre", et_sangre.text.toString())
-                            MySharedPreferences.shared.addString("nivel", nivelyDias["nivel"].toString())
-                            pintarValores()
-                        } else {
-                            Toast.makeText(
-                                this,
-                                "No se adminten valores negativos",
-                                Toast.LENGTH_LONG
-                            ).show()
-                        }
-                    } else {
-                        Toast.makeText(
-                            this,
-                            "Es necesario que la cifra contenga punto o coma.(pj: nivel de sangre: 1,00)",
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
+                    // Actualizamos la sangre y nivel
+                    MySharedPreferences.shared.addString("sangre", et_sangre.text.toString())
+                    MySharedPreferences.shared.addString("nivel", nivelyDias["nivel"].toString())
+                    pintarValores()
                 } else {
                     Toast.makeText(
                         this,
-                        "El valor no puede ser superior a 4 digitos de tamaño",
+                        "Ha de ser un valor entre 1.00 y 7.00",
                         Toast.LENGTH_LONG
                     ).show()
                 }
-            } else {
-                Toast.makeText(this, "El valor introducido no puede estar vacio", Toast.LENGTH_LONG)
-                    .show()
             }
+
         }
     }
 
@@ -79,12 +61,21 @@ class InicioActivity : AppCompatActivity() {
         tvNivel.text = "Nivel de dosis: ${MySharedPreferences.shared.getNivel()}"
     }
 
+    /**
+     * Elejimos el JSON al que pertenece en funcion del rango
+     * puede ser AZUL o ROJO.
+     */
     fun getFicheroCorrespondiente(valor: Float): String {
         if (valor >= 1.0 && valor <= 3.6) {
             return RANGO_AZUL
         } else return RANGO_ROJO
     }
 
+    /**
+     * En funcion del nivel de sangre como parametro recibidoharemos una operacion de suma, resta o simplemente nada
+     * segun el rango al que pertenezca este numero float devolvemos un Map[nivel,dias] Modificado - Aqui solo se vera afectada
+     * el campo nivel ( suma - resta o dejado igual)
+     */
     fun getNivelCorrespondiente(valor: Float): MutableMap<String, Int> {
         val map = mutableMapOf<String, Int>()
         when (valor) {
@@ -115,8 +106,46 @@ class InicioActivity : AppCompatActivity() {
         return map
     }
 
+    /**
+     * Obtenemos el valor del JSON que hemos
+     * guardado en SharedPreferences
+     */
     fun getNivelActual(): String {
         return MySharedPreferences.shared.getNivel()
+    }
+
+    /**
+     * Validamos el campo de texto de nivel de sangre
+     * Que no este vacio, que contenga coma o punto(formato de dato), y
+     * tambien que tenga un tamaño maximo de 4
+     *
+     */
+    fun validarInputText(inputText: String): Boolean{
+
+        if(!inputText.isNullOrEmpty()){
+            if(inputText.length <= 4){
+                if(inputText.contains(".") || inputText.contains(",")){
+                    return  true;
+                }else {
+                    Toast.makeText(
+                        this,
+                        "El el formato del valor en sangre es: (1.00 ó 1,00 a 7.00 ó 7,00)",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }else {
+                Toast.makeText(
+                    this,
+                    "El valor de sangre no puede ser superior a 4 digitos de tamaño",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }else {
+            Toast.makeText(this, "El valor de sangre introducido no puede estar vacio", Toast.LENGTH_LONG)
+                .show()
+        }
+
+        return false;
     }
 
 }
