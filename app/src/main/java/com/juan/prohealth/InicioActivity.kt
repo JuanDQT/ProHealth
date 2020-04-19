@@ -23,7 +23,7 @@ class InicioActivity : AppCompatActivity() {
          */
         btn_calcular.setOnClickListener {
             val inputValorSangreText = et_sangre.text.toString()
-            if(validarInputText(inputValorSangreText)){
+            if(AppContext.validarInputTextSangre(inputValorSangreText)){
                 val valorSangreNumerico = inputValorSangreText.replace(",", ".").toFloat()
                 if(valorSangreNumerico in 1.00..7.00){
                     val nomFichero = getFicheroCorrespondiente(valorSangreNumerico)
@@ -112,40 +112,6 @@ class InicioActivity : AppCompatActivity() {
      */
     fun getNivelActual(): String {
         return MySharedPreferences.shared.getNivel()
-    }
-
-    /**
-     * Validamos el campo de texto de nivel de sangre
-     * Que no este vacio, que contenga coma o punto(formato de dato), y
-     * tambien que tenga un tamaño maximo de 4
-     *
-     */
-    fun validarInputText(inputText: String): Boolean{
-
-        if(!inputText.isNullOrEmpty()){
-            if(inputText.length <= 4){
-                if(inputText.contains(".") || inputText.contains(",")){
-                    return  true;
-                }else {
-                    Toast.makeText(
-                        this,
-                        "El el formato del valor en sangre es: (1.00 ó 1,00 a 7.00 ó 7,00)",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-            }else {
-                Toast.makeText(
-                    this,
-                    "El valor de sangre no puede ser superior a 4 digitos de tamaño",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-        }else {
-            Toast.makeText(this, "El valor de sangre introducido no puede estar vacio", Toast.LENGTH_LONG)
-                .show()
-        }
-
-        return false;
     }
 
 }

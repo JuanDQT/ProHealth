@@ -2,6 +2,7 @@ package com.juan.prohealth
 
 import android.app.Application
 import android.content.Context
+import android.widget.Toast
 import org.json.JSONObject
 import java.nio.charset.StandardCharsets
 
@@ -51,6 +52,74 @@ class AppContext : Application() {
             }
             return data
         }
+
+        /**
+         * Validamos el campo de texto de nivel de sangre
+         * Que no este vacio, que contenga coma o punto(formato de dato), y
+         * tambien que tenga un tamaño maximo de 4
+         *
+         */
+        fun validarInputTextSangre(inputText: String): Boolean{
+
+            if(!inputText.isNullOrEmpty()){
+                if(inputText.length <= 4){
+                    if(inputText.contains(".") || inputText.contains(",")){
+                        return  true;
+                    }else {
+                        Toast.makeText(
+                            context,
+                            "El el formato del valor en sangre es: (1.00 ó 1,00 a 7.00 ó 7,00)",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }else {
+                    Toast.makeText(
+                        context,
+                        "El valor de sangre no puede ser superior a 4 digitos de tamaño",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }else {
+                Toast.makeText(context, "El valor de sangre introducido no puede estar vacio", Toast.LENGTH_LONG)
+                    .show()
+            }
+
+            return false;
+        }
+
+        /**
+         * Aqui validamos el valor del Nivel de Dosis (1-54)
+         * Que no este vacio, que los digitos no sean superiores a 2, y que se encuentre entre los valores 1 y 54
+         */
+        fun validarInputNivel(inputText: String): Boolean{
+
+            if(!inputText.isNullOrEmpty()){
+                if(inputText.length <= 2){
+                    var nivelNumero= inputText.toInt()
+                    if(nivelNumero in 1..54){// sugiere un rango de 1..54 es posible?
+                        return  true;
+                    }else {
+                        Toast.makeText(
+                            context,
+                            "El nivel ha de estar entre los rangos 1-54",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }else {
+                    Toast.makeText(
+                        context,
+                        "El nivel no puede ser superior a 2 digitos de tamaño",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }else {
+                Toast.makeText(context, "El nivel introducido no puede estar vacio", Toast.LENGTH_LONG)
+                    .show()
+            }
+
+            return false;
+        }
+
     }
 
     override fun onCreate() {
