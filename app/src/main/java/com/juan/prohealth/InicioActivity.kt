@@ -1,7 +1,14 @@
 package com.juan.prohealth
 
+import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
+import android.view.View
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.et_sangre
 import kotlinx.android.synthetic.main.inicio_main.*
@@ -15,7 +22,7 @@ class InicioActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.inicio_main)
 
-        pintarValores()
+        //pintarValores()
         /**
          * Cuando introducimos una NUEVA lectura de Sangre aqui recalculamos los dias de control ( 4 o 7 )
          * validamos el campo nivel de sangre que recibimos y aplicamos los calculos
@@ -40,10 +47,9 @@ class InicioActivity : AppCompatActivity() {
                                 "\nPróximo control en dias: ${nivelyDias["dias"]}";
                     tvInfo.text = info
 
-                    // Actualizamos la sangre y nivel
-                    MySharedPreferences.shared.addString("sangre", et_sangre.text.toString())
-                    MySharedPreferences.shared.addString("nivel", nivelyDias["nivel"].toString())
-                    pintarValores()
+                    doAskPlanificacion(sangre = et_sangre.text.toString(), nivel = nivelyDias["nivel"].toString(), dataNiveles = dataNiveles)
+
+                    //pintarValores()
                 } else {
                     Toast.makeText(
                         this,
@@ -53,6 +59,66 @@ class InicioActivity : AppCompatActivity() {
                 }
             }
 
+        }
+    }
+
+    fun doAskPlanificacion(sangre: String, nivel: String, dataNiveles: ArrayList<String>) {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Informacion")
+
+        val view = layoutInflater.inflate(R.layout.ad_planificacion, null)
+
+        for (x in 0 until 7) {
+//        for (x in dataNiveles.withIndex()) {
+            val layout = view.findViewWithTag<LinearLayout>("l${x}")
+
+            if (x >= dataNiveles.size) {
+                layout.visibility = View.GONE
+                continue
+            }
+
+            layout.visibility = View.VISIBLE
+
+            // sobrescribimos valor
+            val textView = view.findViewWithTag<TextView>("t${x}")
+            textView.text = dataNiveles[x]
+
+            // sobreescribimos imagen
+            if (!dataNiveles[x].isNullOrEmpty()) {
+                val resID = resources.getIdentifier(getImageNameByJSON(dataNiveles[x]),"drawable", packageName)
+                val imageView = view.findViewWithTag<ImageView>("i${x}")
+                imageView.setBackgroundResource(resID)
+            }
+
+        }
+        builder.setView(view)
+
+        builder.setPositiveButton("Planificar", DialogInterface.OnClickListener { dialogInterface, i ->
+            // Actualizamos la sangre y nivel
+            MySharedPreferences.shared.addString("sangre", sangre)
+            MySharedPreferences.shared.addString("nivel", nivel)
+        })
+
+        builder.create()
+        builder.show()
+    }
+
+    // TODO: cuando tengamos las imagenes sobrescribimos los nombres que faltan..
+    fun getImageNameByJSON(jsonData: String): String {
+        when (jsonData) {
+            "0" -> return "entero"
+            "1/8" -> return "un_octavo"
+            "1/4" -> return "un_cuarto"
+            "1/2" -> return "medio"
+            "3/4" -> return "tres_cuartos"
+            "1" -> return "entero"
+
+            /*"1+1/4" -> return "entero"
+            "1+1/2" -> return "entero"
+            "1+3/4" -> return "entero"
+            "2" -> return "entero"
+            "2+1/4" -> return "entero"*/
+            else  -> return ""
         }
     }
 
