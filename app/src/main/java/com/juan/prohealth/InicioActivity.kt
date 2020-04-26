@@ -1,8 +1,8 @@
 package com.juan.prohealth
 
-import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -10,6 +10,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.juan.prohealth.database.Control
+import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_main.et_sangre
 import kotlinx.android.synthetic.main.inicio_main.*
 
@@ -21,14 +23,14 @@ class InicioActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.inicio_main)
-
-        //pintarValores()
+        pintarValores()
         /**
          * Cuando introducimos una NUEVA lectura de Sangre aqui recalculamos los dias de control ( 4 o 7 )
          * validamos el campo nivel de sangre que recibimos y aplicamos los calculos
          * para seleccionar los valores de salida e imprimirlos
          */
         btn_calcular.setOnClickListener {
+            hideKeyboard()
             val inputValorSangreText = et_sangre.text.toString()
             if(AppContext.validarInputTextSangre(inputValorSangreText)){
                 val valorSangreNumerico = inputValorSangreText.replace(",", ".").toFloat()
@@ -45,11 +47,11 @@ class InicioActivity : AppCompatActivity() {
                                 "\nNivel de dosis actualizado: ${nivelyDias["nivel"]}" +
                                 "\nDosis diarias de nivel actual: ${dataNiveles}" +
                                 "\nPróximo control en dias: ${nivelyDias["dias"]}";
-                    tvInfo.text = info
+                    //tvInfo.text = info
 
                     doAskPlanificacion(sangre = et_sangre.text.toString(), nivel = nivelyDias["nivel"].toString(), dataNiveles = dataNiveles)
 
-                    //pintarValores()
+                    pintarValores()
                 } else {
                     Toast.makeText(
                         this,
@@ -81,7 +83,7 @@ class InicioActivity : AppCompatActivity() {
 
             // sobrescribimos valor
             val textView = view.findViewWithTag<TextView>("t${x}")
-            textView.text = dataNiveles[x]
+            textView.text = if (dataNiveles[x].isNullOrEmpty()) "No toca" else dataNiveles[x]
 
             // sobreescribimos imagen
             if (!dataNiveles[x].isNullOrEmpty()) {
@@ -97,13 +99,22 @@ class InicioActivity : AppCompatActivity() {
             // Actualizamos la sangre y nivel
             MySharedPreferences.shared.addString("sangre", sangre)
             MySharedPreferences.shared.addString("nivel", nivel)
+            Control.registrarControlActual(dataNiveles, sangre.toFloat(), nivel.toInt())
+
+            // TEST: comprobamos los grabados
+            Realm.getDefaultInstance().use {
+                val controles = it.where(Control::class.java).findAll()
+                Log.e("LOG", "Total: " + controles.size)
+                for(item in controles)
+                    Log.i("LOG", item.toString())
+            }
+
         })
 
         builder.create()
         builder.show()
     }
 
-    // TODO: cuando tengamos las imagenes sobrescribimos los nombres que faltan..
     fun getImageNameByJSON(jsonData: String): String {
         when (jsonData) {
             "0" -> return "entero"
@@ -112,12 +123,11 @@ class InicioActivity : AppCompatActivity() {
             "1/2" -> return "medio"
             "3/4" -> return "tres_cuartos"
             "1" -> return "entero"
-
-            /*"1+1/4" -> return "entero"
-            "1+1/2" -> return "entero"
-            "1+3/4" -> return "entero"
-            "2" -> return "entero"
-            "2+1/4" -> return "entero"*/
+            "1+1/4" -> return "entero_un_cuarto"
+            "1+1/2" -> return "entero_un_medio"
+            "1+3/4" -> return "entero_tres_cuartos"
+            "2" -> return "dos_enteros"
+            "2+1/4" -> return "dos_enteros_un_cuarto"
             else  -> return ""
         }
     }

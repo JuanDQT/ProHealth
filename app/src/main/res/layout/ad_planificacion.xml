@@ -8,7 +8,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:text="Ultimo INR"
         android:textAlignment="center"
         />
@@ -97,7 +97,6 @@
             <ImageView
                 android:tag="i0"
                 android:scaleType="centerCrop"
-                android:background="#000"
                 android:layout_height="match_parent"
                 android:layout_width="match_parent" />
 
@@ -119,7 +118,6 @@
                 android:layout_height="wrap_content" />
             <ImageView
                 android:tag="i1"
-                android:background="#000"
                 android:layout_height="match_parent"
                 android:layout_width="match_parent" />
 
@@ -141,7 +139,6 @@
                 android:layout_height="wrap_content" />
             <ImageView
                 android:tag="i2"
-                android:background="#000"
                 android:layout_height="match_parent"
                 android:layout_width="match_parent" />
 
@@ -162,7 +159,6 @@
                 android:layout_height="wrap_content" />
             <ImageView
                 android:tag="i3"
-                android:background="#000"
                 android:layout_height="match_parent"
                 android:layout_width="match_parent" />
 
@@ -183,7 +179,6 @@
                 android:layout_height="wrap_content" />
             <ImageView
                 android:tag="i4"
-                android:background="#000"
                 android:layout_height="match_parent"
                 android:layout_width="match_parent" />
 
@@ -204,7 +199,6 @@
                 android:layout_height="wrap_content" />
             <ImageView
                 android:tag="i5"
-                android:background="#000"
                 android:layout_height="match_parent"
                 android:layout_width="match_parent" />
 
