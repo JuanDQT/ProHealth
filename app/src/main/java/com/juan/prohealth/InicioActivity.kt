@@ -47,7 +47,7 @@ class InicioActivity : AppCompatActivity() {
                                 "\nNivel de dosis actualizado: ${nivelyDias["nivel"]}" +
                                 "\nDosis diarias de nivel actual: ${dataNiveles}" +
                                 "\nPróximo control en dias: ${nivelyDias["dias"]}";
-                    //tvInfo.text = info
+                    tvInfo.text = info
 
                     doAskPlanificacion(sangre = et_sangre.text.toString(), nivel = nivelyDias["nivel"].toString(), dataNiveles = dataNiveles)
 
@@ -69,6 +69,12 @@ class InicioActivity : AppCompatActivity() {
         builder.setTitle("Informacion")
 
         val view = layoutInflater.inflate(R.layout.ad_planificacion, null)
+        val irnActual = view.findViewById<TextView>(R.id.tvIRN)
+        val irnNew = view.findViewById<TextView>(R.id.tvIRNNew)
+
+        irnActual.text = MySharedPreferences.shared.getSangre()
+        irnNew.text = sangre
+
 
         for (x in 0 until 7) {
 //        for (x in dataNiveles.withIndex()) {
