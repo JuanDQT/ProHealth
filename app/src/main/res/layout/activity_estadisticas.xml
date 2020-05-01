@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".EstadisticasActivity">
+
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/chart"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/frame_options"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:weightSum="3">
+        <Button
+            android:id="@+id/btnMensual"
+            android:text="Ultimo mes"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="0.8"
+            tools:ignore="ButtonStyle" />
+        <Button
+            android:id="@+id/btnSemestral"
+            android:text="Ultimos 6 meses"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1.2"
+            tools:ignore="ButtonStyle" />
+        <Button
+            android:id="@+id/btnAnual"
+            android:text="Ultimo ano"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="0.8"
+            tools:ignore="ButtonStyle" />
+    </LinearLayout>
+
+</RelativeLayout>

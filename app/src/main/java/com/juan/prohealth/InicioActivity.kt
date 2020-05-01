@@ -1,6 +1,7 @@
 package com.juan.prohealth
 
 import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -62,6 +63,10 @@ class InicioActivity : AppCompatActivity() {
             }
 
         }
+
+        btnEstadisticas.setOnClickListener {
+            startActivity(Intent(this, EstadisticasActivity::class.java))
+        }
     }
 
     fun doAskPlanificacion(sangre: String, nivel: String, dataNiveles: ArrayList<String>) {
@@ -112,7 +117,7 @@ class InicioActivity : AppCompatActivity() {
                 val controles = it.where(Control::class.java).findAll()
                 Log.e("LOG", "Total: " + controles.size)
                 for(item in controles)
-                    Log.i("LOG", item.toString())
+                    print(item.toString())
             }
 
         })

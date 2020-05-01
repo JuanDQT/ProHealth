@@ -1,82 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Ini">
-
-    <EditText
-        android:id="@+id/et_sangre"
-        android:layout_width="wrap_content"
-        android:layout_height="45dp"
-        android:layout_marginTop="160dp"
-        android:ems="10"
-        android:hint="Valor de sangre"
-        android:inputType="number|textPersonName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/btn_calcular"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="36dp"
-        android:layout_marginEnd="8dp"
-        android:text="Calcular"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_sangre" />
-
-    <Button
-        android:id="@+id/btnCambiarVentana"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="68dp"
-        android:text="Ir a calendario"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.483"
-        app:layout_constraintStart_toStartOf="parent" />
+    android:orientation="vertical"
+    android:padding="10dp"
+    tools:context=".InicioActivity">
 
     <TextView
         android:id="@+id/tvSangre"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
-        android:text="TextView"
+        tools:text="Sangre"
         android:textColor="#E91E63"
         android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.31"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        />
 
     <TextView
         android:id="@+id/tvNivel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
-        android:text="TextView"
+        tools:text="Nivel"
         android:textColor="#2196F3"
         android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/et_sangre"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.31"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvSangre"
-        app:layout_constraintVertical_bias="0.0" />
+         />
+
+    <EditText
+        android:id="@+id/et_sangre"
+        android:layout_width="wrap_content"
+        android:layout_height="45dp"
+        android:layout_marginTop="120dp"
+        android:ems="10"
+        android:layout_gravity="center_horizontal"
+        android:hint="Valor de sangre"
+        android:inputType="number|textPersonName"
+         />
+
+    <Button
+        android:id="@+id/btn_calcular"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:drawableLeft="@android:drawable/ic_menu_edit"
+        android:text="Calcular" />
+
+    <Button
+        android:id="@+id/btnCambiarVentana"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:drawableLeft="@android:drawable/ic_menu_week"
+        android:text="Ir a calendario" />
+
+    <Button
+        android:id="@+id/btnEstadisticas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@android:drawable/ic_menu_sort_by_size"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="center_horizontal"
+        android:text="Estadisticas" />
 
     <TextView
         android:id="@+id/tvInfo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_calcular" />
+        android:layout_gravity="center_horizontal"
+         />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

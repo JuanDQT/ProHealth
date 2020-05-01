@@ -1,5 +1,6 @@
 package com.juan.prohealth.database
 
+import com.juan.prohealth.addDays
 import io.realm.Realm
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
@@ -30,12 +31,11 @@ open class Control : RealmObject() {
                     control.nivelDosis = nivel
                     control.recurso = planificacion[x]
                     control.fechaInicio = Date()
-                    control.fecha = Date.from(LocalDateTime.now().plusDays(x.toLong()).atZone(ZoneId.systemDefault()).toInstant())
-                    control.fechaFin = Date.from(LocalDateTime.now().plusDays(planificacion.size.toLong()).atZone(ZoneId.systemDefault()).toInstant())
+                    control.fecha = Date().addDays(x)
+                    control.fechaFin = Date().addDays(planificacion.size)
                     realm.commitTransaction()
                 }
             }
-
         }
     }
 

@@ -1,10 +1,12 @@
 package com.juan.prohealth
 
+import android.app.Activity
 import android.content.Context
-import android.view.View
+import android.util.Log
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
+import java.util.*
 
 
 fun AppCompatActivity.hideKeyboard() {
@@ -16,4 +18,14 @@ fun AppCompatActivity.hideKeyboard() {
     // else {
     window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
     // }
+}
+
+// Compatibilidad con versiones antiguas de android
+fun Date.addDays(days: Int): Date {
+    val calendar = Calendar.getInstance()
+    calendar.add(Calendar.DAY_OF_YEAR, days)
+    return calendar.time
+}
+fun Activity.print(message: String) {
+    Log.i("LOG", message)
 }
