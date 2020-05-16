@@ -65,7 +65,7 @@ class InicioActivity : AppCompatActivity() {
         }
 
         btnEstadisticas.setOnClickListener {
-            startActivity(Intent(this, EstadisticasActivity::class.java))
+            startActivity(Intent(this, BarCharActivity::class.java))
         }
     }
 
