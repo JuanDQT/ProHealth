@@ -37,6 +37,7 @@ class AppContext : Application() {
             for (i in 0 until json.getJSONArray(nivel).length()) {
                 //if (json.getJSONArray(nivel).getString(i).isNullOrEmpty())
                   //  continue;
+                //TODO revisar codigo para modificar logica
                 data.add(json.getJSONArray(nivel).getString(i))
             }
 

@@ -1,6 +1,7 @@
 package com.anychart.chart.common.dataentry;
 
-import android.support.annotation.NonNull;
+
+import androidx.annotation.NonNull;
 
 import java.util.HashMap;
 import java.util.Locale;
