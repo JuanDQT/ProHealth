@@ -7,7 +7,7 @@
     tools:context=".BarCharActivity">
 
     <com.anychart.AnyChartView
-        android:id="@+id/any_chart_view"
+        android:id="@+id/acv_grafica"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         />

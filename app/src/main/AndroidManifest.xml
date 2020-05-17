@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.juan.prohealth">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.juan.prohealth"
+    tools:ignore="LockedOrientationActivity">
 
     <application
         android:name=".AppContext"
@@ -12,8 +14,11 @@
         android:theme="@style/AppTheme">
         <activity android:name=".BarCharActivity"></activity>
         <activity android:name=".MainActivity" />
-        <activity android:name=".EstadisticasActivity" />
-        <activity android:name=".SplashScreenActivity">
+        <activity android:name=".SplashScreenActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/SplashTheme"
+
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
