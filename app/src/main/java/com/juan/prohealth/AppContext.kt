@@ -8,6 +8,7 @@ import io.realm.Realm
 import io.realm.RealmConfiguration
 import org.json.JSONObject
 import java.nio.charset.StandardCharsets
+import kotlin.collections.ArrayList
 
 class AppContext : Application() {
 
@@ -31,30 +32,57 @@ class AppContext : Application() {
         }
 
 
-        fun getNivelFromFichero(fileName: String, nivel: String, dias: String, isSumar: Boolean): ArrayList<String> {
-            val json = JSONObject(openJSON(fileName));
-            val data = arrayListOf<String>()
-            for (i in 0 until json.getJSONArray(nivel).length()) {
-                //if (json.getJSONArray(nivel).getString(i).isNullOrEmpty())
-                  //  continue;
-                //TODO revisar codigo para modificar logica
-                data.add(json.getJSONArray(nivel).getString(i))
-            }
+        fun getNivelFromFichero(fileName: String, nivel: String, dias: String, variacionNivelDosis: Boolean): ArrayList<String> {
+            var json = JSONObject(openJSON(fileName))
+            var dataFourDays = arrayListOf<String>()
+            var dataSevenDays = arrayListOf<String>()
 
+            if(dias == "4") {
+                return getDateFourDays(fileName,nivel,dataFourDays, json)
+            }
             if (dias == "7") {
-                    // Control de 7 dias, anadimos los controles '3' restantes (nivelyDias["nivel"]?:0)  = MySharedPreferences.shared.getNivel().toInt()
-                val moveNivel = nivel.toInt() + if (isSumar) 0 else -1//En control de 7 dias, solo existen 2 posibilidades, que se reste 1 nivel o que se mantenga IGUAL (0)
+                // de 0 > 4 guarda una array de 3 (4 numeros) json.getJSONArray(nivel).length()
 
-                    for (i in 0 until json.getJSONArray(moveNivel.toString()).length() - 1) {// -1 porque asi coge los 3 restantes, no todos
-                        for (i in 0 until json.getJSONArray(moveNivel.toString()).length() - 1) {
-
+                /*for (i in 0 until json.getJSONArray(nivel).length()) {
+                    if (json.getJSONArray(nivel).getString(i).isNullOrEmpty() && dataForDays.size<4) {
+                        var diasFaltantes = json.getJSONArray(nivel).length().minus(i)
+                        for (k in 0 until diasFaltantes) {
+                            if(!json.getJSONArray(nivel).getString(k).isNullOrEmpty()) {
+                                dataForDays.add(json.getJSONArray(nivel).getString(k))
+                            }
                         }
-                       // if (json.getJSONArray(moveNivel.toString()).getString(i).isNullOrEmpty())
-                         //   continue;
-                        data.add(json.getJSONArray(moveNivel.toString()).getString(i))
+                    }else{
+                        if(dataForDays.size<4) {
+                            dataForDays.add(json.getJSONArray(nivel).getString(i))
+                        }
+                    }
                 }
-            }
-            return data
+                */
+                //llamamos la funcion para obtener una iteracion COMPLETA de 4 dias sin ""
+                dataFourDays = getDateFourDays(fileName,nivel,dataFourDays, json)
+                var diasRestantes = json.getJSONArray(nivel).length().minus(1)// 3 espacios faltantes a rellenar
+                //TODO Datos a arreglar Nivel 19 - 4.8 sangre
+                for (i in 0 until 4){
+                    dataSevenDays.add(dataFourDays.get(i))
+                }
+
+                var condicionA = json.getJSONArray(nivel).getString(1).isNullOrEmpty()
+                var condicionB = json.getJSONArray(nivel).getString(2).isNullOrEmpty()
+                var condicionC = json.getJSONArray(nivel).getString(3).isNullOrEmpty()
+
+                    for (i in 0 until diasRestantes) {
+                        //Unico caso en el que necesita una logica especial, cuando el ultimo campo(3) del JSON esta vacio ""
+                        if(dataSevenDays.size<7 && condicionC &&!condicionA &&!condicionB) {
+                            var reajuste = i + 1
+                            dataSevenDays.add(dataFourDays.get(reajuste))
+                        }else{
+                            dataSevenDays.add(dataFourDays.get(i))
+                        }
+                    }
+                return dataSevenDays
+                }
+
+            return dataFourDays
         }
 
         /**
@@ -124,6 +152,25 @@ class AppContext : Application() {
             return false;
         }
 
+        fun getDateFourDays(fileName: String, nivel: String, dataForDays: ArrayList<String>, json: JSONObject): ArrayList<String>{
+            //json.getJSONArray(nivel).length())
+            //(dias.toInt())
+            for (i in 0 until json.getJSONArray(nivel).length()) {
+                if (json.getJSONArray(nivel).getString(i).isNullOrEmpty()&& dataForDays.size<4) {
+                    var diasRestantes = json.getJSONArray(nivel).length().minus(i)
+                    for (k in 0 until diasRestantes) {
+                        if(!json.getJSONArray(nivel).getString(k).isNullOrEmpty()){
+                            dataForDays.add(json.getJSONArray(nivel).getString(k))
+                        }
+                    }
+                }else{
+                    if(dataForDays.size<4) {
+                        dataForDays.add(json.getJSONArray(nivel).getString(i))
+                    }
+                }
+            }
+            return dataForDays
+        }
     }
 
     override fun onCreate() {
@@ -133,6 +180,5 @@ class AppContext : Application() {
         val realmConfiguration: RealmConfiguration = RealmConfiguration.Builder().name("control").migration(CustomMigration()).build()
         Realm.setDefaultConfiguration(realmConfiguration)
     }
-
 
 }
