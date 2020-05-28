@@ -31,58 +31,42 @@ class AppContext : Application() {
             return json
         }
 
-
-        fun getNivelFromFichero(fileName: String, nivel: String, dias: String, variacionNivelDosis: Boolean): ArrayList<String> {
+        /**
+         * En esta funcion abarcamos las 3 posibles opciones para iterar correctamente
+         * en caso de planificar dosis para 3, 4, y 7 dias. En caso de que haya algun
+         * nivel espacios vacios de dosis, se procedera a volver a empezar hasta abarcar las
+         * dosis que se han de planificar empezando desde el principio. Devolviendo un arrayList
+         * con los 3, 4 o 7 dias sin VACIOS con las dosis que corresponden.
+         */
+        fun getNivelFromFichero(fileName: String, nivel: String, dias: String): ArrayList<String> {
             var json = JSONObject(openJSON(fileName))
+            var dataThreeDays = arrayListOf<String>()
             var dataFourDays = arrayListOf<String>()
             var dataSevenDays = arrayListOf<String>()
+            var dataDosisOut = arrayListOf<String>()
 
-            if(dias == "4") {
-                return getDateFourDays(fileName,nivel,dataFourDays, json)
+            when(dias){
+                "3"->{
+                    dataThreeDays = getDateFourDays(fileName,nivel,dataFourDays, json)
+                    for (i in 0 until 3){
+                        dataDosisOut.add(dataThreeDays.get(i))
+                    }
+                }
+               "4"->{
+                   dataDosisOut = getDateFourDays(fileName,nivel,dataFourDays, json)
+               }
+                "7"->{
+                    dataFourDays = getDateFourDays(fileName,nivel,dataFourDays, json)
+                    var diasRestantesRellenar = json.getJSONArray(nivel).length().minus(1)
+                    // 3 espacios faltantes a rellenar
+                    for (i in 0 until 4){
+                        dataSevenDays.add(dataFourDays.get(i))
+                    }
+                    dataDosisOut = getDateSevenDays(fileName, nivel, dataSevenDays, dataFourDays, json, diasRestantesRellenar)
+                }
             }
-            if (dias == "7") {
-                // de 0 > 4 guarda una array de 3 (4 numeros) json.getJSONArray(nivel).length()
-
-                /*for (i in 0 until json.getJSONArray(nivel).length()) {
-                    if (json.getJSONArray(nivel).getString(i).isNullOrEmpty() && dataForDays.size<4) {
-                        var diasFaltantes = json.getJSONArray(nivel).length().minus(i)
-                        for (k in 0 until diasFaltantes) {
-                            if(!json.getJSONArray(nivel).getString(k).isNullOrEmpty()) {
-                                dataForDays.add(json.getJSONArray(nivel).getString(k))
-                            }
-                        }
-                    }else{
-                        if(dataForDays.size<4) {
-                            dataForDays.add(json.getJSONArray(nivel).getString(i))
-                        }
-                    }
-                }
-                */
-                //llamamos la funcion para obtener una iteracion COMPLETA de 4 dias sin ""
-                dataFourDays = getDateFourDays(fileName,nivel,dataFourDays, json)
-                var diasRestantes = json.getJSONArray(nivel).length().minus(1)// 3 espacios faltantes a rellenar
-                //TODO Datos a arreglar Nivel 19 - 4.8 sangre
-                for (i in 0 until 4){
-                    dataSevenDays.add(dataFourDays.get(i))
-                }
-
-                var condicionA = json.getJSONArray(nivel).getString(1).isNullOrEmpty()
-                var condicionB = json.getJSONArray(nivel).getString(2).isNullOrEmpty()
-                var condicionC = json.getJSONArray(nivel).getString(3).isNullOrEmpty()
-
-                    for (i in 0 until diasRestantes) {
-                        //Unico caso en el que necesita una logica especial, cuando el ultimo campo(3) del JSON esta vacio ""
-                        if(dataSevenDays.size<7 && condicionC &&!condicionA &&!condicionB) {
-                            var reajuste = i + 1
-                            dataSevenDays.add(dataFourDays.get(reajuste))
-                        }else{
-                            dataSevenDays.add(dataFourDays.get(i))
-                        }
-                    }
-                return dataSevenDays
-                }
-
-            return dataFourDays
+            //TODO revisar que sucede al poner 4.9 en sangre ya que saca vacios
+            return dataDosisOut
         }
 
         /**
@@ -152,9 +136,13 @@ class AppContext : Application() {
             return false;
         }
 
+        /**
+         * Funcion que rellenar un arrayList de tamaño 4 que son los que corresponden
+         * para planificar la dosis sin VACIOS, y en caso de haberlos rellenarlos
+         * de la manera correcta, volviendo a empezar desde el nivel hasta que se
+         * rellenen los 4 espacios.
+         */
         fun getDateFourDays(fileName: String, nivel: String, dataForDays: ArrayList<String>, json: JSONObject): ArrayList<String>{
-            //json.getJSONArray(nivel).length())
-            //(dias.toInt())
             for (i in 0 until json.getJSONArray(nivel).length()) {
                 if (json.getJSONArray(nivel).getString(i).isNullOrEmpty()&& dataForDays.size<4) {
                     var diasRestantes = json.getJSONArray(nivel).length().minus(i)
@@ -170,6 +158,30 @@ class AppContext : Application() {
                 }
             }
             return dataForDays
+        }
+
+        /**
+         * Funcion para rellenar una arrayList de tamaño 7, para ello
+         * nos apoyamos en la que utilizabamos de 4, e iteramos correctamente
+         * para rellenar los 3 dias que faltan por rellenar. Solo existe un caso concreto
+         * en el que si cumplen los 3 requisitos se aplica un reajuste para rellenar
+         * correctamente la arrayList de 7 con un correcto rellenado de dosis.
+         */
+        fun getDateSevenDays(fileName: String, nivel: String, dataSevenDays: ArrayList<String>, dataFourDays: ArrayList<String>, json: JSONObject, diasRestantesRellenar: Int): ArrayList<String>{
+            var condicioA = json.getJSONArray(nivel).getString(1).isNullOrEmpty()
+            var condicioB = json.getJSONArray(nivel).getString(2).isNullOrEmpty()
+            var condicioC = json.getJSONArray(nivel).getString(3).isNullOrEmpty()
+            for (i in 0 until diasRestantesRellenar) {
+                //Unico caso en el que necesita una logica especial, cuando el ultimo campo(3) del JSON esta vacio ""
+                if(dataSevenDays.size<7 && condicioC &&!condicioA &&!condicioB) {
+                    var reajuste = i + 1
+                    dataSevenDays.add(dataFourDays.get(reajuste))
+                }else{
+                    dataSevenDays.add(dataFourDays.get(i))
+                }
+            }
+            return dataSevenDays
+
         }
     }
 

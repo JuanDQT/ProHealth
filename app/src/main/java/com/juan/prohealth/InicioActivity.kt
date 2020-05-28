@@ -39,8 +39,7 @@ class InicioActivity : AppCompatActivity() {
                     val nomFichero = getFicheroCorrespondiente(valorSangreNumerico)
 
                     val nivelyDias: Map<String, Int> = getNivelCorrespondiente((valorSangreNumerico))
-
-                    val dataNiveles = AppContext.getNivelFromFichero(nomFichero, nivelyDias["nivel"].toString(), nivelyDias["dias"].toString(), ((nivelyDias["nivel"]?:0)  == MySharedPreferences.shared.getNivel().toInt()))
+                    val dataNiveles = AppContext.getNivelFromFichero(nomFichero, nivelyDias["nivel"].toString(), nivelyDias["dias"].toString())
                     val info =
                         "Nivel de sangre de control anterior: ${MySharedPreferences.shared.getSangre()}" +
                                 "\nNivel de sangre actualizado: ${valorSangreNumerico}" +
