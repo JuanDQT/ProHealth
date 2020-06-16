@@ -25,43 +25,54 @@
         android:textSize="18sp"
          />
 
-    <EditText
-        android:id="@+id/et_sangre"
-        android:layout_width="wrap_content"
-        android:layout_height="45dp"
-        android:layout_marginTop="120dp"
-        android:ems="10"
-        android:layout_gravity="center_horizontal"
-        android:hint="Valor de sangre"
-        android:inputType="number|textPersonName"
-         />
-
     <Button
-        android:id="@+id/btn_calcular"
-        android:layout_width="wrap_content"
+        android:id="@+id/btnINR"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="70dp"
         android:drawableLeft="@android:drawable/ic_menu_edit"
-        android:text="Calcular" />
+        android:text="Introducir INR" />
 
     <Button
         android:id="@+id/btnCambiarVentana"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="10dp"
         android:drawableLeft="@android:drawable/ic_menu_week"
-        android:text="Ir a calendario" />
+        android:text="Calendrio" />
 
     <Button
         android:id="@+id/btnEstadisticas"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:drawableLeft="@android:drawable/ic_menu_sort_by_size"
-        android:layout_marginTop="10dp"
         android:layout_gravity="center_horizontal"
-        android:text="Estadisticas" />
+        android:drawableLeft="@android:drawable/ic_menu_sort_by_size"
+        android:text="Historial" />
+
+    <Button
+        android:id="@+id/btnAjustes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:drawableLeft="@android:drawable/ic_menu_manage"
+        android:text="Ajustes" />
+
+    <Button
+        android:id="@+id/btnConsejos"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:drawableLeft="@android:drawable/ic_menu_help"
+        android:text="Consejos y recomendaciones" />
+
+    <Button
+        android:id="@+id/btnLogOut"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:drawableLeft="@android:drawable/ic_notification_clear_all"
+        android:text="Desconectarse" />
 
     <TextView
         android:id="@+id/tvInfo"

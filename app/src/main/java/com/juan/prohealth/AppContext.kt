@@ -72,35 +72,17 @@ class AppContext : Application() {
         /**
          * Validamos el campo de texto de nivel de sangre
          * Que no este vacio, que contenga coma o punto(formato de dato), y
-         * tambien que tenga un tamaño maximo de 4
+         * tambien que tenga un tamaño maximo de 4 Y ESTE ENTRE 0 y 7
          *
          */
-        fun validarInputTextSangre(inputText: String): Boolean{
+        fun validarInputTextSangre(inputText: String): Float? {
 
-            if(!inputText.isNullOrEmpty()){
-                if(inputText.length <= 4){
-                    if(inputText.contains(".") || inputText.contains(",")){
-                        return  true;
-                    }else {
-                        Toast.makeText(
-                            context,
-                            "El el formato del valor en sangre es: (1.00 ó 1,00 a 7.00 ó 7,00)",
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
-                }else {
-                    Toast.makeText(
-                        context,
-                        "El valor de sangre no puede ser superior a 4 digitos de tamaño",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-            }else {
-                Toast.makeText(context, "El valor de sangre introducido no puede estar vacio", Toast.LENGTH_LONG)
-                    .show()
+            inputText.toFloatOrNull()?.let {
+                if(it in 1..7)
+                    return (it)
             }
 
-            return false;
+            return null
         }
 
         /**

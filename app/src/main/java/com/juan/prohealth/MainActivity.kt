@@ -1,14 +1,12 @@
 package com.juan.prohealth
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_main.btn_calcular
+import kotlinx.android.synthetic.main.activity_main.btnINR
 import kotlinx.android.synthetic.main.activity_main.et_sangre
-import kotlinx.android.synthetic.main.inicio_main.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -23,12 +21,12 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        btn_calcular.setOnClickListener {
+        btnINR.setOnClickListener {
             //Guardamos valores en String
             val inputValorSangreText = et_sangre.text.toString()
             val inputNivelSangreText = et_nivel.text.toString()
             //Validamos estos valores
-            if(AppContext.validarInputTextSangre(inputValorSangreText)&& AppContext.validarInputNivel(inputNivelSangreText)){
+            if(AppContext.validarInputTextSangre(inputValorSangreText) != null && AppContext.validarInputNivel(inputNivelSangreText)){
                 val valorSangreNumerico = inputValorSangreText.replace(",", ".").toFloat()
                 //Validamos que el valor de sangre este entre 1.00 y 7.00 siendo Float
                 if(valorSangreNumerico >= 1.00 && valorSangreNumerico <= 7.00){

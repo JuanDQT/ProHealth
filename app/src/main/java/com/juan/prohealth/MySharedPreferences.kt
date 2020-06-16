@@ -9,6 +9,9 @@ class MySharedPreferences {
         private val SHARED_PREFERENCES_NAME = "MySharedPreferences"
         private var sharedPreferences = AppContext.context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
 
+        // KEYS
+        val LOGGED_CURRENT_USER = "LOGGED_CURRENT_USER"
+
         fun exists(keys: Array<String>): Boolean {
             if(keys.count() < 1)
                 return false
@@ -46,6 +49,5 @@ class MySharedPreferences {
                 editor.apply()
             }
         }
-
     }
 }

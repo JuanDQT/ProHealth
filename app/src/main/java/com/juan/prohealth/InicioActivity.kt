@@ -3,18 +3,21 @@ package com.juan.prohealth
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.Toast
+import android.view.ViewGroup
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.chip.Chip
 import com.juan.prohealth.database.Control
 import io.realm.Realm
-import kotlinx.android.synthetic.main.activity_main.et_sangre
 import kotlinx.android.synthetic.main.inicio_main.*
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.concurrent.schedule
 
 class InicioActivity : AppCompatActivity() {
 
@@ -30,42 +33,82 @@ class InicioActivity : AppCompatActivity() {
          * validamos el campo nivel de sangre que recibimos y aplicamos los calculos
          * para seleccionar los valores de salida e imprimirlos
          */
-        btn_calcular.setOnClickListener {
-            hideKeyboard()
-            val inputValorSangreText = et_sangre.text.toString()
-            if(AppContext.validarInputTextSangre(inputValorSangreText)){
-                val valorSangreNumerico = inputValorSangreText.replace(",", ".").toFloat()
-                if(valorSangreNumerico in 1.00..7.00){
-                    val nomFichero = getFicheroCorrespondiente(valorSangreNumerico)
+        btnINR.setOnClickListener {
 
-                    val nivelyDias: Map<String, Int> = getNivelCorrespondiente((valorSangreNumerico))
-                    val dataNiveles = AppContext.getNivelFromFichero(nomFichero, nivelyDias["nivel"].toString(), nivelyDias["dias"].toString())
-                    val info =
-                        "Nivel de sangre de control anterior: ${MySharedPreferences.shared.getSangre()}" +
-                                "\nNivel de sangre actualizado: ${valorSangreNumerico}" +
-                                "\nNivel de dosis de control anterior: ${MySharedPreferences.shared.getNivel()}" +
-                                "\nNivel de dosis actualizado: ${nivelyDias["nivel"]}" +
-                                "\nDosis diarias de nivel actual: ${dataNiveles}" +
-                                "\nPróximo control en dias: ${nivelyDias["dias"]}";
-                    tvInfo.text = info
-
-                    doAskPlanificacion(sangre = et_sangre.text.toString(), nivel = nivelyDias["nivel"].toString(), dataNiveles = dataNiveles)
-
-                    pintarValores()
-                } else {
-                    Toast.makeText(
-                        this,
-                        "Ha de ser un valor entre 1.00 y 7.00",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-            }
+            doAskINR()
+            return@setOnClickListener
 
         }
 
         btnEstadisticas.setOnClickListener {
             startActivity(Intent(this, BarCharActivity::class.java))
         }
+    }
+
+    fun doAskINR() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Introducir")
+        builder.setMessage("Por favor, introduce un valor entre 1 y 7")
+        var positiveButton: Button? = null
+
+
+        val view: LinearLayout = layoutInflater.inflate(R.layout.ad_introducir_inr, null) as LinearLayout
+        val layoutHistorico = view.findViewWithTag<LinearLayout>(R.id.ll_historico)
+        val editText = view.findViewById<EditText>(R.id.etValor)
+
+        // Buscamos si hay historial..
+        if (false) {
+            layoutHistorico.visibility = View.VISIBLE
+            val layoutChips = view.findViewWithTag<LinearLayout>(R.id.ll_chips)
+
+            // TODO: buscamos los ultimos 5 valores del historial, y lo mostramos
+            for (x in 0 until 5) {
+                val chip = Chip(this)
+                chip.text = (1 .. 7).random().toString()
+                layoutChips.addView(chip)
+//                chip.chipIcon = ContextCompat.getDrawable(requireContext(), baseline_person_black_18)
+            }
+        }
+
+        editText.addTextChangedListener( object : TextWatcher {
+            override fun afterTextChanged(p0: Editable?) {
+                positiveButton?.let { button ->
+                    AppContext.validarInputTextSangre(editText.text.toString())?.let {
+                        button.isEnabled = true
+                        return
+                    }
+                    button.isEnabled = false
+                }
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+        })
+        builder.setView(view)
+
+        builder.setPositiveButton("Aceptar", DialogInterface.OnClickListener { dialogInterface, i ->
+            this.hideKeyboard()
+            val valorSangreNumerico = editText.text.toString().replace(",", ".").toFloat()
+            val nomFichero = getFicheroCorrespondiente(valorSangreNumerico)
+
+            val nivelyDias: Map<String, Int> = this.getNivelCorrespondiente((valorSangreNumerico))
+            val dataNiveles = AppContext.getNivelFromFichero(nomFichero, nivelyDias["nivel"].toString(), nivelyDias["dias"].toString())
+
+            pintarValores()
+            Timer("SettingUp", false).schedule(500) {
+                runOnUiThread {
+                    doAskPlanificacion(sangre = "${AppContext.validarInputTextSangre(editText.text.toString())}", nivel = nivelyDias["nivel"].toString(), dataNiveles = dataNiveles)
+                }
+            }
+        })
+
+        builder.create()
+        positiveButton = builder.show().getButton(AlertDialog.BUTTON_POSITIVE) as Button?
+        positiveButton?.isEnabled = false
+
     }
 
     fun doAskPlanificacion(sangre: String, nivel: String, dataNiveles: ArrayList<String>) {
