@@ -12,23 +12,28 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".LoginActivity"
-            android:theme="@style/SplashTheme"></activity>
+        <activity android:name=".MostrarGmap"></activity>
+        <activity
+            android:name=".LoginActivity"
+            android:theme="@style/SplashTheme" />
         <activity android:name=".BarCharActivity" />
-        <activity android:name=".MainActivity"
-            android:theme="@style/SplashTheme"/>
+        <activity
+            android:name=".MainActivity"
+            android:theme="@style/SplashTheme" />
         <activity
             android:name=".SplashScreenActivity"
             android:screenOrientation="portrait"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".CalendarioActivity" />
-        <activity android:name=".InicioActivity"
-            android:theme="@style/SplashTheme"/>
+        <activity
+            android:name=".InicioActivity"
+            android:theme="@style/SplashTheme" />
 
         <meta-data
             android:name="preloaded_fonts"

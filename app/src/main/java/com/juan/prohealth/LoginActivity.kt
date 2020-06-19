@@ -25,4 +25,12 @@ class LoginActivity : AppCompatActivity() {
         }
 
     }
+
+    /**
+     * Boton de ATRAS cerramos la app
+     */
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finishAffinity()
+    }
 }

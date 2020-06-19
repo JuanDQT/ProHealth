@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
@@ -43,6 +44,11 @@ class InicioActivity : AppCompatActivity() {
         btnEstadisticas.setOnClickListener {
             startActivity(Intent(this, BarCharActivity::class.java))
         }
+
+        btnGmap.setOnClickListener(){
+            startActivity(Intent(this, MostrarGmap::class.java))
+        }
+
     }
 
     fun doAskINR() {
@@ -243,4 +249,17 @@ class InicioActivity : AppCompatActivity() {
         return MySharedPreferences.shared.getNivel()
     }
 
+    /**
+     * Manejamos el boton ATRAS para devolverlo a Login/User en caso de no haber ningun
+     * registro en SharedPreferences
+     * //TODO Crashea al volver para atras ya teniendo datos en SharedPreference y
+     * Hipotetico usuario invitado
+     */
+    override fun onBackPressed() {
+
+        if(!MySharedPreferences.shared.exists(arrayOf("nivel", "sangre"))){
+            var intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
+    }
 }
