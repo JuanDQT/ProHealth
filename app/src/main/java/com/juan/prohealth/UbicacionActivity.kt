@@ -19,7 +19,7 @@ class UbicacionActivity : AppCompatActivity(), OnMapReadyCallback {
         setContentView(R.layout.activity_ubicacion)
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
-                .findFragmentById(R.id.map) as SupportMapFragment
+            .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
     }
 
@@ -34,10 +34,11 @@ class UbicacionActivity : AppCompatActivity(), OnMapReadyCallback {
      */
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-
-        // Add a marker in Sydney and move the camera
-        val sydney = LatLng(-34.0, 151.0)
-        mMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+        googleMap.isMyLocationEnabled = true
+        // Add a marker and move the camera
+        val farmaciaZamenhof = LatLng(41.55116214146715, 2.100585896303669)
+        mMap.addMarker(MarkerOptions().position(farmaciaZamenhof).title("Farmacia Zamenhof"))
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(farmaciaZamenhof))
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(farmaciaZamenhof,15f))
     }
 }

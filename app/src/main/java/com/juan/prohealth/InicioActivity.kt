@@ -2,17 +2,17 @@ package com.juan.prohealth
 
 import android.content.DialogInterface
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.view.KeyEvent
 import android.view.View
-import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.chip.Chip
+import com.juan.prohealth.AppContext.Companion.context
 import com.juan.prohealth.database.Control
 import io.realm.Realm
 import kotlinx.android.synthetic.main.inicio_main.*
@@ -46,7 +46,17 @@ class InicioActivity : AppCompatActivity() {
         }
 
         btnGmap.setOnClickListener(){
-            startActivity(Intent(this, MostrarGmap::class.java))
+            // Buscar farmacias de guardia cercanas a mi posicion usando APP existente
+           /* val gmmIntentUri = Uri.parse("geo:0,0?q=farmacia+de+guardia")
+            val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+            mapIntent.setPackage("com.google.android.apps.maps")
+            mapIntent.resolveActivity(packageManager)?.let {
+                startActivity(mapIntent)
+            }
+            */
+            //Manera 2º en caso de no tener gmaps ejecutar Activity
+            val intent = Intent(this, UbicacionActivity::class.java)
+            startActivity(intent)
         }
 
     }
