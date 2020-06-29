@@ -1,11 +1,7 @@
 package com.juan.prohealth
 
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
-import android.view.KeyEvent
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.btnINR
@@ -29,11 +25,11 @@ class MainActivity : AppCompatActivity() {
             val inputNivelSangreText = et_nivel.text.toString()
             //Validamos estos valores
             if(AppContext.validarInputNivel(inputNivelSangreText)){
-                    // Guardamos los valores en sharedPrederences
-                    MySharedPreferences.shared.addString("nivel", et_nivel.text.toString())
-                    MySharedPreferences.shared.addString("sangre", inputValorSangreText)
-                    val intent = Intent(this, InicioActivity::class.java)
-                    startActivity(intent)
+                // Guardamos los valores en sharedPrederences
+                MySharedPreferences.shared.addString("nivel", et_nivel.text.toString())
+                MySharedPreferences.shared.addString("sangre", inputValorSangreText)
+                val intent = Intent(this, InicioActivity::class.java)
+                startActivity(intent)
             }
 
         }

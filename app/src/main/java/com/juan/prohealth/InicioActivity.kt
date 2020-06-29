@@ -1,7 +1,9 @@
 package com.juan.prohealth
 
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
@@ -12,13 +14,12 @@ import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.chip.Chip
-import com.juan.prohealth.AppContext.Companion.context
 import com.juan.prohealth.database.Control
 import io.realm.Realm
 import kotlinx.android.synthetic.main.inicio_main.*
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.concurrent.schedule
+
 
 class InicioActivity : AppCompatActivity() {
 
@@ -46,17 +47,22 @@ class InicioActivity : AppCompatActivity() {
         }
 
         btnGmap.setOnClickListener(){
-            // Buscar farmacias de guardia cercanas a mi posicion usando APP existente
-           /* val gmmIntentUri = Uri.parse("geo:0,0?q=farmacia+de+guardia")
-            val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
-            mapIntent.setPackage("com.google.android.apps.maps")
-            mapIntent.resolveActivity(packageManager)?.let {
-                startActivity(mapIntent)
+
+            if(comprabarSiExisteApp("com.google.android.apps.maps", getApplicationContext())){
+                // Buscar farmacias de guardia cercanas a mi posicion usando APP existente
+                val gmmIntentUri = Uri.parse("geo:0,0?q=farmacia+de+guardia")
+                val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+                mapIntent.setPackage("com.google.android.apps.maps")
+                mapIntent.resolveActivity(packageManager)?.let {
+                    startActivity(mapIntent)
+                }
+                //Manera 2º en caso de no tener gmaps ejecutar Activity
+                // val intent = Intent(this, UbicacionActivity::class.java)
+                //startActivity(intent)
+            }else{
+                Toast.makeText(this, "Se necesita tener instalado Google Maps", Toast.LENGTH_LONG).show()
             }
-            */
-            //Manera 2º en caso de no tener gmaps ejecutar Activity
-            val intent = Intent(this, UbicacionActivity::class.java)
-            startActivity(intent)
+
         }
 
     }
@@ -270,6 +276,16 @@ class InicioActivity : AppCompatActivity() {
         if(!MySharedPreferences.shared.exists(arrayOf("nivel", "sangre"))){
             var intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
+        }
+    }
+
+    fun comprabarSiExisteApp(nombrePaquete: String, context: Context): Boolean{
+        val pm = context.packageManager
+        return try {
+            pm.getPackageInfo(nombrePaquete, PackageManager.GET_ACTIVITIES)
+            true
+        } catch (e: PackageManager.NameNotFoundException) {
+            false
         }
     }
 }
