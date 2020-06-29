@@ -40,7 +40,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:drawableLeft="@android:drawable/ic_menu_week"
-        android:text="Calendrio" />
+        android:text="Calendario" />
 
     <Button
         android:id="@+id/btnEstadisticas"
@@ -73,6 +73,14 @@
         android:layout_gravity="center_horizontal"
         android:drawableLeft="@android:drawable/ic_notification_clear_all"
         android:text="Desconectarse" />
+
+    <Button
+        android:id="@+id/btnGmap"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:drawableLeft="@android:drawable/ic_menu_mapmode"
+        android:text="Mostrar farmacias cercanas" />
 
     <TextView
         android:id="@+id/tvInfo"

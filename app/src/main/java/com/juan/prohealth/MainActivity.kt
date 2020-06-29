@@ -2,11 +2,9 @@ package com.juan.prohealth
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.btnINR
-import kotlinx.android.synthetic.main.activity_main.et_sangre
 
 class MainActivity : AppCompatActivity() {
 
@@ -23,37 +21,23 @@ class MainActivity : AppCompatActivity() {
 
         btnINR.setOnClickListener {
             //Guardamos valores en String
-            val inputValorSangreText = et_sangre.text.toString()
+            val inputValorSangreText = "No existe registro aun"
             val inputNivelSangreText = et_nivel.text.toString()
             //Validamos estos valores
-            if(AppContext.validarInputTextSangre(inputValorSangreText) != null && AppContext.validarInputNivel(inputNivelSangreText)){
-                val valorSangreNumerico = inputValorSangreText.replace(",", ".").toFloat()
-                //Validamos que el valor de sangre este entre 1.00 y 7.00 siendo Float
-                if(valorSangreNumerico >= 1.00 && valorSangreNumerico <= 7.00){
-
-                    // Guardamos los valores en sharedPrederences
-                    MySharedPreferences.shared.addString("nivel", et_nivel.text.toString())
-                    MySharedPreferences.shared.addString("sangre", et_sangre.text.toString())
-                    //calcularTodo(valor)
-                    //return@setOnClickListener;
-                    val intent = Intent(this, InicioActivity::class.java)
-                    startActivity(intent)
-
-                } else {
-                    Toast.makeText(
-                        this,
-                        "Ha de ser un valor entre 1.00 y 7.00",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
+            if(AppContext.validarInputNivel(inputNivelSangreText)){
+                // Guardamos los valores en sharedPrederences
+                MySharedPreferences.shared.addString("nivel", et_nivel.text.toString())
+                MySharedPreferences.shared.addString("sangre", inputValorSangreText)
+                val intent = Intent(this, InicioActivity::class.java)
+                startActivity(intent)
             }
 
         }
+
     }
 
     fun goInicioActivity(): Boolean {
         // Comprobamos que los valores existan en el sharedPreferences.
         return MySharedPreferences.shared.exists(arrayOf("nivel", "sangre"))
     }
-
 }
