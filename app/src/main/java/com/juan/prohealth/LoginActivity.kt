@@ -15,7 +15,7 @@ class LoginActivity : AppCompatActivity() {
             // La primera vez, tendra id -1 en modo invitado
             User.crearUsuarioInvitado()
             User.setLogged("-1")
-            startActivity(Intent(this, MainActivity::class.java))
+            startActivity(Intent(this, PreinicioActivity::class.java))
         }
 
         btnLogin.setOnClickListener {

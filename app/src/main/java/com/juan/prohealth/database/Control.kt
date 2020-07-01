@@ -1,6 +1,8 @@
 package com.juan.prohealth.database
 
+import android.util.Log
 import com.juan.prohealth.addDays
+import com.juan.prohealth.print
 import io.realm.Realm
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
@@ -35,6 +37,21 @@ open class Control : RealmObject() {
                     control.fechaFin = Date().addDays(planificacion.size)
                     realm.commitTransaction()
                 }
+            }
+        }
+
+        fun getUltimosIRN(limit: Int = 10): Array<String> {
+            Realm.getDefaultInstance().use {
+                val data = it.where(Control::class.java).findAll().map { c -> c.sangre.toString() }.distinct().takeLast(limit)
+                return data.toTypedArray()
+            }
+
+        }
+
+        fun any(): Boolean {
+            Realm.getDefaultInstance().use {
+                val data = it.where(Control::class.java).findFirst()
+                return data != null
             }
         }
     }

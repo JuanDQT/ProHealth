@@ -44,7 +44,7 @@
             android:theme="@style/SplashTheme" />
         <activity android:name=".BarCharActivity" />
         <activity
-            android:name=".MainActivity"
+            android:name=".PreinicioActivity"
             android:theme="@style/SplashTheme" />
         <activity
             android:name=".SplashScreenActivity"
@@ -58,7 +58,7 @@
         </activity>
         <activity android:name=".CalendarioActivity" />
         <activity
-            android:name=".InicioActivity"
+            android:name=".MainActivity"
             android:theme="@style/SplashTheme" />
 
         <meta-data

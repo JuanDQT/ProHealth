@@ -13,7 +13,7 @@ class SplashScreenActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
 
-        val activityDestination = if (User.isLogged()) MainActivity::class.java else LoginActivity::class.java
+        val activityDestination = if (User.isLogged()) PreinicioActivity::class.java else LoginActivity::class.java
 
         handler = Handler()
         handler.postDelayed({

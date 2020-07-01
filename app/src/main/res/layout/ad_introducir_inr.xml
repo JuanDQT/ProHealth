@@ -2,39 +2,45 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
     android:orientation="vertical">
 
     <EditText
         android:id="@+id/etValor"
         android:inputType="numberDecimal"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
+
         android:layout_width="match_parent"
         android:maxLength="4"
         android:layout_height="wrap_content" />
 
 
     <LinearLayout
+        android:layout_marginTop="10dp"
         android:id="@+id/ll_historico"
-        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:orientation="vertical">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Ultimos valores: " />
+            android:text="Últimos valores: " />
 
 
-        <LinearLayout
-            android:id="@+id/ll_chips"
+        <com.google.android.material.chip.ChipGroup
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:id="@+id/chipGroup"
             android:layout_width="match_parent"
+            app:singleSelection="true"
             android:layout_height="match_parent"
             android:orientation="horizontal"
             >
 
-        </LinearLayout>
+        </com.google.android.material.chip.ChipGroup>
 
     </LinearLayout>
 </LinearLayout>

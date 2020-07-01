@@ -1,59 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp"
     tools:context=".MainActivity">
 
     <TextView
-        android:id="@+id/tvInit"
-        android:layout_width="341dp"
-        android:layout_height="65dp"
-        android:layout_marginTop="120dp"
-        android:fontFamily="@font/cocogoose"
-        android:text="Por favor, introduce el nivel de dosis inicial"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:id="@+id/tvSangre"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Sangre"
+        android:textColor="#E91E63"
+        android:textSize="18sp"
+        />
 
-    <EditText
-        android:id="@+id/et_nivel"
-        android:layout_width="220dp"
-        android:layout_height="101dp"
-        android:layout_marginTop="30dp"
-        android:ems="10"
-        android:hint="Introduce el nivel de dosis"
-        android:inputType="number|textPersonName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvInit" />
+    <TextView
+        android:id="@+id/tvNivel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Nivel"
+        android:textColor="#2196F3"
+        android:textSize="18sp"
+         />
 
     <Button
         android:id="@+id/btnINR"
-        android:layout_width="220dp"
-        android:layout_height="47dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="70dp"
+        android:drawableLeft="@android:drawable/ic_menu_edit"
+        android:text="Introducir INR" />
+
+    <Button
+        android:id="@+id/btnCambiarVentana"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:drawableLeft="@android:drawable/ic_menu_week"
+        android:text="Calendario" />
+
+    <Button
+        android:id="@+id/btnEstadisticas"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:drawableLeft="@android:drawable/ic_menu_sort_by_size"
+        android:text="Historial" />
+
+    <Button
+        android:id="@+id/btnAjustes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:drawableLeft="@android:drawable/ic_menu_manage"
+        android:text="Ajustes" />
+
+    <Button
+        android:id="@+id/btnConsejos"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:drawableLeft="@android:drawable/ic_menu_help"
+        android:text="Consejos y recomendaciones" />
+
+    <Button
+        android:id="@+id/btnLogOut"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:drawableLeft="@android:drawable/ic_notification_clear_all"
+        android:text="Desconectarse" />
+
+    <Button
+        android:id="@+id/btnGmap"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:drawableLeft="@android:drawable/ic_menu_mapmode"
+        android:text="Mostrar farmacias cercanas" />
+
+    <TextView
+        android:id="@+id/tvInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="Guardar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_nivel" />
+        android:layout_gravity="center_horizontal"
+         />
 
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="341dp"
-        android:layout_height="167dp"
-        android:layout_marginBottom="60dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnINR"
-        app:layout_constraintVertical_bias="0.050000012"
-        app:srcCompat="@drawable/coagutest" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
