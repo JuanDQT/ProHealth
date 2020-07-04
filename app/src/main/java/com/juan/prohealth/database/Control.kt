@@ -16,12 +16,12 @@ import kotlin.collections.ArrayList
 open class Control : RealmObject() {
 
     @PrimaryKey private var id: String? = ""
-    private var sangre: Float = 0f
-    private var nivelDosis: Int = 0
-    private var fecha: Date? = null
-    private var fechaInicio: Date? = null
-    private var fechaFin: Date? = null
-    private var recurso: String? = null
+    open var sangre: Float = 0f
+    open var nivelDosis: Int = 0
+    open var fecha: Date? = null
+    open var fechaInicio: Date? = null
+    open var fechaFin: Date? = null
+    open var recurso: String? = null
 
     companion object {
         fun registrarControlActual(planificacion: ArrayList<String>, sangre: Float, nivel: Int) {
@@ -52,6 +52,27 @@ open class Control : RealmObject() {
             Realm.getDefaultInstance().use {
                 val data = it.where(Control::class.java).findFirst()
                 return data != null
+            }
+        }
+
+        fun hasControl(): Boolean {
+            Realm.getDefaultInstance().use {
+                val total = it.where(Control::class.java).count()
+
+                if (total > 0) {
+                    val data = it.where(Control::class.java).findAll().last()
+                    data?.let {
+                        if(Date().after(data.fechaInicio) && Date().before(data.fechaFin))
+                            return true;
+                    }
+                }
+                return false;
+            }
+        }
+
+        fun getHistoric(): List<Control> {
+            Realm.getDefaultInstance().use {
+                return it.copyFromRealm(it.where(Control::class.java).findAll()).distinctBy { it.fechaInicio?.date?.toUInt()  }
             }
         }
     }

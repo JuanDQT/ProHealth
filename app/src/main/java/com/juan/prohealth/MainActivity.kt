@@ -30,6 +30,12 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val any = Control.any()
+
+        if (Control.hasControl()) {
+            btnINR.isEnabled = false
+        }
         pintarValores()
         /**
          * Cuando introducimos una NUEVA lectura de Sangre aqui recalculamos los dias de control ( 4 o 7 )
@@ -121,6 +127,11 @@ class MainActivity : AppCompatActivity() {
             val nomFichero = getFicheroCorrespondiente(valorSangreNumerico)
 
             val nivelyDias: Map<String, Int> = this.getNivelCorrespondiente((valorSangreNumerico))
+
+            if (nivelyDias["nivel"]!! < 1) {
+                alert( message = "Consulte los datos con su MÉDICO")
+                return@OnClickListener
+            }
             val dataNiveles = AppContext.getNivelFromFichero(nomFichero, nivelyDias["nivel"].toString(), nivelyDias["dias"].toString())
 
             Timer("SettingUp", false).schedule(500) {
@@ -185,13 +196,14 @@ class MainActivity : AppCompatActivity() {
             MySharedPreferences.shared.addString("sangre", sangre)
             MySharedPreferences.shared.addString("nivel", nivel)
             Control.registrarControlActual(dataNiveles, sangre.toFloat(), nivel.toInt())
+            btnINR.isEnabled = false
 
             // TEST: comprobamos los grabados
             Realm.getDefaultInstance().use {
                 val controles = it.where(Control::class.java).findAll()
-                Log.e("LOG", "Total: " + controles.size)
+                Log.e("MainActivity", "Total: " + controles.size)
                 for(item in controles)
-                    print(item.toString())
+                    Log.e("MainActivity", item.toString())
             }
             pintarValores()
 

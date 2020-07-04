@@ -10,6 +10,7 @@ import com.anychart.enums.Anchor
 import com.anychart.enums.MarkerType
 import com.anychart.enums.TooltipPositionMode
 import com.anychart.graphics.vector.Stroke
+import com.juan.prohealth.database.Control
 import kotlinx.android.synthetic.main.activity_bar_char.*
 import java.util.*
 import kotlin.collections.ArrayList
@@ -44,9 +45,9 @@ class BarCharActivity : AppCompatActivity() {
 
         cartesian.tooltip().positionMode(TooltipPositionMode.POINT)
 
-        cartesian.title("Seguimiento de dosis en los ultimos 30 dias")
+        cartesian.title("Seguimiento de dosis desde el inicio")
 
-        cartesian.yAxis(0).title("Cantidad (porciones)")
+        cartesian.yAxis(0).title("Dosis ( nivel )")
         cartesian.xAxis(0).labels().padding(5.0, 5.0, 5.0, 5.0)
 
         val seriesData: MutableList<DataEntry> = getDemoPoints()
@@ -56,7 +57,7 @@ class BarCharActivity : AppCompatActivity() {
         val series1Mapping = set.mapAs("{ x: 'x', value: 'value' }")
 
         val series1 = cartesian.line(series1Mapping)
-        series1.name("Ocultar esto")
+        series1.name("Nivel de dosis")
         series1.hovered().markers().enabled(true)
         series1.hovered().markers()
             .type(MarkerType.CIRCLE)
@@ -79,16 +80,16 @@ class BarCharActivity : AppCompatActivity() {
         return true
     }
 
-    // TODO: mirar la forma de representar los valores decimales en fracciones.. API
     fun getDemoPoints(): MutableList<DataEntry> {
         val list = arrayListOf<DataEntry>()
-        val calendar = Calendar.getInstance()
-        val dosis = floatArrayOf(0f, 0.125f, 0.25f, 0.5f, 0.75f, 1f, 1.25f, 1.5f, 1.75f, 2f, 2.25f)
-        for (i in 0..30) {
-            calendar.add(Calendar.DAY_OF_YEAR, -i)
-            list.add(ValueDataEntry(calendar.get(Calendar.DAY_OF_MONTH), dosis[(0 until dosis.count()).random()]))
-        }
 
-        return list.asReversed()
+        Control.getHistoric().let {controles ->
+            if (controles.count() > 0) {
+                for (item in controles) {
+                    list.add(ValueDataEntry(item.fechaInicio?.customFormat(), item.nivelDosis))
+                }
+            }
+        }
+        return list
     }
 }
