@@ -87,6 +87,15 @@
             android:drawableLeft="@android:drawable/ic_menu_mapmode"
             android:text="Mostrar farmacias cercanas" />
 
+        <Button
+            android:id="@+id/btnBorrar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:drawableLeft="@android:drawable/stat_notify_sync"
+            android:text="TEST - Reconfigurar INR" />
+
+
         <TextView
             android:id="@+id/tvInfo"
             android:layout_width="wrap_content"

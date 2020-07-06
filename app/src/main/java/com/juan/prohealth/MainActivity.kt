@@ -22,7 +22,7 @@ import java.util.*
 import kotlin.concurrent.schedule
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     val RANGO_AZUL: String = "rangoBajoAzul.json"
     val RANGO_ROJO: String = "rangoAltoRojo.json"
@@ -31,49 +31,76 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val any = Control.any()
-
-        if (Control.hasControl()) {
-            btnINR.isEnabled = false
-        }
         pintarValores()
-        /**
-         * Cuando introducimos una NUEVA lectura de Sangre aqui recalculamos los dias de control ( 4 o 7 )
-         * validamos el campo nivel de sangre que recibimos y aplicamos los calculos
-         * para seleccionar los valores de salida e imprimirlos
-         */
-        btnINR.setOnClickListener {
+        checkHasControlToday()
 
-            doAskINR()
-            return@setOnClickListener
-
-        }
-
-        btnEstadisticas.setOnClickListener {
-            startActivity(Intent(this, BarCharActivity::class.java))
-        }
-
-        btnGmap.setOnClickListener(){
-
-            if(comprabarSiExisteApp("com.google.android.apps.maps", getApplicationContext())){
-                // Buscar farmacias de guardia cercanas a mi posicion usando APP existente
-                val gmmIntentUri = Uri.parse("geo:0,0?q=farmacia+de+guardia")
-                val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
-                mapIntent.setPackage("com.google.android.apps.maps")
-                mapIntent.resolveActivity(packageManager)?.let {
-                    startActivity(mapIntent)
-                }
-                //Manera 2º en caso de no tener gmaps ejecutar Activity
-                // val intent = Intent(this, UbicacionActivity::class.java)
-                //startActivity(intent)
-            }else{
-                Toast.makeText(this, "Se necesita tener instalado Google Maps", Toast.LENGTH_LONG).show()
-            }
-
-        }
-
+        btnBorrar.setOnClickListener(this)
+        btnINR.setOnClickListener(this)
+        btnGmap.setOnClickListener(this)
+        btnEstadisticas.setOnClickListener(this)
     }
 
+    fun checkHasControlToday() {
+        if (Control.hasControl()) {
+            btnINR.isEnabled = false
+            btnBorrar.isEnabled = true
+        } else {
+            btnINR.isEnabled = true
+            btnBorrar.isEnabled = false
+        }
+    }
+
+    // Controlamos eventos click Botones
+    override fun onClick(view: View?) {
+        view?.let {
+            when (it.id) {
+                R.id.btnBorrar -> doAjustarIRN()
+                R.id.btnINR -> doAskINR()
+                R.id.btnGmap -> doOpenMaps()
+                R.id.btnEstadisticas -> doOpenEstadisticas()
+            }
+        }
+    }
+
+    fun doAjustarIRN() {
+        val data = Control.getAll()
+        Log.e("MainActivity", "ANTES")
+        for(item in data)
+            Log.e("MainActivity", item.toString())
+
+        Control.restartIRN()
+        checkHasControlToday()
+        Log.e("MainActivity", "DESPUES")
+        for(item in Control.getAll())
+            Log.e("MainActivity", item.toString())
+    }
+
+    fun doOpenEstadisticas() {
+        startActivity(Intent(this, BarCharActivity::class.java))
+    }
+
+    fun doOpenMaps() {
+        if(comprabarSiExisteApp("com.google.android.apps.maps", getApplicationContext())){
+            // Buscar farmacias de guardia cercanas a mi posicion usando APP existente
+            val gmmIntentUri = Uri.parse("geo:0,0?q=farmacia+de+guardia")
+            val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+            mapIntent.setPackage("com.google.android.apps.maps")
+            mapIntent.resolveActivity(packageManager)?.let {
+                startActivity(mapIntent)
+            }
+            //Manera 2º en caso de no tener gmaps ejecutar Activity
+            // val intent = Intent(this, UbicacionActivity::class.java)
+            //startActivity(intent)
+        }else{
+            Toast.makeText(this, "Se necesita tener instalado Google Maps", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    /**
+     * Cuando introducimos una NUEVA lectura de Sangre aqui recalculamos los dias de control ( 4 o 7 )
+     * validamos el campo nivel de sangre que recibimos y aplicamos los calculos
+     * para seleccionar los valores de salida e imprimirlos
+     */
     fun doAskINR() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Introducir")
@@ -167,7 +194,6 @@ class MainActivity : AppCompatActivity() {
 
 
         for (x in 0 until 7) {
-//        for (x in dataNiveles.withIndex()) {
             val layout = view.findViewWithTag<LinearLayout>("l${x}")
 
             if (x >= dataNiveles.size) {
@@ -196,15 +222,12 @@ class MainActivity : AppCompatActivity() {
             MySharedPreferences.shared.addString("sangre", sangre)
             MySharedPreferences.shared.addString("nivel", nivel)
             Control.registrarControlActual(dataNiveles, sangre.toFloat(), nivel.toInt())
-            btnINR.isEnabled = false
+            checkHasControlToday()
 
             // TEST: comprobamos los grabados
-            Realm.getDefaultInstance().use {
-                val controles = it.where(Control::class.java).findAll()
-                Log.e("MainActivity", "Total: " + controles.size)
-                for(item in controles)
-                    Log.e("MainActivity", item.toString())
-            }
+            for(item in Control.getAll())
+                Log.e("MainActivity", item.toString())
+
             pintarValores()
 
         })

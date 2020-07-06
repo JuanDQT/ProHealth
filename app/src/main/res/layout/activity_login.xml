@@ -65,6 +65,9 @@
             android:layout_width="match_parent"
             android:layout_marginLeft="50dp"
             android:layout_marginRight="50dp"
+            android:drawableRight="@drawable/googleg_standard_color_18"
+            android:paddingRight="30dp"
+            android:drawablePadding="-30dp"
             android:text="Login with Google"
             android:layout_height="wrap_content" />
     </LinearLayout>

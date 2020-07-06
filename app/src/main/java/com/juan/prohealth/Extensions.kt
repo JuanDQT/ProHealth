@@ -29,6 +29,17 @@ fun Date.addDays(days: Int): Date {
     return calendar.time
 }
 
+fun Date.clearTime(): Date {
+    val calendar = Calendar.getInstance()
+    calendar.time = this
+    calendar[Calendar.HOUR_OF_DAY] = 0
+    calendar[Calendar.MINUTE] = 0
+    calendar[Calendar.SECOND] = 0
+    calendar[Calendar.MILLISECOND] = 0
+
+    return calendar.time
+}
+
 fun Activity.print(message: String) {
     Log.i("LOG", message)
 }
