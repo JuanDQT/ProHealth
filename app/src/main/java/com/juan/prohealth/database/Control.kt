@@ -43,9 +43,9 @@ open class Control : RealmObject() {
                     control.sangre = sangre
                     control.nivelDosis = nivel
                     control.recurso = planificacion[x]
-                    control.fechaInicio = Date()
+                    control.fechaInicio = Date().clearTime()
                     control.fecha = Date().addDays(x).clearTime()
-                    control.fechaFin = Date().addDays(planificacion.size)
+                    control.fechaFin = Date().addDays(planificacion.size).clearTime()
                     realm.commitTransaction()
                 }
             }
@@ -88,6 +88,13 @@ open class Control : RealmObject() {
         fun getAll(): List<Control> {
             Realm.getDefaultInstance().use {
                 return it.copyFromRealm(it.where(Control::class.java).findAll())
+            }
+        }
+
+        fun getActiveControlList(): List<Control> {
+            Realm.getDefaultInstance().use {
+                val index = it.where(Control::class.java).equalTo("fecha", Date().clearTime()).findFirst()
+                return it.copyFromRealm(it.where(Control::class.java).equalTo("fechaInicio", index?.fechaInicio).and().equalTo("fechaFin", index?.fechaFin).findAll())
             }
         }
 

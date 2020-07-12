@@ -15,10 +15,12 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
+import com.gtomato.android.ui.transformer.FlatMerryGoRoundTransformer
+import com.juan.prohealth.adapters.DosisAdapter
 import com.juan.prohealth.database.Control
-import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.concurrent.schedule
 
 
@@ -38,15 +40,36 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         btnINR.setOnClickListener(this)
         btnGmap.setOnClickListener(this)
         btnEstadisticas.setOnClickListener(this)
+
+    }
+
+    fun setDosisWidget() {
+        carousel.visibility = View.VISIBLE
+        val transformer = FlatMerryGoRoundTransformer()
+        transformer.viewPerspective = 0.3
+
+        transformer.farScale = -1.3
+
+        carousel.transformer = transformer
+        carousel.isInfinite = true
+        val items = ArrayList(Control.getActiveControlList())
+        carousel.adapter = DosisAdapter(items, applicationContext)
+
+        if (items.count() > 0) {
+            val position = items.indexOf(items.filter { f -> f.fecha == Date().clearTime() }.first())
+            carousel.smoothScrollToPosition(position)
+        }
     }
 
     fun checkHasControlToday() {
         if (Control.hasControl()) {
             btnINR.isEnabled = false
             btnBorrar.isEnabled = true
+            setDosisWidget()
         } else {
             btnINR.isEnabled = true
             btnBorrar.isEnabled = false
+            carousel.visibility = View.GONE
         }
     }
 
@@ -209,7 +232,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
             // sobreescribimos imagen
             if (!dataNiveles[x].isNullOrEmpty()) {
-                val resID = resources.getIdentifier(getImageNameByJSON(dataNiveles[x]),"drawable", packageName)
+                val resID = resources.getIdentifier(AppContext.getImageNameByJSON(dataNiveles[x]),"drawable", packageName)
                 val imageView = view.findViewWithTag<ImageView>("i${x}")
                 imageView.setBackgroundResource(resID)
             }
@@ -234,23 +257,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
         builder.create()
         builder.show()
-    }
-
-    fun getImageNameByJSON(jsonData: String): String {
-        when (jsonData) {
-            "0" -> return "entero"
-            "1/8" -> return "un_octavo"
-            "1/4" -> return "un_cuarto"
-            "1/2" -> return "medio"
-            "3/4" -> return "tres_cuartos"
-            "1" -> return "entero"
-            "1+1/4" -> return "entero_un_cuarto"
-            "1+1/2" -> return "entero_un_medio"
-            "1+3/4" -> return "entero_tres_cuartos"
-            "2" -> return "dos_enteros"
-            "2+1/4" -> return "dos_enteros_un_cuarto"
-            else  -> return ""
-        }
     }
 
     fun pintarValores() {

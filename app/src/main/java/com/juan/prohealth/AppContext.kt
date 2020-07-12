@@ -165,6 +165,24 @@ class AppContext : Application() {
             return dataSevenDays
 
         }
+
+        fun getImageNameByJSON(jsonData: String): String {
+            when (jsonData) {
+                "0" -> return "entero"
+                "1/8" -> return "un_octavo"
+                "1/4" -> return "un_cuarto"
+                "1/2" -> return "medio"
+                "3/4" -> return "tres_cuartos"
+                "1" -> return "entero"
+                "1+1/4" -> return "entero_un_cuarto"
+                "1+1/2" -> return "entero_un_medio"
+                "1+3/4" -> return "entero_tres_cuartos"
+                "2" -> return "dos_enteros"
+                "2+1/4" -> return "dos_enteros_un_cuarto"
+                else  -> return ""
+            }
+        }
+
     }
 
     override fun onCreate() {
