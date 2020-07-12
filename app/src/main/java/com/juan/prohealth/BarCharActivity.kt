@@ -45,9 +45,9 @@ class BarCharActivity : AppCompatActivity() {
 
         cartesian.tooltip().positionMode(TooltipPositionMode.POINT)
 
-        cartesian.title("Seguimiento de dosis desde el inicio")
+        cartesian.title("Historico de nivel de sangre")
 
-        cartesian.yAxis(0).title("Dosis ( nivel )")
+        cartesian.yAxis(0).title("Registro INR")
         cartesian.xAxis(0).labels().padding(5.0, 5.0, 5.0, 5.0)
 
         val seriesData: MutableList<DataEntry> = getDemoPoints()
@@ -57,7 +57,7 @@ class BarCharActivity : AppCompatActivity() {
         val series1Mapping = set.mapAs("{ x: 'x', value: 'value' }")
 
         val series1 = cartesian.line(series1Mapping)
-        series1.name("Nivel de dosis")
+        series1.name("Nivel de sangre")
         series1.hovered().markers().enabled(true)
         series1.hovered().markers()
             .type(MarkerType.CIRCLE)
@@ -86,7 +86,7 @@ class BarCharActivity : AppCompatActivity() {
         Control.getHistoric().let {controles ->
             if (controles.count() > 0) {
                 for (item in controles) {
-                    list.add(ValueDataEntry(item.fechaInicio?.customFormat(), item.nivelDosis))
+                    list.add(ValueDataEntry(item.fechaInicio?.customFormat(), item.sangre))
                 }
             }
         }

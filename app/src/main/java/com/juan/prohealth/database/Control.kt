@@ -3,7 +3,6 @@ package com.juan.prohealth.database
 import android.util.Log
 import com.juan.prohealth.addDays
 import com.juan.prohealth.clearTime
-import com.juan.prohealth.withNoTime
 import io.realm.Realm
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
