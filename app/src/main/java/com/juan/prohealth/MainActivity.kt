@@ -40,6 +40,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         btnINR.setOnClickListener(this)
         btnGmap.setOnClickListener(this)
         btnEstadisticas.setOnClickListener(this)
+        btnCalendario.setOnClickListener(this)
 
     }
 
@@ -81,6 +82,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 R.id.btnINR -> doAskINR()
                 R.id.btnGmap -> doOpenMaps()
                 R.id.btnEstadisticas -> doOpenEstadisticas()
+                R.id.btnCalendario -> doCalendario()
             }
         }
     }
@@ -339,5 +341,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         } catch (e: PackageManager.NameNotFoundException) {
             false
         }
+    }
+    fun doCalendario(){
+        startActivity(Intent(this, CalendarioActivity::class.java))
     }
 }

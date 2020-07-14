@@ -94,7 +94,7 @@ open class Control : RealmObject() {
         fun getActiveControlList(): List<Control> {
             Realm.getDefaultInstance().use {
                 val index = it.where(Control::class.java).equalTo("fecha", Date().clearTime()).findFirst()
-                return it.copyFromRealm(it.where(Control::class.java).equalTo("fechaInicio", index?.fechaInicio).and().equalTo("fechaFin", index?.fechaFin).findAll())
+                return it.copyFromRealm(it.where(Control::class.java).equalTo("fechaInicio", index?.fechaInicio).and().findAll())
             }
         }
 
@@ -113,6 +113,13 @@ open class Control : RealmObject() {
                 }
             } catch (e: Exception) {
                 false
+            }
+        }
+
+        fun getControlDay(): List<Control>{
+            Realm.getDefaultInstance().use {
+                var dataCheck = it.where(Control::class.java).equalTo("fecha", Date().clearTime()).findFirst()
+                return it.copyFromRealm(it.where(Control::class.java).findAll())
             }
         }
     }
