@@ -42,6 +42,7 @@ class MySharedPreferences {
         }
 
 
+        // genericos
         fun addString(key: String, value: String) {
             sharedPreferences?.let {
                 val editor = it.edit()
@@ -49,5 +50,14 @@ class MySharedPreferences {
                 editor.apply()
             }
         }
+
+        // genericos
+        fun getString(key: String): String {
+            sharedPreferences?.let {
+                return it.getString(key, "")
+            }
+            return ""
+        }
+
     }
 }

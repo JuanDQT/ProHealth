@@ -3,6 +3,7 @@ package com.juan.prohealth.database
 import android.util.Log
 import com.juan.prohealth.addDays
 import com.juan.prohealth.clearTime
+import com.juan.prohealth.customFormat
 import io.realm.Realm
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
@@ -98,6 +99,18 @@ open class Control : RealmObject() {
             }
         }
 
+        fun getActiveControlListToEmail(): String {
+            val items = this.getActiveControlList()
+            if (items.count() > 0) {
+                var body = "<h1>Control IRN</h1><br/><br/>"
+                for (x in items) {
+                    body += "<p>Fecha: ${x.fecha?.customFormat("dd/MM/yyyy")}. Dosis: ${x.recurso}</p><br/>"
+                }
+                return body
+            } else return "No hay datos"
+        }
+
+
         fun restartIRN(): Boolean {
             return try {
                 Realm.getDefaultInstance().use {
@@ -116,6 +129,7 @@ open class Control : RealmObject() {
             }
         }
 
+        // TODO: preguntar armando que se supone que hace esto...
         fun getControlDay(): List<Control>{
             Realm.getDefaultInstance().use {
                 var dataCheck = it.where(Control::class.java).equalTo("fecha", Date().clearTime()).findFirst()

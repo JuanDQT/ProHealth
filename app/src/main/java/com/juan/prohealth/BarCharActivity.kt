@@ -86,7 +86,7 @@ class BarCharActivity : AppCompatActivity() {
         Control.getHistoric().let {controles ->
             if (controles.count() > 0) {
                 for (item in controles) {
-                    list.add(ValueDataEntry(item.fechaInicio?.customFormat(), item.sangre))
+                    list.add(ValueDataEntry(item.fechaInicio?.customFormat("dd/MM"), item.sangre))
                 }
             }
         }

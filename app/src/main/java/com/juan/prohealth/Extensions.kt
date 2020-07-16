@@ -44,8 +44,8 @@ fun Activity.print(message: String) {
     Log.i("LOG", message)
 }
 
-fun Date.customFormat(): String {
-    val formatter = SimpleDateFormat("dd/MM")
+fun Date.customFormat(format: String): String {
+    val formatter = SimpleDateFormat(format)
     return formatter.format(this)
 }
 

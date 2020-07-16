@@ -234,6 +234,14 @@
 
     </LinearLayout>
 
+    <androidx.appcompat.widget.AppCompatCheckBox
+        android:id="@+id/cb_mails"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="15dp"
+        android:text="Enviar por email" />
+
 
 
 

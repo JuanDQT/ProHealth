@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
+import android.text.Html
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
@@ -41,6 +42,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         btnGmap.setOnClickListener(this)
         btnEstadisticas.setOnClickListener(this)
         btnCalendario.setOnClickListener(this)
+        btnAjustes.setOnClickListener(this)
 
     }
 
@@ -83,6 +85,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 R.id.btnGmap -> doOpenMaps()
                 R.id.btnEstadisticas -> doOpenEstadisticas()
                 R.id.btnCalendario -> doCalendario()
+                R.id.btnAjustes -> startActivity(Intent(this, AjustesActivity::class.java))
             }
         }
     }
@@ -206,6 +209,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         val view = layoutInflater.inflate(R.layout.ad_planificacion, null)
         val irnActual = view.findViewById<TextView>(R.id.tvIRN)
         val irnNew = view.findViewById<TextView>(R.id.tvIRNNew)
+        val btnMails = view.findViewById<CheckBox>(R.id.cb_mails)
 
         irnActual.text = MySharedPreferences.shared.getSangre()
         irnNew.text = sangre
@@ -255,10 +259,21 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
             pintarValores()
 
+            if (btnMails.isChecked)
+                sendEmailPlanificacion()
+
         })
 
         builder.create()
         builder.show()
+    }
+
+    fun sendEmailPlanificacion() {
+        val data = Html.fromHtml(Control.getActiveControlListToEmail())
+        val emailIntent = Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", MySharedPreferences.shared.getString("emails"), null))
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Planificacion IRN")
+        emailIntent.putExtra(Intent.EXTRA_TEXT, data)
+        startActivity(Intent.createChooser(emailIntent, "Enviar mail..."))
     }
 
     fun pintarValores() {

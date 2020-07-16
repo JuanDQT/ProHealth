@@ -25,7 +25,7 @@ class DosisAdapter(var list: ArrayList<Control>, var context: Context): Recycler
     }
 
     override fun onBindViewHolder(holder: PalabraViewHolder2, position: Int) {
-        holder.tvText?.text = "${list[position].fecha?.customFormat()}"
+        holder.tvText?.text = "${list[position].fecha?.customFormat("dd/MM")}"
 //        holder.tvText.setText(list.get(position).getNivelDosis());
 
         if (list[position].fecha == Date().clearTime()) {
