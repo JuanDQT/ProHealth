@@ -129,11 +129,13 @@ open class Control : RealmObject() {
             }
         }
 
-        // TODO: preguntar armando que se supone que hace esto...
-        fun getControlDay(): List<Control>{
+        fun getControlDay(fecha: Date): Control?{
             Realm.getDefaultInstance().use {
-                var dataCheck = it.where(Control::class.java).equalTo("fecha", Date().clearTime()).findFirst()
-                return it.copyFromRealm(it.where(Control::class.java).findAll())
+                var dataCheck = it.where(Control::class.java).equalTo("fecha", fecha.clearTime()).findFirst()
+                if(dataCheck!=null){
+                    return it.copyFromRealm(dataCheck)
+                }
+               return null
             }
         }
     }

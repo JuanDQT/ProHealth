@@ -1,63 +1,96 @@
 package com.juan.prohealth
 
+import android.graphics.Typeface
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
-import androidx.annotation.NonNull
 import androidx.appcompat.app.AppCompatActivity
+import com.events.calendar.utils.EventsCalendarUtil
+import com.events.calendar.utils.EventsCalendarUtil.getDateString
+import com.events.calendar.utils.EventsCalendarUtil.selectedDate
+import com.events.calendar.utils.EventsCalendarUtil.setCurrentSelectedDate
+import com.events.calendar.utils.EventsCalendarUtil.today
+import com.events.calendar.views.EventsCalendar
 import com.juan.prohealth.database.Control
-import com.prolificinteractive.materialcalendarview.CalendarDay
-import com.prolificinteractive.materialcalendarview.MaterialCalendarView
-import com.prolificinteractive.materialcalendarview.OnDateSelectedListener
 import kotlinx.android.synthetic.main.activity_calendario.*
+import java.util.*
 
-// https://github.com/prolificinteractive/material-calendarview
-class CalendarioActivity : AppCompatActivity(), OnDateSelectedListener{
+
+class CalendarioActivity : AppCompatActivity(), EventsCalendar.Callback{
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_calendario)
-        calendarView.setOnDateChangedListener(this)
-       /* btnPuntos.setOnClickListener {
-            pintarPuntos()
-        }
 
-        btnRango.setOnClickListener {
-            pintarRango()
-        }*/
+        val today = Calendar.getInstance()
+        val end = Calendar.getInstance()
+        end.add(Calendar.YEAR, 2)
+
+        eventsCalendar.setSelectionMode(eventsCalendar.MULTIPLE_SELECTION) //set mode of Calendar
+            .setIsBoldTextOnSelectionEnabled(true)
+            .setToday(today) //set today's date [today: Calendar]
+            .setMonthRange(today, end) //set starting month [start: Calendar] and ending month [end: Calendar]
+            .setWeekStartDay(Calendar.SUNDAY, false) //set start day of the week as you wish [startday: Int, doReset: Boolean]
+            .setCurrentSelectedDate(today) //set current date and scrolls the calendar to the corresponding month of the selected date [today: Calendar]
+            .setDatesTypeface(Typeface.DEFAULT) //set font for dates
+            .setDateTextFontSize(16f) //set font size for dates
+            .setMonthTitleTypeface(Typeface.DEFAULT_BOLD) //set font for title of the calendar
+            .setMonthTitleFontSize(16f) //set font size for title of the calendar
+            .setWeekHeaderTypeface(Typeface.DEFAULT) //set font for week names
+            .setWeekHeaderFontSize(16f) //set font size for week names
+            .setCallback(object : EventsCalendar.Callback {
+                override fun onDayLongPressed(selectedDate: Calendar?) {
+                    TODO("Not yet implemented")
+                }
+
+                override fun onDaySelected(selectedDate: Calendar?) {
+                    selectedDate?.let {
+                        var fechaSeleccionada = it.time.clearTime()
+                        var registroDay = Control.getControlDay(fechaSeleccionada)
+                        if(registroDay==null){
+                            Toast.makeText(this@CalendarioActivity,"No hay registros guardados",Toast.LENGTH_LONG).show()
+                            tv_Dosis.setText("")
+                            tv_Sangre.setText("")
+                            tv_infoDosis.setText("")
+                            viewDosis.setBackgroundResource(0)
+                        }else{
+                            var nivelDosis = registroDay.nivelDosis.toString()
+                            var nivelSangreActual = registroDay.sangre.toString()
+                            var imagenDosisBaseDatos = registroDay.recurso.toString()
+                            var imagenNameRecurso = AppContext.getImageNameByJSON(imagenDosisBaseDatos)
+                            val recursoID = resources.getIdentifier(imagenNameRecurso,"drawable", packageName)
+                            //Toast.makeText(this@CalendarioActivity,"Hay 1 registro guardados ",Toast.LENGTH_LONG).show()
+                            tv_Dosis.setText("El nivel de dosis actual es: " + nivelDosis)
+                            tv_Sangre.setText("Tu nivel de sangre actual es: " + nivelSangreActual)
+                            tv_infoDosis.setText("Dosis de Sintrom para este dia : " + imagenDosisBaseDatos)
+                            viewDosis.setBackgroundResource(recursoID)
+                        }
+                    }
+                }
+
+                override fun onMonthChanged(monthStartDate: Calendar?) {
+                    TODO("Not yet implemented")
+                }
+            }) //set the callback for EventsCalendar
+            //.addEvent() //set events on the EventsCalendar [c: Calendar]
+           // .disableDate(dc) //disable a specific day on the EventsCalendar [c: Calendar]
+            .disableDaysInWeek(Calendar.SATURDAY, Calendar.SUNDAY) //disable days in a week on the whole EventsCalendar [varargs days: Int]
+            .build()
+
+
     }
 
-    override fun onDateSelected(
-        @NonNull widget: MaterialCalendarView,
-        @NonNull date: CalendarDay,
-        selected: Boolean
-    ) {
-        if(selected){
-           widget.clearSelection()
-          //widget.currentDate
-        }
-        Control.getControlDay()
-        Toast.makeText(this, date.toString().replace("CalendarDay","").replace("{","").replace("}","")
-                + " " + selected.toString(), Toast.LENGTH_LONG).show()
-    }
-/*
-    fun pintarPuntos() {
-        calendarView.clearSelection()
-        calendarView.selectionMode = MaterialCalendarView.SELECTION_MODE_MULTIPLE
-        // Itera 7 veces y por cada itearcion marca un dia aleatorio en el calendario
-        for (x in 0 until 7) {
-            //calendarView.selectedDate = CalendarDay.from(2020, 3, (1 until 31).random())
-            calendarView.setDateSelected(CalendarDay.from(2020, 4, (1 until 31).random()), true)
-        }
-
+    override fun onDayLongPressed(selectedDate: Calendar?) {
+        TODO("Not yet implemented")
     }
 
-    // Coge una fecha aleatoria del mes actual, y marca en el calendario los dias siguientes(aleatorio 1 - 5)
-    fun pintarRango() {
-        calendarView.clearSelection()
-        calendarView.selectionMode = MaterialCalendarView.SELECTION_MODE_RANGE
-        val diaAleatorio = (1 until 25).random()
-        calendarView.selectRange(CalendarDay.from(2020,4, diaAleatorio), CalendarDay.from(2020,4, diaAleatorio + (1 until 5).random()))
+    override fun onDaySelected(selectedDate: Calendar?) {
+        Toast.makeText(this,Calendar.DATE,Toast.LENGTH_LONG).show()
     }
-*/
+
+    override fun onMonthChanged(monthStartDate: Calendar?) {
+        TODO("Not yet implemented")
+    }
+
 
 }
