@@ -168,7 +168,7 @@ class AppContext : Application() {
 
         fun getImageNameByJSON(jsonData: String): String {
             when (jsonData) {
-                "0" -> return "entero"
+                "0" -> return "notoca"
                 "1/8" -> return "un_octavo"
                 "1/4" -> return "un_cuarto"
                 "1/2" -> return "medio"
