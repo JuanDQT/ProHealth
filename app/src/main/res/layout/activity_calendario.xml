@@ -8,24 +8,21 @@
     tools:context=".CalendarioActivity">
 
     <com.events.calendar.views.EventsCalendar
-        android:id="@+id/eventsCalendar"
+        android:id="@+id/ev_calendario"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#000000"
         android:overScrollMode="never"
         app:datesTextSize="16sp"
-        app:eventDotColor="#ff0000"
+        app:eventDotColor="#FFEB3B"
         app:isBoldTextOnSelectionEnabled="true"
         app:monthTitleColor="#ffffff"
         app:monthTitleTextSize="24sp"
         app:primaryTextColor="#c4c4c4"
-        app:rangeSelectionColor="#ffe600"
-        app:rangeSelectionEndColor="#c1ae01"
-        app:rangeSelectionStartColor="#c1ae01"
         app:secondaryTextColor="#666666"
-        app:selectedTextColor="#000000"
-        app:selectionColor="#ffe600"
-        app:weekHeaderColor="#c6c6c6"
+        app:selectedTextColor="#c4c4c4"
+        app:selectionColor="@android:color/transparent"
+        app:weekHeaderColor="#A83030"
         app:weekHeaderTextSize="14sp" />
 
     <LinearLayout

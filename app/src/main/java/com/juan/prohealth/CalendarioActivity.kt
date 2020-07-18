@@ -23,13 +23,12 @@ class CalendarioActivity : AppCompatActivity(), EventsCalendar.Callback{
         selectedDate?.let {
             var fechaSeleccionada = it.time.clearTime()
             var registroDay = Control.getControlDay(fechaSeleccionada)
-            if(registroDay==null){
-                Toast.makeText(this@CalendarioActivity,"No hay registros guardados",Toast.LENGTH_LONG).show()
+            if(registroDay == null){
                 tv_Dosis.setText("")
                 tv_Sangre.setText("")
                 tv_infoDosis.setText("")
                 viewDosis.setBackgroundResource(0)
-            }else{
+            } else {
                 var nivelDosis = registroDay.nivelDosis.toString()
                 var nivelSangreActual = registroDay.sangre.toString()
                 var imagenDosisBaseDatos = registroDay.recurso.toString()
@@ -45,7 +44,6 @@ class CalendarioActivity : AppCompatActivity(), EventsCalendar.Callback{
     }
 
     override fun onMonthChanged(monthStartDate: Calendar?) {
-        Log.e("MON", "CHANGED")
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,7 +54,7 @@ class CalendarioActivity : AppCompatActivity(), EventsCalendar.Callback{
         val end = Calendar.getInstance()
         end.add(Calendar.YEAR, 2)
 
-        eventsCalendar.setSelectionMode(eventsCalendar.MULTIPLE_SELECTION) //set mode of Calendar
+        ev_calendario.setSelectionMode(ev_calendario.SINGLE_SELECTION) //set mode of Calendar
             .setIsBoldTextOnSelectionEnabled(true)
             .setToday(today) //set today's date [today: Calendar]
             .setMonthRange(today, end) //set starting month [start: Calendar] and ending month [end: Calendar]
@@ -72,19 +70,23 @@ class CalendarioActivity : AppCompatActivity(), EventsCalendar.Callback{
             //.addEvent() //set events on the EventsCalendar [c: Calendar]
            // .disableDate(dc) //disable a specific day on the EventsCalendar [c: Calendar]
             //.disableDaysInWeek(Calendar.SATURDAY, Calendar.SUNDAY) //disable days in a week on the whole EventsCalendar [varargs days: Int]
-            .build()
+//            .build()
 
-        val c = Calendar.getInstance()
-        println("INFORMACION DEV: "+ Control.getHistoric().get(0).fechaInicio.toString())
-        //Fri Jul 17 00:00:00 GMT+02:00 2020 esto queda al hacer un toString de una fecha
-        /*var historico = Control.getHistoric()
-        for (i in 0 until historico.size){
-            var day = historico.get(i).fechaInicio
-        }*/
-        c.add(Calendar.DAY_OF_MONTH, 1)
-        eventsCalendar.addEvent(c)
-        eventsCalendar.addEvent(c)
 
+        pintarDiasCalendario()
+
+
+    }
+
+    fun pintarDiasCalendario() {
+
+        val items = Control.getAll()
+
+        if (items.count() > 0) {
+            val itemsToCalendar: Array<Calendar> = items.map { i -> Calendar.getInstance().fromDate(i.fecha!!) }.toTypedArray()
+            ev_calendario.addEvent(itemsToCalendar)
+            ev_calendario.build()
+        }
     }
 
 }

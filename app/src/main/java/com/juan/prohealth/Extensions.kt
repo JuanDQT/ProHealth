@@ -57,3 +57,8 @@ fun Activity.alert(title: String = "Alerta", message: String) {
 
     dialogBuilder.create().show()
 }
+
+fun Calendar.fromDate(date: Date): Calendar {
+    this.time = date
+    return this
+}

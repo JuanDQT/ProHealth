@@ -79,13 +79,13 @@ open class Control : RealmObject() {
             }
         }
 
+        // Se usa para la grafica..
         fun getHistoric(): List<Control> {
             Realm.getDefaultInstance().use {
                 return it.copyFromRealm(it.where(Control::class.java).findAll()).distinctBy { it.fechaInicio?.date?.toUInt()  }
             }
         }
 
-        // test
         fun getAll(): List<Control> {
             Realm.getDefaultInstance().use {
                 return it.copyFromRealm(it.where(Control::class.java).findAll())
