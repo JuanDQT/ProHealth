@@ -37,6 +37,8 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
     implementation 'com.github.tizisdeepan:eventscalendar:1.6.1'
+    implementation 'com.andrognito.flashbar:flashbar:1.0.3'
+    implementation 'android.arch.work:work-runtime-ktx:2.3.4'
     implementation project(path: ':anychart')
 
 }

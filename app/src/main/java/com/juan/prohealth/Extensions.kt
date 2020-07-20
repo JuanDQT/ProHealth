@@ -62,3 +62,18 @@ fun Calendar.fromDate(date: Date): Calendar {
     this.time = date
     return this
 }
+
+fun Calendar.fromDate(date: Date, hora: Int, minuto: Int): Calendar {
+    this.time = date
+    this[Calendar.HOUR_OF_DAY] = hora
+    this[Calendar.MINUTE] = minuto
+    this[Calendar.SECOND] = 0
+    return this
+}
+
+fun Long.clearSeconds(): Long {
+    val cal = Calendar.getInstance()
+    cal.timeInMillis = this
+    cal[Calendar.SECOND] = 0
+    return cal.timeInMillis
+}

@@ -35,6 +35,6 @@ class PreinicioActivity : AppCompatActivity() {
 
     fun goInicioActivity(): Boolean {
         // Comprobamos que los valores existan en el sharedPreferences.
-        return MySharedPreferences.shared.exists(arrayOf("nivel", "sangre"))
+        return MySharedPreferences.shared.exists(arrayOf("nivel"))
     }
 }

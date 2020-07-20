@@ -20,14 +20,30 @@
         android:text="Contactos de confianza"
         />
 
-    <TextView
-        android:id="@+id/tv_notificaciones"
+    <LinearLayout
+        android:id="@+id/frame_notificaciones"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:gravity="center_vertical"
-        android:textSize="20sp"
-        android:text="Ajustar notificaciones"
-        />
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/tv_notficaciones"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:textSize="20sp"
+            android:text="Ajustar notificaciones"
+            />
+        <TextView
+            android:id="@+id/tv_hora"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center_vertical|end"
+            android:textSize="20sp"
+            tools:text="18:00"
+            />
+
+    </LinearLayout>
+
 
     <TextView
         android:id="@+id/tv_exportar"

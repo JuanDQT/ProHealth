@@ -14,11 +14,13 @@ import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.andrognito.flashbar.Flashbar
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.gtomato.android.ui.transformer.FlatMerryGoRoundTransformer
 import com.juan.prohealth.adapters.DosisAdapter
 import com.juan.prohealth.database.Control
+import com.juan.prohealth.database.User
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 import kotlin.collections.ArrayList
@@ -29,13 +31,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     val RANGO_AZUL: String = "rangoBajoAzul.json"
     val RANGO_ROJO: String = "rangoAltoRojo.json"
+    var flashBar: Flashbar? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        pintarValores()
-        checkHasControlToday()
 
         btnBorrar.setOnClickListener(this)
         btnINR.setOnClickListener(this)
@@ -43,7 +43,53 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         btnEstadisticas.setOnClickListener(this)
         btnCalendario.setOnClickListener(this)
         btnAjustes.setOnClickListener(this)
+    }
 
+    override fun onResume() {
+        super.onResume()
+
+        Control.closeOlderControls()
+
+        pintarValores()
+        checkHasControlToday()
+    }
+
+    fun askForControl(valor: String?) {
+
+        if (flashBar == null || (flashBar != null && !flashBar!!.isShown())) {
+            flashBar =  Flashbar.Builder(this)
+                .gravity(Flashbar.Gravity.BOTTOM)
+                .title(getString(R.string.title_notificacion))
+                .message(String.format(getString(R.string.msg_notificacion, valor)))
+                .enableSwipeToDismiss()
+                .backgroundColorRes(R.color.colorPrimaryDark)
+                .positiveActionText("Si")
+                .negativeActionText("Hoy no tomare")
+                .positiveActionTextColorRes(R.color.colorAccent)
+                .negativeActionTextColorRes(R.color.colorAccent)
+                .positiveActionTapListener(object : Flashbar.OnActionTapListener {
+                    override fun onActionTapped(bar: Flashbar) {
+                        updateControlStatus(true)
+                        bar.dismiss()
+                    }
+                })
+                .negativeActionTapListener(object : Flashbar.OnActionTapListener {
+                    override fun onActionTapped(bar: Flashbar) {
+                        updateControlStatus(false)
+                        bar.dismiss()
+                    }
+                })
+                .build()
+
+            flashBar?.show()
+        }
+
+    }
+
+    // TODO: preguntar, si cuando un control acaba, ese mismo dia puede planificar nuevos controles, incluyendo el mismo dia? se daria el caso? si es superior mejor..
+    fun updateControlStatus(status: Boolean) {
+        Control.updateCurrentControl(status)
+        pintarValores()
     }
 
     fun setDosisWidget() {
@@ -58,17 +104,21 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         val items = ArrayList(Control.getActiveControlList())
         carousel.adapter = DosisAdapter(items, applicationContext)
 
-        if (items.count() > 0) {
+        if (items != null && items.count() > 0) {
             val position = items.indexOf(items.filter { f -> f.fecha == Date().clearTime() }.first())
             carousel.smoothScrollToPosition(position)
         }
     }
 
     fun checkHasControlToday() {
-        if (Control.hasControl()) {
+        if (Control.hasPendingControls()) {
             btnINR.isEnabled = false
             btnBorrar.isEnabled = true
             setDosisWidget()
+            if(Control.hasControlToday() && User.isAlarmTime())
+                askForControl(Control.getControlDay(Date())?.recurso)
+            else flashBar?.dismiss()
+
         } else {
             btnINR.isEnabled = true
             btnBorrar.isEnabled = false
@@ -253,7 +303,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             Control.registrarControlActual(dataNiveles, sangre.toFloat(), nivel.toInt())
             checkHasControlToday()
 
-            // TEST: comprobamos los grabados
+            MyWorkManager.setWorkers(Control.getActiveControlList(onlyPendings = true))
+
             for(item in Control.getAll())
                 Log.e("MainActivity", item.toString())
 

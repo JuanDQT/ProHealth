@@ -2,26 +2,31 @@ package com.juan.prohealth.database
 
 import com.juan.prohealth.MySharedPreferences
 import com.juan.prohealth.addDays
+import com.juan.prohealth.fromDate
 import io.realm.Realm
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
 import io.realm.kotlin.createObject
 import java.io.File
+import java.lang.Exception
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.math.min
 
 open class User : RealmObject() {
 
     @PrimaryKey
     private var id: String? = ""
     private var name: String? = ""
+    private var horaAlarma: Int = 20
+    private var minutoAlarma: Int = 34
 
     companion object {
         fun crearUsuarioInvitado() {
-            Realm.getDefaultInstance().executeTransactionAsync {
+            Realm.getDefaultInstance().executeTransaction {
                 val user = it.createObject(User::class.java, "-1")
                 user.name = "Invitado"
             }
@@ -47,10 +52,49 @@ open class User : RealmObject() {
             return MySharedPreferences.shared.exists(arrayOf(MySharedPreferences.shared.LOGGED_CURRENT_USER))
         }
 
+        fun getCurrentTimeNotification(): Array<Int> {
+            Realm.getDefaultInstance().use {
+                val currentUser =  it.where(User::class.java).equalTo("id", MySharedPreferences.shared.getString(MySharedPreferences.shared.LOGGED_CURRENT_USER)).findFirst()
+                currentUser?.let {
+                    return arrayOf(it.horaAlarma, it.minutoAlarma)
+                }
+            }
+            return emptyArray()
+        }
+
+        fun settCurrentTimeNotification(hora: Int, minuto: Int): Boolean {
+            return try {
+                Realm.getDefaultInstance().executeTransaction {
+                    val currentUser =  it.where(User::class.java).equalTo("id", MySharedPreferences.shared.getString(MySharedPreferences.shared.LOGGED_CURRENT_USER)).findFirst()
+                    currentUser?.let {
+                        currentUser.horaAlarma = hora
+                        currentUser.minutoAlarma = minuto
+                    }
+                }
+                true
+            } catch (e: Exception) {
+                false
+            }
+        }
+
+
         fun setLogged(idUser: String) {
             // El id a guardar en el sharedpreferences sera el campo User.Id
             // Si en un futuro el usuario desea registrarse y no ser invitado, solamente tendra que actualizarse el campo User.id por el que le ofrezca el servidor
             MySharedPreferences.shared.addString(MySharedPreferences.shared.LOGGED_CURRENT_USER, idUser)
+        }
+
+        fun getAll(): List<User> {
+            Realm.getDefaultInstance().use {
+                return it.copyFromRealm(it.where(User::class.java).findAll())
+            }
+        }
+
+        fun isAlarmTime(): Boolean {
+            val userTime: Array<Int> = getCurrentTimeNotification()
+
+            val cal = Calendar.getInstance().fromDate(Date(), userTime[0], userTime[1])
+            return Date().after(cal.time)
         }
     }
 

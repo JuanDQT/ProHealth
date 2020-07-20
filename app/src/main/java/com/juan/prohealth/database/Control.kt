@@ -19,6 +19,7 @@ open class Control : RealmObject() {
     open var fechaInicio: Date? = null
     open var fechaFin: Date? = null
     open var recurso: String? = null
+    open var medicado: Boolean? = null
 
     companion object {
 
@@ -66,13 +67,43 @@ open class Control : RealmObject() {
             }
         }
 
-        fun hasControl(): Boolean {
+        // Control pendiente de hoy
+        fun hasControlToday(): Boolean {
             Realm.getDefaultInstance().use {
                 val total = it.where(Control::class.java).count()
 
                 if (total > 0) {
-                    val data = it.where(Control::class.java).equalTo("fecha", Date().clearTime()).findFirst()
-//                    val data = it.where(Control::class.java).equalTo("fecha", Date().withNoTime()).findFirst()
+                    val data = it.where(Control::class.java).equalTo("fecha", Date().clearTime()).and().isNull("medicado").findFirst()
+                    return data != null
+                }
+                return false;
+            }
+        }
+
+        fun updateCurrentControl(status: Boolean) {
+            Realm.getDefaultInstance().executeTransaction {
+                val data = it.where(Control::class.java).equalTo("fecha", Date().clearTime()).and().isNull("medicado").findFirst()
+                data?.let {
+                    data.medicado = status
+                }
+            }
+        }
+
+        fun closeOlderControls() {
+            Realm.getDefaultInstance().executeTransaction {
+                val index = it.where(Control::class.java).equalTo("fecha", Date().clearTime()).findFirst()
+                val olders = it.where(Control::class.java).equalTo("fechaInicio", index?.fechaInicio).and().lessThan("fecha", Date().clearTime()).and().isNull("medicado").findAll()
+                for(x in olders)
+                    x.medicado = false
+            }
+        }
+
+        // Controles hoy, o manana, etc
+        fun hasPendingControls(): Boolean {
+            Realm.getDefaultInstance().use {
+                val total = it.where(Control::class.java).count()
+                if (total > 0) {
+                    val data = it.where(Control::class.java).greaterThanOrEqualTo("fecha", Date().clearTime()).and().isNull("medicado").findFirst()
                     return data != null
                 }
                 return false;
@@ -92,10 +123,13 @@ open class Control : RealmObject() {
             }
         }
 
-        fun getActiveControlList(): List<Control> {
+        fun getActiveControlList(onlyPendings: Boolean = false): List<Control> {
             Realm.getDefaultInstance().use {
                 val index = it.where(Control::class.java).equalTo("fecha", Date().clearTime()).findFirst()
-                return it.copyFromRealm(it.where(Control::class.java).equalTo("fechaInicio", index?.fechaInicio).and().findAll())
+                if(onlyPendings)
+                    return it.copyFromRealm(it.where(Control::class.java).equalTo("fechaInicio", index?.fechaInicio).and().isNull("medicado").findAll())
+                else
+                    return it.copyFromRealm(it.where(Control::class.java).equalTo("fechaInicio", index?.fechaInicio).findAll())
             }
         }
 
@@ -110,6 +144,26 @@ open class Control : RealmObject() {
             } else return "No hay datos"
         }
 
+        // De momento en html.. despues excel
+        fun exportDataMail(): String {
+            val items = this.getActiveControlList()
+            if (items.count() > 0) {
+                var body = "<h1>Historico controles</h1><br/><br/>"
+                for (x in items) {
+                    body += "<p><b>Fecha: ${x.fecha?.customFormat("dd/MM/yyyy")}</b>. Dosis: ${x.recurso}</p>Medicado: ${getMedicadoResult(x.medicado)}<br/>"
+                }
+                return body
+            } else return "No hay datos"
+        }
+
+        fun getMedicadoResult(value: Boolean?): String {
+            value?.let {
+                if(it)
+                    return "Sí"
+                else return "No"
+            }
+            return "No todavía"
+        }
 
         fun restartIRN(): Boolean {
             return try {
