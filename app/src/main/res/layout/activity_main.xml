@@ -47,7 +47,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:drawableLeft="@android:drawable/ic_menu_edit"
-                android:text="Introducir INR" />
+                android:text="@string/introducir_INR" />
 
             <Button
                 android:id="@+id/btnCalendario"
@@ -55,7 +55,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:drawableLeft="@android:drawable/ic_menu_week"
-                android:text="Calendario" />
+                android:text="@string/introducir_INR" />
 
             <Button
                 android:id="@+id/btnEstadisticas"

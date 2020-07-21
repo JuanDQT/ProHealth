@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="introducir_valor">Introdueix un valor</string>
+    <string name="introducir_INR">Introduïr INR</string>
+    <string name="calendario">Calendari</string>
+    <string name="title_notificacion">Recordatori</string>
+    <string name="msg_notificacion">Heu ingerit la dosis de %s?</string>
+</resources>
