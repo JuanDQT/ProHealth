@@ -45,9 +45,13 @@ class MyWorkManager(context: Context, workerParamaters: WorkerParameters): Worke
             instance.enqueue(not)
         }
 
+        fun clearAllWorks() {
+            WorkManager.getInstance().cancelAllWorkByTag(TAG)
+        }
+
         // Creamos los trabajos programados
         fun setWorkers(controls: List<Control>) {
-            WorkManager.getInstance().cancelAllWorkByTag(TAG)
+            clearAllWorks()
 
             if(controls.count() == 0)
                 return
@@ -95,7 +99,7 @@ class MyWorkManager(context: Context, workerParamaters: WorkerParameters): Worke
         notificationBuilder.setAutoCancel(true)
             .setDefaults(Notification.DEFAULT_ALL)
             .setWhen(System.currentTimeMillis())
-            .setSmallIcon(R.drawable.ic_info)
+            .setSmallIcon(R.mipmap.ic_launcher_foreground)
             .setTicker("Hearty365") //     .setPriority(Notification.PRIORITY_MAX)
             .setContentTitle(applicationContext.resources.getString(com.juan.prohealth.R.string.title_notificacion))
             .setContentText(String.format(applicationContext.resources.getString(R.string.msg_notificacion), valor))

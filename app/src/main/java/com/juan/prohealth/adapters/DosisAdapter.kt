@@ -8,11 +8,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
-import com.juan.prohealth.AppContext
+import com.juan.prohealth.*
 
-import com.juan.prohealth.R;
-import com.juan.prohealth.clearTime
-import com.juan.prohealth.customFormat
 import com.juan.prohealth.database.Control;
 import java.util.*
 
@@ -35,8 +32,7 @@ class DosisAdapter(var list: ArrayList<Control>, var context: Context): Recycler
         }
 
         list[position].recurso?.let {
-            val resID = context.resources.getIdentifier(AppContext.getImageNameByJSON(it),"drawable", context.packageName)
-            holder.ivSrc?.setBackgroundResource(resID)
+            holder.ivSrc?.setBackgroundResource(AppContext.getImageNameByJSON(it))
         }
     }
 
