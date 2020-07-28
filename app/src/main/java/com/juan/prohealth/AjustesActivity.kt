@@ -6,7 +6,6 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.text.Html
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
@@ -14,11 +13,14 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.work.Data
 import com.juan.prohealth.database.Control
 import com.juan.prohealth.database.User
+import io.github.lucasfsc.html2pdf.Html2Pdf
 import kotlinx.android.synthetic.main.activity_ajustes.*
-import java.util.*
+import java.io.BufferedWriter
+import java.io.File
+import java.io.FileWriter
+import java.net.URI
 
 
 class AjustesActivity : AppCompatActivity(), View.OnClickListener {
@@ -95,11 +97,38 @@ class AjustesActivity : AppCompatActivity(), View.OnClickListener {
         builder.create().show()
     }
 
+    fun generateExportFile(callback: (String?) -> Unit) {
+
+        val tempFile = File(externalCacheDir, "resultado.pdf")
+
+        // Lets to transorm to PDF
+        Html2Pdf.Companion.Builder()
+            .context(this)
+            .html(Control.exportDataMail())
+            .file(tempFile)
+            .build().convertToPdf(object : Html2Pdf.OnCompleteConversion {
+                override fun onFailed() {
+                    return callback(null)
+                }
+
+                override fun onSuccess() {
+                    return callback(tempFile.absolutePath)
+                }
+            })
+    }
+
     fun doExportarMail() {
-        val data = Html.fromHtml(Control.exportDataMail())
-        val emailIntent = Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", MySharedPreferences.shared.getString("emails"), null))
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Planificacion IRN")
-        emailIntent.putExtra(Intent.EXTRA_TEXT, data)
-        startActivity(Intent.createChooser(emailIntent, "Enviar mail..."))
+        generateExportFile {
+            it?.let {
+                val emailIntent = Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", MySharedPreferences.shared.getString("emails"), null))
+                emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Historico IRN")
+                emailIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse( "file://"+ it))
+                emailIntent.putExtra(Intent.EXTRA_TEXT, "Hola, te adjunto mi historico de dosis.")
+                startActivity(Intent.createChooser(emailIntent, "Enviar mail..."))
+                return@generateExportFile
+            }
+            Toast.makeText(this@AjustesActivity, "Error al generar el adjunto.. Consulte los permisos de la aplicacion", Toast.LENGTH_SHORT).show()
+        }
+
     }
 }
