@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "981038103685",
+    "firebase_url": "https://coagutest-android.firebaseio.com",
+    "project_id": "coagutest-android",
+    "storage_bucket": "coagutest-android.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:981038103685:android:bb0f05b74808a5ff363dec",
+        "android_client_info": {
+          "package_name": "com.juan.prohealth"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "981038103685-1l9d7i6p1lh2hnfh0j5r6vk4n73if8h9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA6i5F2mIeWBxVnry6swYAZpFdhRqmPipk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "981038103685-1l9d7i6p1lh2hnfh0j5r6vk4n73if8h9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

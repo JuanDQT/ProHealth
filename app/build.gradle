@@ -3,6 +3,9 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'realm-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'
+
 // Como importar modulos: https://stackoverflow.com/a/41764425
 
 android {
@@ -40,6 +43,8 @@ dependencies {
     implementation 'com.github.tizisdeepan:eventscalendar:1.6.1'
     implementation 'com.andrognito.flashbar:flashbar:1.0.3'
     implementation 'android.arch.work:work-runtime-ktx:2.3.4'
+    implementation 'com.google.firebase:firebase-crashlytics:17.1.0'
+
     implementation project(path: ':anychart')
 
 }
