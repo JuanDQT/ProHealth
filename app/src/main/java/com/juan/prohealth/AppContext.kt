@@ -15,7 +15,7 @@ class AppContext : Application() {
     companion object {
         lateinit  var context: Context
 
-        private fun openJSON(fileName: String): String? {
+        fun getFileContentFromAssets(fileName: String): String? {
             var json: String? = null
             json = try {
                 val inputStream = context.assets.open(fileName)
@@ -39,7 +39,7 @@ class AppContext : Application() {
          * con los 3, 4 o 7 dias sin VACIOS con las dosis que corresponden.
          */
         fun getNivelFromFichero(fileName: String, nivel: String, dias: String): ArrayList<String> {
-            var json = JSONObject(openJSON(fileName))
+            var json = JSONObject(getFileContentFromAssets(fileName))
             var dataThreeDays = arrayListOf<String>()
             var dataFourDays = arrayListOf<String>()
             var dataSevenDays = arrayListOf<String>()

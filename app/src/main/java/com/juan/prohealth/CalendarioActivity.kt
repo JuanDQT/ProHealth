@@ -33,12 +33,11 @@ class CalendarioActivity : AppCompatActivity(), EventsCalendar.Callback{
                 var nivelSangreActual = registroDay.sangre.toString()
                 var imagenDosisBaseDatos = registroDay.recurso.toString()
                 var imagenNameRecurso = AppContext.getImageNameByJSON(imagenDosisBaseDatos)
-                val recursoID = resources.getIdentifier(imagenNameRecurso,"drawable", packageName)
                 //Toast.makeText(this@CalendarioActivity,"Hay 1 registro guardados ",Toast.LENGTH_LONG).show()
                 tv_Dosis.setText("El nivel de dosis actual es: " + nivelDosis)
                 tv_Sangre.setText("Tu nivel de sangre actual es: " + nivelSangreActual)
                 tv_infoDosis.setText("Dosis de Sintrom para este dia : " + imagenDosisBaseDatos)
-                viewDosis.setBackgroundResource(recursoID)
+                viewDosis.setBackgroundResource(imagenNameRecurso)
             }
         }
     }

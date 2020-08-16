@@ -1,6 +1,7 @@
 package com.juan.prohealth.database
 
 import android.util.Log
+import com.juan.prohealth.AppContext
 import com.juan.prohealth.addDays
 import com.juan.prohealth.clearTime
 import com.juan.prohealth.customFormat
@@ -47,7 +48,7 @@ open class Control : RealmObject() {
                     control.recurso = planificacion[x]
                     control.fechaInicio = Date().clearTime()
                     control.fecha = Date().addDays(x).clearTime()
-                    control.fechaFin = Date().addDays(planificacion.size).clearTime()
+                    control.fechaFin = Date().addDays(planificacion.size - 1).clearTime()
                     realm.commitTransaction()
                 }
             }
@@ -144,16 +145,36 @@ open class Control : RealmObject() {
             } else return "No hay datos"
         }
 
-        // De momento en html.. despues excel
         fun exportDataMail(): String {
-            val items = this.getActiveControlList()
-            if (items.count() > 0) {
-                var body = "<h1>Historico controles</h1><br/><br/>"
-                for (x in items) {
-                    body += "<p><b>Fecha: ${x.fecha?.customFormat("dd/MM/yyyy")}</b>. Dosis: ${x.recurso}</p>Medicado: ${getMedicadoResult(x.medicado)}<br/>"
-                }
-                return body
-            } else return "No hay datos"
+            val template = AppContext.getFileContentFromAssets("report_all.html")
+
+            template?.let {
+                val items = this.getAll()
+                var content = it
+                content = content.replace("{fecha}", Date().customFormat("dd/MM/yyyy"))
+                if (items.count() > 0) {
+                    var fill = ""
+                    var isNewGroup = false
+                    var ultimaFechaInicio: Date? = null
+
+                    for ((index, control) in items.withIndex()) { // o si es nuevo
+
+                        isNewGroup = if(ultimaFechaInicio == null || ultimaFechaInicio != control.fechaInicio) true else false
+
+                        if (isNewGroup) {
+                            fill += "<table class='generated'><caption>${control.fechaInicio?.customFormat("dd/MM/yyyy")} - ${control.fechaFin?.customFormat("dd/MM/yyyy")}</caption><tr><th>Fecha</th><th>Sangre</th><th>Dosis</th><th>Recurso</th><th>Medicado</th></tr>"
+                        }
+                        fill += "<tr><td>${control.fecha?.customFormat("dd/MM/yyyy")}</td><td>${control.sangre}</td><td>${control.nivelDosis}</td><td>${control.recurso}</td><td>${getMedicadoResult(control.medicado)}</td></tr>"
+
+                        if(index == items.count() -1)
+                            fill += "</table>"
+                        ultimaFechaInicio = control.fechaInicio
+                    }
+                    return content.replace("{fillable}", fill)
+                } else return it.replace("{fillable}", "No hay datos")
+
+        }
+            return "Error al cargar la plantilla"
         }
 
         fun getMedicadoResult(value: Boolean?): String {

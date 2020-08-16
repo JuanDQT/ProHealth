@@ -123,6 +123,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             btnINR.isEnabled = true
             btnBorrar.isEnabled = false
             carousel.visibility = View.GONE
+            flashBar?.dismiss()
+            MyWorkManager.clearAllWorks()
         }
     }
 
@@ -288,9 +290,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
             // sobreescribimos imagen
             if (!dataNiveles[x].isNullOrEmpty()) {
-                val resID = resources.getIdentifier(AppContext.getImageNameByJSON(dataNiveles[x]),"drawable", packageName)
                 val imageView = view.findViewWithTag<ImageView>("i${x}")
-                imageView.setBackgroundResource(resID)
+                imageView.setBackgroundResource(AppContext.getImageNameByJSON(dataNiveles[x]))
             }
 
         }

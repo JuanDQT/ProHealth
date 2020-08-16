@@ -104,7 +104,10 @@
                 android:tag="i0"
                 android:scaleType="centerCrop"
                 android:layout_height="40dp"
-                android:layout_width="40dp" />
+                android:layout_width="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_gravity="center_horizontal"
+                />
 
         </LinearLayout>
 
@@ -125,7 +128,9 @@
             <ImageView
                 android:tag="i1"
                 android:layout_height="40dp"
-                android:layout_width="40dp"/>
+                android:layout_width="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_gravity="center_horizontal"/>
 
         </LinearLayout>
 
@@ -146,7 +151,9 @@
             <ImageView
                 android:tag="i2"
                 android:layout_height="40dp"
-                android:layout_width="40dp" />
+                android:layout_width="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_gravity="center_horizontal" />
 
         </LinearLayout>
         <LinearLayout
@@ -166,7 +173,9 @@
             <ImageView
                 android:tag="i3"
                 android:layout_height="40dp"
-                android:layout_width="40dp"/>
+                android:layout_width="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_gravity="center_horizontal"/>
 
         </LinearLayout>
         <LinearLayout
@@ -186,7 +195,9 @@
             <ImageView
                 android:tag="i4"
                 android:layout_height="40dp"
-                android:layout_width="40dp" />
+                android:layout_width="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_gravity="center_horizontal" />
 
         </LinearLayout>
         <LinearLayout
@@ -206,7 +217,9 @@
             <ImageView
                 android:tag="i5"
                 android:layout_height="40dp"
-                android:layout_width="40dp" />
+                android:layout_width="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_gravity="center_horizontal" />
 
         </LinearLayout>
         <LinearLayout
@@ -226,7 +239,9 @@
 
             <ImageView
                 android:layout_height="40dp"
-                android:layout_width="40dp"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_gravity="center_horizontal"
                 android:tag="i6" />
 
         </LinearLayout>

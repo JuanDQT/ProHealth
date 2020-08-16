@@ -6,7 +6,9 @@ import android.content.Context
 import android.util.Log
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -76,4 +78,15 @@ fun Long.clearSeconds(): Long {
     cal.timeInMillis = this
     cal[Calendar.SECOND] = 0
     return cal.timeInMillis
+}
+
+fun ImageView.setBackgroundResource(resourceName: String) {
+    try {
+        val resource = resources.getIdentifier(resourceName,"drawable", AppContext.context.packageName)
+        this.setBackgroundResource(resource)
+    } catch (e: Exception) {
+        Log.e("ERROR", "Error cargando el fichero imagen. ${e.message}")
+    }
+
+
 }
