@@ -1,119 +1,198 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/rootView"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="10dp"
     tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/tvSangre"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:text="Sangre"
-        android:textColor="#E91E63"
-        android:textSize="18sp"
-        />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout3"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/tvNivel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:text="Nivel"
-        android:textColor="#2196F3"
-        android:textSize="18sp"
-         />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@color/colorPrimary"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/constraintLayout2"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/tv_sangre_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/tu_nivel_inr"
+                android:textAlignment="center"
+                android:textColor="#fff"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toTopOf="@+id/tv_sangre_valor"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_sangre_valor"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="TextView"
+                android:textAlignment="center"
+                android:textColor="#fff"
+                android:textSize="42sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:text="4,6" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@color/colorPrimaryDark"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/constraintLayout"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/tv_dosis_valor"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="TextView"
+                android:textAlignment="center"
+                android:textColor="#fff"
+                android:textSize="42sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:text="5" />
+
+            <TextView
+                android:id="@+id/tv_dosis_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/tu_nivel_de_dosis"
+                android:textAlignment="center"
+                android:textColor="#fff"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toTopOf="@+id/tv_dosis_valor"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <ImageButton
+                android:id="@+id/ib_profile"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="5dp"
+                android:background="@null"
+                android:scaleType="fitXY"
+                app:layout_constraintBottom_toTopOf="@+id/tv_dosis_text"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:srcCompat="@drawable/icon_profile" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.gtomato.android.ui.widget.CarouselView
         android:id="@+id/carousel"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:layout_centerInParent="true"/>
+        android:layout_centerInParent="true"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout3" />
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        app:layout_constraintTop_toBottomOf="@+id/carousel">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
+            android:background="#fff"
             android:orientation="vertical"
-            >
-            <Button
-                android:id="@+id/btnINR"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:drawableLeft="@android:drawable/ic_menu_edit"
-                android:text="@string/introducir_INR" />
+            android:paddingLeft="50dp"
+            android:paddingRight="50dp">
 
-            <Button
+            <com.juan.prohealth.custom.CustomButton
                 android:id="@+id/btnCalendario"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:drawableLeft="@android:drawable/ic_menu_week"
-                android:text="@string/introducir_INR" />
+                app:cb_title="@string/calendario"
+                app:cb_resource="@android:drawable/ic_menu_today"
+                app:cb_icon_position="left"
+                 />
 
-            <Button
+            <com.juan.prohealth.custom.CustomButton
                 android:id="@+id/btnEstadisticas"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:drawableLeft="@android:drawable/ic_menu_sort_by_size"
-                android:text="Historial" />
+                app:cb_title="@string/historial"
+                app:cb_resource="@android:drawable/ic_menu_sort_by_size"
+                app:cb_icon_position="right"
+                />
 
-            <Button
-                android:id="@+id/btnAjustes"
+            <com.juan.prohealth.custom.CustomButton
+                android:id="@+id/btnINR"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:drawableLeft="@android:drawable/ic_menu_manage"
-                android:text="Ajustes" />
-
-            <Button
-                android:id="@+id/btnConsejos"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:drawableLeft="@android:drawable/ic_menu_help"
-                android:text="Consejos y recomendaciones" />
-
-            <Button
-                android:id="@+id/btnLogOut"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:drawableLeft="@android:drawable/ic_notification_clear_all"
-                android:text="Desconectarse" />
-
-            <Button
+                app:cb_title="@string/introducir_INR"
+                app:cb_resource="@android:drawable/ic_menu_sort_by_size"
+                app:cb_icon_position="left"
+                />
+            <com.juan.prohealth.custom.CustomButton
                 android:id="@+id/btnGmap"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:drawableLeft="@android:drawable/ic_menu_mapmode"
-                android:text="Mostrar farmacias cercanas" />
+                app:cb_title="@string/farmacias_cercanas"
+                app:cb_resource="@android:drawable/ic_menu_mapmode"
+                app:cb_icon_position="right"
+                />
+            <com.juan.prohealth.custom.CustomButton
+                android:id="@+id/btnConsejos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cb_title="@string/consejos_y_dudas"
+                app:cb_resource="@android:drawable/ic_menu_help"
+                app:cb_icon_position="left"
+                />
+
+            <com.juan.prohealth.custom.CustomButton
+                android:id="@+id/btnAjustes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cb_title="@string/configuracion"
+                app:cb_resource="@android:drawable/ic_menu_manage"
+                app:cb_icon_position="right"
+                />
 
             <Button
+                android:visibility="gone"
                 android:id="@+id/btnBorrar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:drawableLeft="@android:drawable/stat_notify_sync"
                 android:text="Reconfigurar INR" />
-
-
-            <TextView
-                android:id="@+id/tvInfo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_gravity="center_horizontal"
-                />
         </LinearLayout>
 
     </ScrollView>
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

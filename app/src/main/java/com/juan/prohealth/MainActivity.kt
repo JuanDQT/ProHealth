@@ -329,8 +329,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     fun pintarValores() {
-        tvSangre.text = "Nivel de sangre: ${MySharedPreferences.shared.getSangre()}"
-        tvNivel.text = "Nivel de dosis: ${MySharedPreferences.shared.getNivel()}"
+        tv_sangre_valor.text = "${MySharedPreferences.shared.getSangre()}"
+        tv_dosis_valor.text = "${MySharedPreferences.shared.getNivel()}"
     }
 
     /**

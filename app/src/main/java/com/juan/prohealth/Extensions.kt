@@ -4,10 +4,13 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.util.Log
+import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
+import kotlinx.android.synthetic.main.custom_button.view.*
 import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
@@ -87,6 +90,10 @@ fun ImageView.setBackgroundResource(resourceName: String) {
     } catch (e: Exception) {
         Log.e("ERROR", "Error cargando el fichero imagen. ${e.message}")
     }
+}
 
-
+fun View.alignTo(position: Int) {
+    val currentLayoutParams = this.layoutParams as RelativeLayout.LayoutParams
+    currentLayoutParams.addRule(position)
+    this.layoutParams = currentLayoutParams
 }
