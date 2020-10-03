@@ -10,8 +10,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.android.synthetic.main.custom_button.view.*
-import java.lang.Exception
+import com.anychart.AnyChart.line
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -53,6 +52,23 @@ fun Date.customFormat(format: String): String {
     val formatter = SimpleDateFormat(format)
     return formatter.format(this)
 }
+
+fun Date.isTomorrow() : Boolean {
+    val c1 = Calendar.getInstance() // today
+    c1.add(Calendar.DAY_OF_YEAR, 1) // yesterday
+    val c2 = Calendar.getInstance()
+    c2.time = this // your date
+    return (c1.get(Calendar.YEAR) == c2.get(Calendar.YEAR) && c1.get(Calendar.DAY_OF_YEAR) == c2.get(Calendar.DAY_OF_YEAR))
+}
+
+fun Date.isYesterday() : Boolean {
+    val c1 = Calendar.getInstance() // today
+    c1.add(Calendar.DAY_OF_YEAR, -1) // yesterday
+    val c2 = Calendar.getInstance()
+    c2.time = this // your date
+    return (c1.get(Calendar.YEAR) == c2.get(Calendar.YEAR) && c1.get(Calendar.DAY_OF_YEAR) == c2.get(Calendar.DAY_OF_YEAR))
+}
+
 
 fun Activity.alert(title: String = "Alerta", message: String) {
     val dialogBuilder = AlertDialog.Builder(this)
