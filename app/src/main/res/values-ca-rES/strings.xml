@@ -1,8 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    //Pantalla iniciada por primera vez
+    <string name="introduce_dosis">Si us plau, introdueix el nivell de dosi inicial</string>
+    <string name="hint_introduce_dosis">Introdueix el nivell de dosi</string>
+    <string name="btext_guardar">Guardar</string>
+    //Menu principal
     <string name="introducir_valor">Introdueix un valor</string>
-    <string name="introducir_INR">Introduïr INR</string>
+    <string name="introducir_INR">Introdueix INR</string>
     <string name="calendario">Calendari</string>
     <string name="title_notificacion">Recordatori</string>
     <string name="msg_notificacion">Heu ingerit la dosis de %s?</string>
+    <string name="historial">Historial</string>
+    <string name="ajustes">Ajustos</string>
+    <string name="consejos_y_recomendaciones">Consells i recomanacions</string>
+    <string name="desconectarse">Desconnectar-se</string>
+    <string name="mostrar_farmacias_cercanas">Mostrar farmàcies pròximes</string>
+    <string name="reconfigurar">Reconfigurar INR</string>
+    //Login
+    <string name="usuario">Usuari</string>
+    <string name="contraseña">Contrasenya</string>
+    <string name="entrar">Entrar</string>
+    <string name="login_google">Entra amb Google</string>
+    <string name="continuar_sin_contraseña">Continuar sense registrar-se</string>
+    //Menu Ajustes
+    <string name="contactos_de_confianza">Contactes de confiança</string>
+    <string name="ajustar_notificaciones">Ajustar notificacions</string>
+    <string name="exportar_datos">Exportar dades</string>
+    //Layout ad_introducir_inr
+    <string name="ultimo_valor">Últims valors: </string>
+    //Layout ad_planificacion
+    <string name="ultimo_INR">Último INR</string>
+    <string name="inr_hoy">INR Avui</string>
+    <string name="tu_dosis">La teva dosi:</string>
+    <string name="enviar_email">Enviar per email</string>
+    //Layout Item_dosis
+    <string name="text_hoy">Avui</string>
 </resources>

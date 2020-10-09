@@ -26,7 +26,7 @@
             android:layout_marginTop="50dp"
             android:layout_marginLeft="50dp"
             android:layout_marginRight="50dp"
-            android:text="Usuario"
+            android:text="@string/usuario"
             />
 
         <EditText
@@ -41,7 +41,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginLeft="50dp"
             android:layout_marginRight="50dp"
-            android:text="Contraseña"
+            android:text="@string/contraseña"
             />
 
         <EditText
@@ -57,7 +57,7 @@
             android:layout_width="match_parent"
             android:layout_marginLeft="50dp"
             android:layout_marginRight="50dp"
-            android:text="Entrar"
+            android:text="@string/entrar"
             android:layout_height="wrap_content" />
 
         <Button
@@ -68,7 +68,7 @@
             android:drawableRight="@drawable/googleg_standard_color_18"
             android:paddingRight="30dp"
             android:drawablePadding="-30dp"
-            android:text="Login with Google"
+            android:text="@string/login_google"
             android:layout_height="wrap_content" />
     </LinearLayout>
 
@@ -78,7 +78,7 @@
         android:layout_width="match_parent"
         android:textAlignment="center"
         android:layout_height="wrap_content"
-        android:text="Continuar sin registrarse"
+        android:text="@string/continuar_sin_contraseña"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="30dp"
         />
