@@ -18,7 +18,8 @@
             android:layout_width="30dp"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="20dp"
-            android:src="@android:drawable/ic_menu_revert"
+            android:src="@drawable/flecha_atras"
+            android:rotation="180"
             android:layout_height="30dp"/>
         <LinearLayout
             android:layout_marginTop="10dp"

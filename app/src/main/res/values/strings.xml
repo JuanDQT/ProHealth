@@ -7,7 +7,9 @@
     <string name="msg_notificacion">Has ingerido tu dosis de %s?</string>
     <string name="empty">vacio</string>
     <string name="tu_nivel_inr">Tu nivel INR</string>
+    <string name="calcula_tu_inr">Calcula tu INR</string>
     <string name="historial">Historial</string>
+    <string name="tu_historial">Tu historial</string>
     <string name="tu_nivel_de_dosis">Tu nivel de dosis</string>
     <string name="farmacias_cercanas">Farmacias Cercanas</string>
     <string name="consejos_y_dudas">Consejos y Dudas</string>

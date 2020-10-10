@@ -167,7 +167,7 @@
                 android:id="@+id/btnEstadisticas"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cb_title="@string/historial"
+                app:cb_title="@string/tu_historial"
                 app:cb_resource="@android:drawable/ic_menu_sort_by_size"
                 app:cb_icon_position="right"
                 />
@@ -176,8 +176,8 @@
                 android:id="@+id/btnINR"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cb_title="@string/introducir_INR"
-                app:cb_resource="@android:drawable/ic_menu_sort_by_size"
+                app:cb_title="@string/calcula_tu_inr"
+                app:cb_resource="@android:drawable/ic_menu_revert"
                 app:cb_icon_position="left"
                 />
             <com.juan.prohealth.custom.CustomButton

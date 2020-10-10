@@ -5,6 +5,7 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.opengl.Visibility
 import android.os.Bundle
 import android.text.Editable
 import android.text.Html
@@ -114,7 +115,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     fun checkHasControlToday() {
         if (Control.hasPendingControls()) {
-            btnINR.isEnabled = false
+            btnINR.visibility = View.GONE
             btnBorrar.isEnabled = true
             setDosisWidget()
             if(Control.hasControlToday() && User.isAlarmTime())
@@ -122,7 +123,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             else flashBar?.dismiss()
 
         } else {
-            btnINR.isEnabled = true
+            btnINR.visibility = View.VISIBLE
             btnBorrar.isEnabled = false
             carousel.visibility = View.GONE
             iv_arrow_left.visibility = View.GONE

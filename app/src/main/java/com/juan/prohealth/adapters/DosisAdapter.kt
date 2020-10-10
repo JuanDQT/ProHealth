@@ -1,6 +1,7 @@
 package com.juan.prohealth.adapters;
 
 import android.content.Context;
+import android.graphics.Typeface
 import android.text.format.DateUtils
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +31,8 @@ class DosisAdapter(var list: ArrayList<Control>, var context: Context): Recycler
 
             if (it == Date().clearTime()) {
                 holder.tvCurrent?.visibility = View.VISIBLE
+                holder.tvCurrent?.typeface = Typeface.DEFAULT_BOLD
+                holder.tvText?.typeface = Typeface.DEFAULT_BOLD
             } else {
                 // dia antes, despues
                 if(it.isTomorrow())
