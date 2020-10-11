@@ -33,6 +33,9 @@
     <string name="ultimo_INR">Último INR</string>
     <string name="inr_hoy">INR Hoy</string>
     <string name="tu_dosis">Tu dosis:</string>
+    <string name="alerta">Alerta</string>
+    <string name="validando">Validando</string>
+    <string name="error_verificacion">Verificación de registro fallido. Es necesario una conexión a internet.</string>
     <string name="enviar_email">Enviar por email</string>
     //Layout Item_dosis
     <string name="text_hoy">Hoy</string>
