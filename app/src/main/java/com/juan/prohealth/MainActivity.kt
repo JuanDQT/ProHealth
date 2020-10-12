@@ -115,7 +115,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     fun checkHasControlToday() {
         if (Control.hasPendingControls()) {
-            btnINR.visibility = View.GONE
+            btnINR.isEnabled = false
             btnBorrar.isEnabled = true
             setDosisWidget()
             if(Control.hasControlToday() && User.isAlarmTime())
@@ -123,7 +123,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             else flashBar?.dismiss()
 
         } else {
-            btnINR.visibility = View.VISIBLE
+            btnINR.isEnabled = true
             btnBorrar.isEnabled = false
             carousel.visibility = View.GONE
             iv_arrow_left.visibility = View.GONE

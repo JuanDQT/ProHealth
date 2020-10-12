@@ -6,8 +6,7 @@
     android:layout_height="match_parent">
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="75dp"
-        >
+        android:layout_height="75dp">
         <TextView
             android:id="@+id/my_textview"
             android:layout_width="200dp"
@@ -18,7 +17,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="0dp"
             android:layout_marginBottom="17dp"
-            android:layout_toEndOf="@+id/my_civ"
+            android:layout_toEndOf="@+id/my_cv"
             android:background="@drawable/rounder_corner"
             android:drawablePadding="40dp"
             android:paddingStart="30dp"
@@ -28,19 +27,23 @@
             android:textColor="#fff"
             android:textSize="24sp"
             tools:text="Titulo"
-            android:textStyle="bold" />
+             />
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/my_civ"
-            android:padding="5dp"
+        <androidx.cardview.widget.CardView
+            app:cardBackgroundColor="@color/colorPrimaryDark"
+            android:id="@+id/my_cv"
             android:layout_width="75dp"
-            android:layout_height="match_parent"
-            android:src="@android:drawable/ic_menu_today"
-            app:civ_circle_background_color="@color/colorPrimaryDark"
-            app:civ_border_width="10dp"
-            app:civ_border_color="@color/colorPrimaryDark"
-            />
-
+            android:layout_height="75dp"
+            app:cardCornerRadius="50dp"
+            app:contentPadding="18dp"
+            app:cardPreventCornerOverlap="true"
+            >
+            <ImageView
+                android:id="@+id/my_iv"
+                android:scaleType="centerInside"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </androidx.cardview.widget.CardView>
     </RelativeLayout>
 
 </merge>

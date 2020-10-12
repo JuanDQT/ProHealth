@@ -26,6 +26,8 @@
     <string name="guardar">Guardar</string>
     <string name="he_olvidado_mi_contrasena">He olvidado mi contraseña</string>
     <string name="entrar_con_google">Entrar con Google</string>
+    <string name="fecha">Fecha</string>
+    <string name="valores_inr">Valores INR</string>
     <string name="continuar_sin_registrarse">Continuar sin registrarse</string>
     <string name="msg_introducir_nivel_dosis">Por favor, introduce el nivel de dosis inicial</string>
 </resources>

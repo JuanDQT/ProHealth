@@ -18,7 +18,7 @@
             android:layout_width="30dp"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="20dp"
-            android:src="@drawable/flecha_atras"
+            android:src="@drawable/flecha"
             android:rotation="180"
             android:layout_height="30dp"/>
         <LinearLayout
@@ -70,7 +70,7 @@
             android:backgroundTint="#f3f1f2"
             android:layout_height="wrap_content"
             android:textColor="#000"
-            android:drawableLeft="@android:drawable/ic_menu_search"
+            android:drawableStart="@drawable/lupa"
             android:text="@string/buscar_por_fecha"
             app:layout_constraintEnd_toStartOf="@+id/btn_resetear_valores"
             app:layout_constraintHorizontal_bias="0.5"
@@ -81,7 +81,7 @@
             android:id="@+id/btn_resetear_valores"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:drawableLeft="@android:drawable/ic_menu_rotate"
+            android:drawableStart="@drawable/refresh"
             android:text="@string/resetear_valores"
             app:layout_constraintEnd_toEndOf="parent"
             android:textColor="#000"
@@ -94,7 +94,7 @@
             android:id="@+id/btn_exportar_datos"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:drawableLeft="@android:drawable/ic_menu_save"
+            android:drawableStart="@drawable/save"
             android:text="@string/exportar_datos"
             app:layout_constraintBottom_toBottomOf="parent"
             android:backgroundTint="#f3f1f2"
@@ -122,6 +122,7 @@
         android:id="@+id/progress_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:indeterminateTint="@color/colorPrimary"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
         />

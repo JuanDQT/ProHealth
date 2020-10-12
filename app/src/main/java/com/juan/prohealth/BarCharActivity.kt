@@ -41,10 +41,14 @@ class BarCharActivity : AppCompatActivity() {
 
         cartesian.tooltip().positionMode(TooltipPositionMode.POINT)
 
-        cartesian.title("Historico de nivel de sangre")
+        cartesian.title().enabled(false)
 
-        cartesian.yAxis(0).title("Registro INR")
-        cartesian.xAxis(0).labels().padding(5.0, 5.0, 5.0, 5.0)
+        cartesian.yAxis(0).title(getString(R.string.valores_inr))
+        cartesian.xAxis(0).labels().padding(5.0, 5.0, 5.0, 5.0).rotation(270).fontWeight("bold")
+        cartesian.yAxis(0).labels().fontWeight("bold")
+        cartesian.xAxis(0).title(getString(R.string.fecha))
+        cartesian.yGrid(true)
+
 
         val seriesData: MutableList<DataEntry> = getDemoPoints()
         val color = resources.getString(R.color.colorPrimary).replace("ff", "").toUpperCase()
@@ -52,11 +56,11 @@ class BarCharActivity : AppCompatActivity() {
         val set = Set.instantiate()
         set.data(seriesData)
         val series1Mapping = set.mapAs("{ x: 'x', value: 'value' }")
+
+
+
         val series1 = cartesian.line(series1Mapping)
-//        series1.name("")
         series1.hovered().markers().enabled(true)
-
-
         series1.hovered().markers()
             .type(MarkerType.CIRCLE)
             .size(4.0)
@@ -64,17 +68,19 @@ class BarCharActivity : AppCompatActivity() {
             .position("right")
             .anchor(Anchor.LEFT_CENTER)
             .offsetX(5.0)
-            .offsetY(5.0)
+            .offsetY(5.0).enabled(false)
         series1.color(color)
-
         // TODO; hacer la linea mas gruesa...
-        series1.stroke("7 $color")
+        series1.stroke("7 $color").enabled(true)
         series1.color(color).markers().enabled(true)
             .type(MarkerType.CIRCLE)
             .size(9)
         series1.hover().labels(false)
 
-        cartesian.legend().enabled(true)
+
+
+
+        cartesian.legend().enabled(false)
         cartesian.legend().fontSize(13.0)
         cartesian.legend().padding(0.0, 0.0, 10.0, 0.0)
 
