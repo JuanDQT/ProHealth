@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -8,7 +13,6 @@
     android:orientation="vertical"
     android:background="#fff"
     tools:context=".MainActivity">
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout3"
         android:layout_width="match_parent"
@@ -127,13 +131,15 @@
         app:layout_constraintBottom_toTopOf="@id/scrollView2"
         app:layout_constraintEnd_toStartOf="@+id/iv_arrow_right"
         app:layout_constraintStart_toEndOf="@+id/iv_arrow_left"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout3" />
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout3"
+        tools:listitem="@layout/item_dosis" />
 
     <ImageView
         android:id="@+id/iv_arrow_right"
         android:layout_width="20dp"
         android:layout_height="30dp"
         android:layout_marginEnd="10dp"
+        android:scaleType="centerCrop"
         android:src="@drawable/shape_triangle"
         app:layout_constraintBottom_toBottomOf="@+id/carousel"
         app:layout_constraintEnd_toEndOf="parent"
@@ -144,6 +150,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="visible"
+        android:scrollbars="vertical"
         app:layout_constraintTop_toBottomOf="@+id/carousel">
 
         <LinearLayout
@@ -216,3 +223,5 @@
 
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>
