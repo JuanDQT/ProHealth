@@ -1,19 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rootView"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp"
     tools:context=".MainActivity">
 
     <TextView
-        android:id="@+id/tvInit"
+        android:id="@+id/tvSangre"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        tools:text="Sangre"
+        android:textColor="#E91E63"
+        android:textSize="18sp"
+        />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:id="@+id/tvNivel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Nivel"
+        android:textColor="#2196F3"
+        android:textSize="18sp"
+         />
+
+    <com.gtomato.android.ui.widget.CarouselView
+        android:id="@+id/carousel"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_centerInParent="true"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:orientation="vertical"
+            >
+            <Button
+                android:id="@+id/btnINR"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:drawableLeft="@android:drawable/ic_menu_edit"
+                android:text="@string/introducir_INR" />
+
+            <Button
+                android:id="@+id/btnCalendario"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:drawableLeft="@android:drawable/ic_menu_week"
+                android:text="@string/calendario" />
+
+            <Button
+                android:id="@+id/btnEstadisticas"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:drawableLeft="@android:drawable/ic_menu_sort_by_size"
+                android:text="@string/historial" />
+
+            <Button
+                android:id="@+id/btnAjustes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:drawableLeft="@android:drawable/ic_menu_manage"
+                android:text="@string/ajustes" />
+
+            <Button
+                android:id="@+id/btnConsejos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:drawableLeft="@android:drawable/ic_menu_help"
+                android:text="@string/consejos_y_recomendaciones" />
+
+            <Button
+                android:id="@+id/btnLogOut"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:drawableLeft="@android:drawable/ic_notification_clear_all"
+                android:text="@string/desconectarse" />
+
+            <Button
+                android:id="@+id/btnGmap"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:drawableLeft="@android:drawable/ic_menu_mapmode"
+                android:text="@string/mostrar_farmacias_cercanas" />
+
+            <Button
+                android:id="@+id/btnBorrar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:drawableLeft="@android:drawable/stat_notify_sync"
+                android:text="@string/reconfigurar" />
+
+
+            <TextView
+                android:id="@+id/tvInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_gravity="center_horizontal"
+                />
+        </LinearLayout>
+
+    </ScrollView>
+</LinearLayout>

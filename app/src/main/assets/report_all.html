@@ -1,0 +1,106 @@
+<html>
+<head>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            display: flex;
+            flex-direction: row;
+            height: 100px;
+            /*background: #0b2e13;*/
+            justify-content: space-between;
+            border: 2px solid black;
+            box-sizing: border-box;
+        }
+
+        #logo {
+            width: 200px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-image: url("logo.png");
+            border-right: 2px solid black;
+        }
+
+        #title {
+            /*background: #f00060;*/
+            flex-grow: 1;
+            text-align: center;
+            margin: auto;
+        }
+
+        #title h1 {
+            /*background: #6f42c1;*/
+            text-align: center;
+        }
+
+        #date {
+            height: auto;
+            border-left: 2px solid black;
+            /*background: #1c7430;*/
+            width: 200px;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        #date > * {
+            text-align: center;
+            padding: 0;
+            margin: 10px;
+        }
+
+        #table_info, .generated {
+            width: 100%;
+        }
+
+        #table_info, #table_info th, #table_info td {
+            border: 2px solid black;
+            border-collapse: collapse;
+        }
+        #table_info th:nth-child(1) {
+            /*background: #1c7430;*/
+            width: 200px;
+            text-align: left;
+            height: 30px;
+            padding-left: 5px;
+        }
+
+        #table_info th:nth-child(2) {
+            /*background: rgba(41, 28, 116, 0.62);*/
+            text-align: left;
+            padding-left: 5px;
+        }
+
+        .generated, .generated th, .generated td {
+            border: 1px solid black;
+            border-collapse: collapse;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body>
+
+<header>
+    <div id="logo"></div>
+    <div id="title"><h2>Historico de dosis</h2></div>
+    <div id="date"><h4>Fecha</h4><p>{fecha}</p></div>
+</header>
+<table id="table_info">
+    <tr>
+        <th>Nombre</th><th>Usuario</th>
+    </tr>
+    <tr>
+        <th>App</th><th>CoaguTest v1.0</th>
+    </tr>
+</table>
+
+{fillable}
+</body>
+</html>
