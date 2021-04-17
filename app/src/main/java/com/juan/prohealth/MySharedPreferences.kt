@@ -2,7 +2,6 @@ package com.juan.prohealth
 
 import android.content.Context
 import android.content.SharedPreferences
-import java.util.*
 
 class MySharedPreferences {
 
@@ -12,8 +11,6 @@ class MySharedPreferences {
 
         // KEYS
         val LOGGED_CURRENT_USER = "LOGGED_CURRENT_USER"
-        val SYSTEM_DATE = "SYSTEM_DATE"
-        val END_DATE_TEST = "END_DATE_TEST"
 
         fun exists(keys: Array<String>): Boolean {
             if(keys.count() < 1)
@@ -60,36 +57,6 @@ class MySharedPreferences {
                 return it.getString(key, "")
             }
             return ""
-        }
-
-        fun getSystemDate(): Long {
-            sharedPreferences?.let {
-                return it.getLong(SYSTEM_DATE, 0)
-            }
-            return 0
-        }
-
-        fun updateSystemDate(value: Long) {
-            sharedPreferences?.let {
-                val editor = it.edit()
-                editor.putLong(SYSTEM_DATE, value)
-                editor.apply()
-            }
-        }
-
-        fun getFechaFinPrueba(): Long {
-            sharedPreferences?.let {
-                return it.getLong(END_DATE_TEST, 0)
-            }
-            return 0
-        }
-
-        fun setFechaFinPrueba(value: Long) {
-            sharedPreferences?.let {
-                val editor = it.edit()
-                editor.putLong(END_DATE_TEST, value)
-                editor.apply()
-            }
         }
 
     }

@@ -2,15 +2,13 @@ package com.juan.prohealth
 
 import android.app.Application
 import android.content.Context
-import android.provider.Settings
-import android.telephony.TelephonyManager
 import android.widget.Toast
-import androidx.core.content.ContextCompat.getSystemService
 import com.juan.prohealth.database.CustomMigration
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import org.json.JSONObject
 import java.nio.charset.StandardCharsets
+import kotlin.collections.ArrayList
 
 class AppContext : Application() {
 
@@ -85,10 +83,6 @@ class AppContext : Application() {
             }
 
             return null
-        }
-
-        fun getIMEI(): String {
-            return Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
         }
 
         /**
