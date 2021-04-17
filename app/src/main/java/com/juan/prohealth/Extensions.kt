@@ -3,6 +3,7 @@ package com.juan.prohealth
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
@@ -29,6 +30,7 @@ fun AppCompatActivity.hideKeyboard() {
 // Compatibilidad con versiones antiguas de android
 fun Date.addDays(days: Int): Date {
     val calendar = Calendar.getInstance()
+    calendar.time = this
     calendar.add(Calendar.DAY_OF_YEAR, days)
     return calendar.time
 }
@@ -48,7 +50,7 @@ fun Activity.print(message: String) {
     Log.i("LOG", message)
 }
 
-fun Date.customFormat(format: String): String {
+fun Date.customFormat(format: String = "dd/MM/yyyy"): String {
     val formatter = SimpleDateFormat(format)
     return formatter.format(this)
 }
@@ -69,12 +71,21 @@ fun Date.isYesterday() : Boolean {
     return (c1.get(Calendar.YEAR) == c2.get(Calendar.YEAR) && c1.get(Calendar.DAY_OF_YEAR) == c2.get(Calendar.DAY_OF_YEAR))
 }
 
-
 fun Activity.alert(title: String = "Alerta", message: String) {
     val dialogBuilder = AlertDialog.Builder(this)
     dialogBuilder.setTitle(title)
+    dialogBuilder.setCancelable(closable)
     dialogBuilder.setMessage(message)
-    dialogBuilder.setPositiveButton("Aceptar", null)
+
+    dialogBuilder.setPositiveButton("Aceptar", listener)
+
+    listener?.let {
+        dialogBuilder.setPositiveButton(opc.orEmpty(), it)
+    }
+
+    listener2?.let {
+        dialogBuilder.setNegativeButton(opc2.orEmpty(), it)
+    }
 
     dialogBuilder.create().show()
 }

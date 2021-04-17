@@ -161,7 +161,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cb_icon_position="left"
-                app:cb_resource="@drawable/calendar"
+                app:cb_resource="@android:drawable/ic_menu_today"
                 app:cb_title="@string/calendario" />
 
             <com.juan.prohealth.custom.CustomButton
@@ -169,40 +169,41 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cb_icon_position="right"
-                app:cb_resource="@drawable/grafica"
+                app:cb_resource="@android:drawable/ic_menu_sort_by_size"
                 app:cb_title="@string/tu_historial" />
+
 
             <com.juan.prohealth.custom.CustomButton
                 android:id="@+id/btnINR"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cb_icon_position="left"
-                app:cb_resource="@drawable/pen"
-                app:cb_title="@string/calcula_tu_inr" />
+                app:cb_resource="@drawable/pen"                                                 
+                app:cb_title="@string/introducir_INR"  />                                  
 
             <com.juan.prohealth.custom.CustomButton
                 android:id="@+id/btnGmap"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cb_icon_position="right"
+                app:cb_title="@string/farmacias_cercanas"
                 app:cb_resource="@drawable/place"
-                app:cb_title="@string/farmacias_cercanas" />
+                app:cb_icon_position="right"  />                                   
 
             <com.juan.prohealth.custom.CustomButton
                 android:id="@+id/btnConsejos"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cb_icon_position="left"
+                app:cb_title="@string/consejos_y_dudas"
                 app:cb_resource="@drawable/question_mark"
-                app:cb_title="@string/consejos_y_dudas" />
+                app:cb_icon_position="left" />                                   
 
             <com.juan.prohealth.custom.CustomButton
                 android:id="@+id/btnAjustes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cb_icon_position="right"
-                app:cb_resource="@drawable/settings"
-                app:cb_title="@string/configuracion" />
+                app:cb_title="@string/configuracion"
+                app:cb_icon_position="right"                                    
+                app:cb_resource="@drawable/settings"/>                                    
 
             <Button
                 android:id="@+id/btnBorrar"
@@ -212,6 +213,7 @@
                 android:drawableLeft="@android:drawable/stat_notify_sync"
                 android:text="Reconfigurar INR"
                 android:visibility="gone" />
+          
         </LinearLayout>
 
     </ScrollView>

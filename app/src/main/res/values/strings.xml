@@ -1,5 +1,11 @@
 <resources>
-    <string name="app_name" translatable="false">ProHealth</string>
+    //Pantalla iniciada por primera vez
+    <string name="introduce_dosis">Por favor, introduce el nivel de dosis inicial</string>
+    <string name="hint_introduce_dosis">Introduce el nivel de dosis</string>
+    <string name="btext_guardar">Guardar</string>
+
+    //Menu principal
+    <string name="app_name" translatable="false">CoaguTest</string>
     <string name="introducir_valor">Introduce un valor</string>
     <string name="introducir_INR">Introduce tu INR</string>
     <string name="calendario">Calendario</string>
@@ -30,4 +36,26 @@
     <string name="valores_inr">Valores INR</string>
     <string name="continuar_sin_registrarse">Continuar sin registrarse</string>
     <string name="msg_introducir_nivel_dosis">Por favor, introduce el nivel de dosis inicial</string>
+    <string name="ajustes">Ajustes</string>
+    <string name="desconectarse">Desconectarse</string>
+    <string name="reconfigurar">Reconfigurar INR</string>
+  
+     //Menu Ajustes
+    <string name="contactos_de_confianza">Contactos de confianza</string>
+    <string name="ajustar_notificaciones">Ajustar notificaciones</string>
+    <string name="exportar_datos">Exportar datos</string>
+    //Layout ad_introducir_inr
+    <string name="ultimo_valor">Últimos valores: </string>
+    //Layout ad_planificacion
+    <string name="ultimo_INR">Último INR</string>
+    <string name="inr_hoy">INR Hoy</string>
+    <string name="tu_dosis">Tu dosis:</string>
+    <string name="alerta">Alerta</string>
+    <string name="validando">Validando</string>
+    <string name="error_verificacion">Verificación de registro fallido. Es necesario una conexión a internet.</string>
+    <string name="enviar_email">Enviar por email</string>
+  
+    //Layout Item_dosis
+    <string name="text_hoy">Hoy</string>
+  
 </resources>

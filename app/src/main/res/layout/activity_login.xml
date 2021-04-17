@@ -42,6 +42,7 @@
             android:layout_height="wrap_content" />
 
         <TextView
+            android:textStyle="bold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -58,17 +59,14 @@
             android:layout_marginRight="50dp"
             android:textColor="#000"
             android:inputType="textPassword"
-            android:backgroundTint="#000"
             android:layout_height="wrap_content" />
 
         <EditText
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:layout_marginLeft="50dp"
-            android:textSize="12sp"
-            android:layout_marginRight="50dp"
-            android:enabled="false"
-            android:backgroundTint="@color/colorPrimaryDark"
+            android:layout_marginRight="50dp"         
             android:text="@string/he_olvidado_mi_contrasena"
             android:textColor="@color/colorPrimaryDark"
             />
@@ -121,6 +119,5 @@
         </FrameLayout>
 
     </LinearLayout>
-
 
 </RelativeLayout>

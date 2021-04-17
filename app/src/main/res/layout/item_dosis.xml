@@ -15,9 +15,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAlignment="center"
-        android:textSize="22sp"
-        android:text="HOY"
-        />
+        android:textStyle="bold"
+         android:textSize="22sp"      
+        android:text="@string/text_hoy" />     
 
     <TextView
         android:textColor="#000"
@@ -25,7 +25,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAlignment="center"
-        android:textSize="32sp"
+        android:textSize="28sp"
+        android:textStyle="bold"
         android:layout_marginTop="-10dp"
         tools:text="12/12"/>
 
