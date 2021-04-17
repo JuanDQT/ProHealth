@@ -7,40 +7,23 @@
     //Menu principal
     <string name="app_name" translatable="false">CoaguTest</string>
     <string name="introducir_valor">Introduce un valor</string>
-    <string name="introducir_INR">Introduce tu INR</string>
+    <string name="introducir_INR">Introduce INR</string>
     <string name="calendario">Calendario</string>
     <string name="title_notificacion">Recordatorio</string>
     <string name="msg_notificacion">Has ingerido tu dosis de %s?</string>
-    <string name="empty">vacio</string>
-    <string name="tu_nivel_inr">Tu nivel INR</string>
-    <string name="calcula_tu_inr">Calcula tu INR</string>
     <string name="historial">Historial</string>
-    <string name="tu_historial">Tu historial</string>
-    <string name="tu_nivel_de_dosis">Tu nivel de dosis</string>
-    <string name="farmacias_cercanas">Farmacias Cercanas</string>
-    <string name="consejos_y_dudas">Consejos y Dudas</string>
-    <string name="configuracion">Configuración</string>
-    <string name="manana">MAÑANA</string>
-    <string name="ayer">AYER</string>
-    <string name="buscar_por_fecha">Buscar por fecha</string>
-    <string name="resetear_valores">Resetear valores</string>
-    <string name="exportar_datos">Exportar datos</string>
-    <string name="volver_al_menu">Volver al menu</string>
-    <string name="usuario">Usuario</string>
-    <string name="contrasena">Contraseña</string>
-    <string name="entrar">Entrar</string>
-    <string name="guardar">Guardar</string>
-    <string name="he_olvidado_mi_contrasena">He olvidado mi contraseña</string>
-    <string name="entrar_con_google">Entrar con Google</string>
-    <string name="fecha">Fecha</string>
-    <string name="valores_inr">Valores INR</string>
-    <string name="continuar_sin_registrarse">Continuar sin registrarse</string>
-    <string name="msg_introducir_nivel_dosis">Por favor, introduce el nivel de dosis inicial</string>
     <string name="ajustes">Ajustes</string>
+    <string name="consejos_y_recomendaciones">Consejos y recomendaciones</string>
     <string name="desconectarse">Desconectarse</string>
+    <string name="mostrar_farmacias_cercanas">Mostrar farmacias cercanas</string>
     <string name="reconfigurar">Reconfigurar INR</string>
-  
-     //Menu Ajustes
+    //Login
+    <string name="usuario">Usuario</string>
+    <string name="contraseña">Contraseña</string>
+    <string name="entrar">Entrar</string>
+    <string name="login_google">Entra con Google</string>
+    <string name="continuar_sin_contraseña">Continuar sin registrarse</string>
+    //Menu Ajustes
     <string name="contactos_de_confianza">Contactos de confianza</string>
     <string name="ajustar_notificaciones">Ajustar notificaciones</string>
     <string name="exportar_datos">Exportar datos</string>
@@ -54,8 +37,6 @@
     <string name="validando">Validando</string>
     <string name="error_verificacion">Verificación de registro fallido. Es necesario una conexión a internet.</string>
     <string name="enviar_email">Enviar por email</string>
-  
     //Layout Item_dosis
     <string name="text_hoy">Hoy</string>
-  
 </resources>

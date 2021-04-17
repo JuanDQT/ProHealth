@@ -45,10 +45,7 @@
         <activity
             android:name=".LoginActivity"
             android:theme="@style/SplashTheme" />
-        <activity
-            android:name=".BarCharActivity"
-            android:theme="@style/SplashTheme"
-            />
+        <activity android:name=".BarCharActivity" />
         <activity
             android:name=".PreinicioActivity"
             android:theme="@style/SplashTheme" />
@@ -58,6 +55,7 @@
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -65,6 +63,10 @@
         <activity
             android:name=".MainActivity"
             android:theme="@style/SplashTheme" />
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
 
         <uses-library
             android:name="org.apache.http.legacy"
