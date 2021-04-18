@@ -5,11 +5,13 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.util.Log
+import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
-import java.lang.Exception
+import com.anychart.AnyChart.line
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -52,6 +54,23 @@ fun Date.customFormat(format: String = "dd/MM/yyyy"): String {
     val formatter = SimpleDateFormat(format)
     return formatter.format(this)
 }
+
+fun Date.isTomorrow() : Boolean {
+    val c1 = Calendar.getInstance() // today
+    c1.add(Calendar.DAY_OF_YEAR, 1) // yesterday
+    val c2 = Calendar.getInstance()
+    c2.time = this // your date
+    return (c1.get(Calendar.YEAR) == c2.get(Calendar.YEAR) && c1.get(Calendar.DAY_OF_YEAR) == c2.get(Calendar.DAY_OF_YEAR))
+}
+
+fun Date.isYesterday() : Boolean {
+    val c1 = Calendar.getInstance() // today
+    c1.add(Calendar.DAY_OF_YEAR, -1) // yesterday
+    val c2 = Calendar.getInstance()
+    c2.time = this // your date
+    return (c1.get(Calendar.YEAR) == c2.get(Calendar.YEAR) && c1.get(Calendar.DAY_OF_YEAR) == c2.get(Calendar.DAY_OF_YEAR))
+}
+
 
 fun Activity.alert(title: String = "Alerta", message: String, opc: String? = null, listener: DialogInterface.OnClickListener? = null, opc2: String? = null, listener2: DialogInterface.OnClickListener? = null, closable: Boolean = true) {
     val dialogBuilder = AlertDialog.Builder(this)
@@ -99,6 +118,10 @@ fun ImageView.setBackgroundResource(resourceName: String) {
     } catch (e: Exception) {
         Log.e("ERROR", "Error cargando el fichero imagen. ${e.message}")
     }
+}
 
-
+fun View.alignTo(position: Int) {
+    val currentLayoutParams = this.layoutParams as RelativeLayout.LayoutParams
+    currentLayoutParams.addRule(position)
+    this.layoutParams = currentLayoutParams
 }

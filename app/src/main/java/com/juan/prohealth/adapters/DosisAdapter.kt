@@ -1,11 +1,14 @@
 package com.juan.prohealth.adapters;
 
 import android.content.Context;
+import android.graphics.Typeface
+import android.text.format.DateUtils
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import androidx.core.graphics.alpha
 
 import androidx.recyclerview.widget.RecyclerView;
 import com.juan.prohealth.*
@@ -22,18 +25,31 @@ class DosisAdapter(var list: ArrayList<Control>, var context: Context): Recycler
     }
 
     override fun onBindViewHolder(holder: PalabraViewHolder2, position: Int) {
-        holder.tvText?.text = "${list[position].fecha?.customFormat("dd/MM")}"
+        list[position].fecha?.let {
+            holder.tvText?.text = "${it.customFormat("dd/MM")}"
 //        holder.tvText.setText(list.get(position).getNivelDosis());
 
-        if (list[position].fecha == Date().clearTime()) {
-            holder.tvCurrent?.visibility = View.VISIBLE
-        } else {
-            holder.tvCurrent?.visibility = View.GONE
+            if (it == Date().clearTime()) {
+                holder.tvCurrent?.visibility = View.VISIBLE
+                holder.tvCurrent?.typeface = Typeface.DEFAULT_BOLD
+                holder.tvText?.typeface = Typeface.DEFAULT_BOLD
+            } else {
+                // dia antes, despues
+                if(it.isTomorrow())
+                    holder.tvCurrent?.text = context.getString(R.string.manana)
+                else if(it.isYesterday())
+                    holder.tvCurrent?.text = context.getString(R.string.ayer)
+                else
+                    holder.tvCurrent?.visibility = View.GONE
+            }
         }
+
 
         list[position].recurso?.let {
             holder.ivSrc?.setBackgroundResource(AppContext.getImageNameByJSON(it))
         }
+
+//        holder.itemView.background.alpha = 2
     }
 
     class PalabraViewHolder2(itemView: View) : RecyclerView.ViewHolder(itemView) {

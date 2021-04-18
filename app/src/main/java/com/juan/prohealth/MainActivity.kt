@@ -6,6 +6,7 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.opengl.Visibility
 import android.os.Bundle
 import android.text.Editable
 import android.text.Html
@@ -166,9 +167,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     fun setDosisWidget() {
         carousel.visibility = View.VISIBLE
         val transformer = FlatMerryGoRoundTransformer()
-        transformer.viewPerspective = 0.3
-
-        transformer.farScale = -1.3
+        transformer.viewPerspective = 0.2
+        transformer.farAlpha = 0.0
+        iv_arrow_left.visibility = View.VISIBLE
+        iv_arrow_right.visibility = View.VISIBLE
+        transformer.farScale = -1.5
 
         carousel.transformer = transformer
         carousel.isInfinite = true
@@ -194,6 +197,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             btnINR.isEnabled = true
             btnBorrar.isEnabled = false
             carousel.visibility = View.GONE
+            iv_arrow_left.visibility = View.GONE
+            iv_arrow_right.visibility = View.GONE
             flashBar?.dismiss()
             MyWorkManager.clearAllWorks()
         }
@@ -400,8 +405,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     fun pintarValores() {
-        tvSangre.text = "Nivel de sangre: ${MySharedPreferences.shared.getSangre()}"
-        tvNivel.text = "Nivel de dosis: ${MySharedPreferences.shared.getNivel()}"
+        tv_sangre_valor.text = "${MySharedPreferences.shared.getSangre().replace(".", ",")}"
+        tv_dosis_valor.text = "${MySharedPreferences.shared.getNivel()}"
     }
 
     /**
