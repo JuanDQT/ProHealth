@@ -10,17 +10,19 @@ import com.anychart.enums.Anchor
 import com.anychart.enums.MarkerType
 import com.anychart.enums.TooltipPositionMode
 import com.anychart.graphics.vector.Stroke
-import com.anychart.graphics.vector.StrokeLineCap
 import com.juan.prohealth.database.Control
-import kotlinx.android.synthetic.main.activity_bar_char.*
+import com.juan.prohealth.databinding.ActivityBarCharBinding
 
 class BarCharActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityBarCharBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_bar_char)
+        binding = ActivityBarCharBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        acv_grafica.setProgressBar(findViewById(R.id.progress_bar))
+        binding.acvGrafica.setProgressBar(findViewById(R.id.progress_bar))
 
         val cartesian = AnyChart.line()
 
@@ -58,7 +60,6 @@ class BarCharActivity : AppCompatActivity() {
         val series1Mapping = set.mapAs("{ x: 'x', value: 'value' }")
 
 
-
         val series1 = cartesian.line(series1Mapping)
         series1.hovered().markers().enabled(true)
         series1.hovered().markers()
@@ -84,13 +85,13 @@ class BarCharActivity : AppCompatActivity() {
         cartesian.legend().fontSize(13.0)
         cartesian.legend().padding(0.0, 0.0, 10.0, 0.0)
 
-        acv_grafica.setChart(cartesian)
+        binding.acvGrafica.setChart(cartesian)
     }
 
     fun getDemoPoints(): MutableList<DataEntry> {
         val list = arrayListOf<DataEntry>()
 
-        Control.getHistoric().let {controles ->
+        Control.getHistoric().let { controles ->
             if (controles.count() > 0) {
                 for (item in controles) {
                     list.add(ValueDataEntry(item.fechaInicio?.customFormat("dd/MM"), item.sangre))
