@@ -3,13 +3,10 @@ package com.juan.prohealth
 import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.androidnetworking.error.ANError
 import com.androidnetworking.interfaces.JSONObjectRequestListener
-import com.juan.prohealth.security.UniqueDeviceID
-import kotlinx.android.synthetic.main.activity_preinicio.*
-import kotlinx.android.synthetic.main.activity_preinicio.btnINR
+import com.juan.prohealth.databinding.ActivityPreinicioBinding
 import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
@@ -18,7 +15,8 @@ class PreinicioActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_preinicio)
+        val binding = ActivityPreinicioBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         // Comprobamos que ya esta guardado
         if (goInicioActivity()) {
@@ -28,12 +26,12 @@ class PreinicioActivity : AppCompatActivity() {
             return
         }
 
-        btnINR.setOnClickListener {
+        binding.btnINR.setOnClickListener {
 
             //Guardamos valores en String
-            val inputNivelSangreText = et_nivel.text.toString()
+            val inputNivelSangreText = binding.etNivel.text.toString()
             //Validamos estos valores
-            if(AppContext.validarInputNivel(inputNivelSangreText)){
+            if (AppContext.validarInputNivel(inputNivelSangreText)) {
                 // Guardamos los valores en sharedPrederences
 
 
@@ -52,12 +50,17 @@ class PreinicioActivity : AppCompatActivity() {
 
                             if (status == 1) {
 
-                                val fechaFin = SimpleDateFormat("yyyy-MM-dd").parse(it.getString("fechaFin"))
+                                val fechaFin =
+                                    SimpleDateFormat("yyyy-MM-dd").parse(it.getString("fechaFin"))
                                 MySharedPreferences.shared.setFechaFinPrueba(fechaFin.clearTime().time)
 
 
-                                MySharedPreferences.shared.addString("nivel", et_nivel.text.toString())
-                                val intent = Intent(this@PreinicioActivity, MainActivity::class.java)
+                                MySharedPreferences.shared.addString(
+                                    "nivel",
+                                    binding.etNivel.text.toString()
+                                )
+                                val intent =
+                                    Intent(this@PreinicioActivity, MainActivity::class.java)
                                 startActivity(intent)
                             } else
                                 alert(getString(R.string.alerta), "Vuelvelo a intentar mas tarde")
@@ -70,7 +73,6 @@ class PreinicioActivity : AppCompatActivity() {
                     }
                 })
             }
-
 
 
             //
