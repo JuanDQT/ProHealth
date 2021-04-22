@@ -13,11 +13,9 @@ import java.util.*
 
 class DoseAdapter(var controls: ArrayList<Control>, var context: Context) :
     RecyclerView.Adapter<DoseAdapter.ViewHolder>() {
-    //private val localView = R.layout.item_dosis
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemDosisBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        //val view = LayoutInflater.from(context).inflate(localView, parent, false);
         return ViewHolder(binding)
     }
 
@@ -47,22 +45,45 @@ class DoseAdapter(var controls: ArrayList<Control>, var context: Context) :
         controls[position].recurso?.let {
             holder.ivSrc?.setBackgroundResource(AppContext.getImageNameByJSON(it))
         }
-
-//        holder.itemView.background.alpha = 2
     }
 
     class ViewHolder(private val binding: ItemDosisBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(control: Control) {
-            binding.apply {
-                if (control.fecha != null) {
-                    tvText.text = control.fecha!!.customFormat("dd/MM")
-                }
 
-                if (control.recurso != null) {
-                    ivSrc.setBackgroundResource(AppContext.getImageNameByJSON(control.recurso!!))
-                    tvCurrent
+            val resourceControl = control.recurso
+            val dateControl = control.fecha
+
+            if (dateControl != null) {
+
+                binding.apply {
+
+                    tvText.text = dateControl.customFormat("dd/MM")
+
+                    if (dateControl == Date().clearTime()) {
+                        tvCurrent.visibility = View.VISIBLE
+                        tvCurrent.typeface = Typeface.DEFAULT_BOLD
+                        tvText.typeface = Typeface.DEFAULT_BOLD
+                    } else {
+                        // dia antes, despues
+                        if (dateControl.isTomorrow())
+                            tvCurrent.text = context.getString(R.string.manana)
+                        else if (dateControl.isYesterday())
+                            tvCurrent.text = context.getString(R.string.ayer)
+                        else
+                            tvCurrent.visibility = View.GONE
+                        //with WHEN
+                        when {
+                            dateControl.isTomorrow() -> tvCurrent.text = "MAÑANA"
+                            dateControl.isYesterday() -> tvCurrent.text = "AYER"
+                            else -> tvCurrent.visibility = View.GONE
+                        }
+                    }
+
+                    if (resourceControl != null) {
+                        ivSrc.setBackgroundResource(AppContext.getImageNameByJSON(resourceControl))
+                    }
                 }
             }
         }
