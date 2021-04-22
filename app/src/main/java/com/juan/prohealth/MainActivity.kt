@@ -21,7 +21,7 @@ import com.androidnetworking.interfaces.JSONObjectRequestListener
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.gtomato.android.ui.transformer.FlatMerryGoRoundTransformer
-import com.juan.prohealth.adapters.DosisAdapter
+import com.juan.prohealth.adapters.DoseAdapter
 import com.juan.prohealth.database.Control
 import com.juan.prohealth.database.User
 import com.juan.prohealth.databinding.ActivityMainBinding
@@ -174,7 +174,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         binding.carousel.transformer = transformer
         binding.carousel.isInfinite = true
         val items = ArrayList(Control.getActiveControlList())
-        binding.carousel.adapter = DosisAdapter(items, applicationContext)
+        binding.carousel.adapter = DoseAdapter(items, applicationContext)
 
         if (items != null && items.count() > 0) {
             val position = items.indexOf(items.filter { f -> f.fecha == Date().clearTime() }.first())
