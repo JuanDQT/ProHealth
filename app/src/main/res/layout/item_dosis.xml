@@ -21,7 +21,7 @@
 
     <TextView
         android:textColor="#000"
-        android:id="@+id/tv_text"
+        android:id="@+id/tv_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAlignment="center"
@@ -30,7 +30,7 @@
         tools:text="12/12"/>
 
     <ImageView
-        android:id="@+id/iv_src"
+        android:id="@+id/image_dose"
         android:layout_width="169dp"
         android:layout_height="70dp"
         android:layout_marginTop="10dp"
