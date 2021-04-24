@@ -11,7 +11,7 @@ import com.juan.prohealth.database.Control
 import com.juan.prohealth.databinding.ItemDosisBinding
 import java.util.*
 
-class DoseAdapter(var controls: ArrayList<Control>, var context: Context) :
+class DoseAdapter(var controls: ArrayList<Control>) :
     RecyclerView.Adapter<DoseAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -20,32 +20,7 @@ class DoseAdapter(var controls: ArrayList<Control>, var context: Context) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-
         holder.bind(controls[position], holder.itemView.context)
-/*
-        controls[position].fecha?.let {
-            holder.tvText?.text = "${it.customFormat("dd/MM")}"
-//        holder.tvText.setText(list.get(position).getNivelDosis());
-
-            if (it == Date().clearTime()) {
-                holder.tvCurrent?.visibility = View.VISIBLE
-                holder.tvCurrent?.typeface = Typeface.DEFAULT_BOLD
-                holder.tvText?.typeface = Typeface.DEFAULT_BOLD
-            } else {
-                // dia antes, despues
-                if (it.isTomorrow())
-                    holder.tvCurrent?.text = context.getString(R.string.manana)
-                else if (it.isYesterday())
-                    holder.tvCurrent?.text = context.getString(R.string.ayer)
-                else
-                    holder.tvCurrent?.visibility = View.GONE
-            }
-        }
-
-
-        controls[position].recurso?.let {
-            holder.ivSrc?.setBackgroundResource(AppContext.getImageNameByJSON(it))
-        }*/
     }
 
     class ViewHolder(private val binding: ItemDosisBinding) :
@@ -60,21 +35,13 @@ class DoseAdapter(var controls: ArrayList<Control>, var context: Context) :
 
                 binding.apply {
 
-                    tvText.text = dateControl.customFormat("dd/MM")
+                    tvDate.text = dateControl.customFormat("dd/MM")
 
                     if (dateControl == Date().clearTime()) {
                         tvCurrent.visibility = View.VISIBLE
                         tvCurrent.typeface = Typeface.DEFAULT_BOLD
-                        tvText.typeface = Typeface.DEFAULT_BOLD
+                        tvDate.typeface = Typeface.DEFAULT_BOLD
                     } else {
-                        // dia antes, despues
-                        /*        if (dateControl.isTomorrow())
-                                    tvCurrent.text = context.getString(R.string.manana)
-                                else if (dateControl.isYesterday())
-                                    tvCurrent.text = context.getString(R.string.ayer)
-                                else
-                                    tvCurrent.visibility = View.GONE*/
-                        //with WHEN
                         when {
                             dateControl.isTomorrow() -> tvCurrent.text =
                                 context.getString(R.string.manana)
@@ -85,7 +52,11 @@ class DoseAdapter(var controls: ArrayList<Control>, var context: Context) :
                     }
 
                     if (resourceControl != null) {
-                        ivSrc.setBackgroundResource(AppContext.getImageNameByJSON(resourceControl))
+                        imageDose.setBackgroundResource(
+                            AppContext.getImageNameByJSON(
+                                resourceControl
+                            )
+                        )
                     }
                 }
             }
@@ -93,10 +64,5 @@ class DoseAdapter(var controls: ArrayList<Control>, var context: Context) :
 
     }
 
-    override fun getItemCount(): Int = if (controls.size!= 0) controls.size else 0
-/*        return if (controls == null) {
-            0
-        } else {
-            controls!!.count()
-        }*/
+    override fun getItemCount(): Int = if (controls.size > 0) controls.size else 0
 }
