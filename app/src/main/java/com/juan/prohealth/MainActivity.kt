@@ -15,7 +15,6 @@ import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.ViewUtils
 import com.andrognito.flashbar.Flashbar
 import com.androidnetworking.error.ANError
 import com.androidnetworking.interfaces.JSONObjectRequestListener
@@ -25,10 +24,7 @@ import com.gtomato.android.ui.transformer.FlatMerryGoRoundTransformer
 import com.juan.prohealth.adapters.DosisAdapter
 import com.juan.prohealth.database.Control
 import com.juan.prohealth.database.User
-import com.juan.prohealth.security.UniqueDeviceID
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_main.btnINR
-import kotlinx.android.synthetic.main.activity_preinicio.*
+import com.juan.prohealth.databinding.ActivityMainBinding
 import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
@@ -38,20 +34,23 @@ import kotlin.concurrent.schedule
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
 
+    private lateinit var binding: ActivityMainBinding
+
     val RANGO_AZUL: String = "rangoBajoAzul.json"
     val RANGO_ROJO: String = "rangoAltoRojo.json"
     var flashBar: Flashbar? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        btnBorrar.setOnClickListener(this)
-        btnINR.setOnClickListener(this)
-        btnGmap.setOnClickListener(this)
-        btnEstadisticas.setOnClickListener(this)
-        btnCalendario.setOnClickListener(this)
-        btnAjustes.setOnClickListener(this)
+        binding.btnBorrar.setOnClickListener(this)
+        binding.btnINR.setOnClickListener(this)
+        binding.btnGmap.setOnClickListener(this)
+        binding.btnEstadisticas.setOnClickListener(this)
+        binding.btnCalendario.setOnClickListener(this)
+        binding.btnAjustes.setOnClickListener(this)
     }
 
     override fun onResume() {
@@ -164,36 +163,40 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     fun setDosisWidget() {
-        carousel.visibility = View.VISIBLE
+        binding.carousel.visibility = View.VISIBLE
         val transformer = FlatMerryGoRoundTransformer()
-        transformer.viewPerspective = 0.3
+        transformer.viewPerspective = 0.2
+        transformer.farAlpha = 0.0
+        binding.ivArrowLeft.visibility = View.VISIBLE
+        binding.ivArrowRight.visibility = View.VISIBLE
+        transformer.farScale = -1.5
 
-        transformer.farScale = -1.3
-
-        carousel.transformer = transformer
-        carousel.isInfinite = true
+        binding.carousel.transformer = transformer
+        binding.carousel.isInfinite = true
         val items = ArrayList(Control.getActiveControlList())
-        carousel.adapter = DosisAdapter(items, applicationContext)
+        binding.carousel.adapter = DosisAdapter(items, applicationContext)
 
         if (items != null && items.count() > 0) {
             val position = items.indexOf(items.filter { f -> f.fecha == Date().clearTime() }.first())
-            carousel.smoothScrollToPosition(position)
+            binding.carousel.smoothScrollToPosition(position)
         }
     }
 
     fun checkHasControlToday() {
         if (Control.hasPendingControls()) {
-            btnINR.isEnabled = false
-            btnBorrar.isEnabled = true
+            binding.btnINR.isEnabled = false
+            binding.btnBorrar.isEnabled = true
             setDosisWidget()
             if(Control.hasControlToday() && User.isAlarmTime())
                 askForControl(Control.getControlDay(Date())?.recurso)
             else flashBar?.dismiss()
 
         } else {
-            btnINR.isEnabled = true
-            btnBorrar.isEnabled = false
-            carousel.visibility = View.GONE
+            binding.btnINR.isEnabled = true
+            binding.btnBorrar.isEnabled = false
+            binding.carousel.visibility = View.GONE
+            binding.ivArrowLeft.visibility = View.GONE
+            binding.ivArrowRight.visibility = View.GONE
             flashBar?.dismiss()
             MyWorkManager.clearAllWorks()
         }
@@ -400,8 +403,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     fun pintarValores() {
-        tvSangre.text = "Nivel de sangre: ${MySharedPreferences.shared.getSangre()}"
-        tvNivel.text = "Nivel de dosis: ${MySharedPreferences.shared.getNivel()}"
+        binding.tvSangreValor.text = "${MySharedPreferences.shared.getSangre().replace(".", ",")}"
+        binding.tvDosisValor.text = "${MySharedPreferences.shared.getNivel()}"
     }
 
     /**

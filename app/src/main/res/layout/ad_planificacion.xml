@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="@string/ultimo_INR"
+        android:text="Ultimo INR"
         android:textAlignment="center"
         />
 
@@ -40,7 +40,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/inr_hoy"
+        android:text="INR Hoy"
         android:layout_marginTop="20dp"
         android:textAlignment="center"
         />
@@ -71,7 +71,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/tu_dosis"
+        android:text="Tu dosis:"
         android:layout_marginTop="10dp"
         android:textAlignment="center"
         />
@@ -255,7 +255,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:layout_marginLeft="15dp"
-        android:text="@string/enviar_email" />
+        android:text="Enviar por email" />
 
 
 

@@ -5,13 +5,15 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import com.juan.prohealth.database.User
+import com.juan.prohealth.databinding.ActivitySplashScreenBinding
 
 class SplashScreenActivity : AppCompatActivity() {
 
     lateinit var handler: Handler
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_splash_screen)
+        val binding = ActivitySplashScreenBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         val activityDestination = if (User.isLogged()) PreinicioActivity::class.java else LoginActivity::class.java
 
