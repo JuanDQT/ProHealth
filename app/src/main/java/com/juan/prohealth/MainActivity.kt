@@ -21,7 +21,7 @@ import com.androidnetworking.interfaces.JSONObjectRequestListener
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.gtomato.android.ui.transformer.FlatMerryGoRoundTransformer
-import com.juan.prohealth.adapters.DosisAdapter
+import com.juan.prohealth.adapters.DoseAdapter
 import com.juan.prohealth.database.Control
 import com.juan.prohealth.database.User
 import com.juan.prohealth.databinding.ActivityMainBinding
@@ -93,7 +93,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                                         if (status == 1) {
                                             pdLoading.dismiss()
 
-                                            val fechaFin = SimpleDateFormat("yyyy-MM-dd").parse(it.getString("fechaFin"))
+                                            val fechaFin =
+                                                SimpleDateFormat("yyyy-MM-dd").parse(it.getString("fechaFin"))
                                             MySharedPreferences.shared.setFechaFinPrueba(fechaFin.clearTime().time)
 
                                             onResume()
@@ -103,17 +104,24 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
                                 override fun onError(anError: ANError?) {
                                     pdLoading.dismiss()
-                                    alert(getString(R.string.alerta), getString(R.string.error_verificacion))
+                                    alert(
+                                        getString(R.string.alerta),
+                                        getString(R.string.error_verificacion)
+                                    )
                                 }
                             })
 
-                        }, closable = false)
+                        }, closable = false
+                    )
                 }
-            }
-            else {
-                alert("Alerta", "Por favor, no juege con las fechas. Vuelva a situarla a ${Date(currentDate).customFormat()}", "Aceptar", DialogInterface.OnClickListener { dialogInterface, i ->
-                    finishAffinity()
-                })
+            } else {
+                alert(
+                    "Alerta",
+                    "Por favor, no juege con las fechas. Vuelva a situarla a ${Date(currentDate).customFormat()}",
+                    "Aceptar",
+                    DialogInterface.OnClickListener { dialogInterface, i ->
+                        finishAffinity()
+                    })
             }
         }
 
@@ -127,7 +135,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     fun askForControl(valor: String?) {
 
         if (flashBar == null || (flashBar != null && !flashBar!!.isShown())) {
-            flashBar =  Flashbar.Builder(this)
+            flashBar = Flashbar.Builder(this)
                 .gravity(Flashbar.Gravity.BOTTOM)
                 .title(getString(R.string.title_notificacion))
                 .message(String.format(getString(R.string.msg_notificacion, valor)))
@@ -174,10 +182,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         binding.carousel.transformer = transformer
         binding.carousel.isInfinite = true
         val items = ArrayList(Control.getActiveControlList())
-        binding.carousel.adapter = DosisAdapter(items, applicationContext)
+        binding.carousel.adapter = DoseAdapter(items)
 
         if (items != null && items.count() > 0) {
-            val position = items.indexOf(items.filter { f -> f.fecha == Date().clearTime() }.first())
+            val position =
+                items.indexOf(items.filter { f -> f.fecha == Date().clearTime() }.first())
             binding.carousel.smoothScrollToPosition(position)
         }
     }
@@ -187,7 +196,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             binding.btnINR.isEnabled = false
             binding.btnBorrar.isEnabled = true
             setDosisWidget()
-            if(Control.hasControlToday() && User.isAlarmTime())
+            if (Control.hasControlToday() && User.isAlarmTime())
                 askForControl(Control.getControlDay(Date())?.recurso)
             else flashBar?.dismiss()
 
@@ -219,13 +228,13 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     fun doAjustarIRN() {
         val data = Control.getAll()
         Log.e("MainActivity", "ANTES")
-        for(item in data)
+        for (item in data)
             Log.e("MainActivity", item.toString())
 
         Control.restartIRN()
         checkHasControlToday()
         Log.e("MainActivity", "DESPUES")
-        for(item in Control.getAll())
+        for (item in Control.getAll())
             Log.e("MainActivity", item.toString())
     }
 
@@ -234,7 +243,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     fun doOpenMaps() {
-        if(comprabarSiExisteApp("com.google.android.apps.maps", getApplicationContext())){
+        if (comprabarSiExisteApp("com.google.android.apps.maps", getApplicationContext())) {
             // Buscar farmacias de guardia cercanas a mi posicion usando APP existente
             val gmmIntentUri = Uri.parse("geo:0,0?q=farmacia+de+guardia")
             val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
@@ -245,8 +254,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             //Manera 2º en caso de no tener gmaps ejecutar Activity
             // val intent = Intent(this, UbicacionActivity::class.java)
             //startActivity(intent)
-        }else{
-            Toast.makeText(this, "Se necesita tener instalado Google Maps", Toast.LENGTH_LONG).show()
+        } else {
+            Toast.makeText(this, "Se necesita tener instalado Google Maps", Toast.LENGTH_LONG)
+                .show()
         }
     }
 
@@ -261,7 +271,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         builder.setMessage("Por favor, introduce un valor INR entre 1 y 7")
         var positiveButton: Button? = null
 
-        val view: LinearLayout = layoutInflater.inflate(R.layout.ad_introducir_inr, null) as LinearLayout
+        val view: LinearLayout =
+            layoutInflater.inflate(R.layout.ad_introducir_inr, null) as LinearLayout
         val editText = view.findViewById<EditText>(R.id.etValor)
 
         // Buscamos si hay historial..
@@ -273,7 +284,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             val chipGroup = view.findViewById<ChipGroup>(R.id.chipGroup)
 
             for (x in 0 until ultimosControles.count()) {
-                val chip = getLayoutInflater().inflate(R.layout.layout_chip_choice, chipGroup, false) as Chip
+                val chip = getLayoutInflater().inflate(
+                    R.layout.layout_chip_choice,
+                    chipGroup,
+                    false
+                ) as Chip
                 chip.text = ultimosControles[x]
                 chipGroup.addView(chip)
 
@@ -283,7 +298,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             }
         }
 
-        editText.addTextChangedListener( object : TextWatcher {
+        editText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
                 positiveButton?.let { button ->
                     AppContext.validarInputTextSangre(editText.text.toString())?.let {
@@ -310,14 +325,22 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             val nivelyDias: Map<String, Int> = this.getNivelCorrespondiente((valorSangreNumerico))
 
             if (nivelyDias["nivel"]!! < 1) {
-                alert( message = "Consulte los datos con su MÉDICO")
+                alert(message = "Consulte los datos con su MÉDICO")
                 return@OnClickListener
             }
-            val dataNiveles = AppContext.getNivelFromFichero(nomFichero, nivelyDias["nivel"].toString(), nivelyDias["dias"].toString())
+            val dataNiveles = AppContext.getNivelFromFichero(
+                nomFichero,
+                nivelyDias["nivel"].toString(),
+                nivelyDias["dias"].toString()
+            )
 
             Timer("SettingUp", false).schedule(500) {
                 runOnUiThread {
-                    doAskPlanificacion(sangre = "${AppContext.validarInputTextSangre(editText.text.toString())}", nivel = nivelyDias["nivel"].toString(), dataNiveles = dataNiveles)
+                    doAskPlanificacion(
+                        sangre = "${AppContext.validarInputTextSangre(editText.text.toString())}",
+                        nivel = nivelyDias["nivel"].toString(),
+                        dataNiveles = dataNiveles
+                    )
                 }
             }
         })
@@ -371,24 +394,26 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         }
         builder.setView(view)
 
-        builder.setPositiveButton("Planificar", DialogInterface.OnClickListener { dialogInterface, i ->
-            // Actualizamos la sangre y nivel
-            MySharedPreferences.shared.addString("sangre", sangre)
-            MySharedPreferences.shared.addString("nivel", nivel)
-            Control.registrarControlActual(dataNiveles, sangre.toFloat(), nivel.toInt())
-            checkHasControlToday()
+        builder.setPositiveButton(
+            "Planificar",
+            DialogInterface.OnClickListener { dialogInterface, i ->
+                // Actualizamos la sangre y nivel
+                MySharedPreferences.shared.addString("sangre", sangre)
+                MySharedPreferences.shared.addString("nivel", nivel)
+                Control.registrarControlActual(dataNiveles, sangre.toFloat(), nivel.toInt())
+                checkHasControlToday()
 
-            MyWorkManager.setWorkers(Control.getActiveControlList(onlyPendings = true))
+                MyWorkManager.setWorkers(Control.getActiveControlList(onlyPendings = true))
 
-            for(item in Control.getAll())
-                Log.e("MainActivity", item.toString())
+                for (item in Control.getAll())
+                    Log.e("MainActivity", item.toString())
 
-            pintarValores()
+                pintarValores()
 
-            if (btnMails.isChecked)
-                sendEmailPlanificacion()
+                if (btnMails.isChecked)
+                    sendEmailPlanificacion()
 
-        })
+            })
 
         builder.create()
         builder.show()
@@ -396,7 +421,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     fun sendEmailPlanificacion() {
         val data = Html.fromHtml(Control.getActiveControlListToEmail())
-        val emailIntent = Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", MySharedPreferences.shared.getString("emails"), null))
+        val emailIntent = Intent(
+            Intent.ACTION_SENDTO,
+            Uri.fromParts("mailto", MySharedPreferences.shared.getString("emails"), null)
+        )
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Planificacion IRN")
         emailIntent.putExtra(Intent.EXTRA_TEXT, data)
         startActivity(Intent.createChooser(emailIntent, "Enviar mail..."))
@@ -476,7 +504,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 */
 
-    fun comprabarSiExisteApp(nombrePaquete: String, context: Context): Boolean{
+    fun comprabarSiExisteApp(nombrePaquete: String, context: Context): Boolean {
         val pm = context.packageManager
         return try {
             pm.getPackageInfo(nombrePaquete, PackageManager.GET_ACTIVITIES)
@@ -485,7 +513,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             false
         }
     }
-    fun doCalendario(){
+
+    fun doCalendario() {
         startActivity(Intent(this, CalendarioActivity::class.java))
     }
 }
