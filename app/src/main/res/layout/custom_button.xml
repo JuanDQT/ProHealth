@@ -4,20 +4,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="75dp">
+
         <TextView
-            android:id="@+id/my_textview"
+            android:id="@+id/menuText"
             android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
+            android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
             android:layout_marginStart="-25dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="0dp"
             android:layout_marginBottom="17dp"
-            android:layout_toEndOf="@+id/my_cv"
+            android:layout_toEndOf="@+id/containIcon"
             android:background="@drawable/rounder_corner"
             android:drawablePadding="40dp"
             android:paddingStart="30dp"
@@ -26,23 +28,22 @@
             android:textAlignment="viewStart"
             android:textColor="#fff"
             android:textSize="24sp"
-            tools:text="Titulo"
-             />
+            tools:text="Titulo" />
 
         <androidx.cardview.widget.CardView
-            app:cardBackgroundColor="@color/colorPrimaryDark"
-            android:id="@+id/my_cv"
+            android:id="@+id/containIcon"
             android:layout_width="75dp"
             android:layout_height="75dp"
-            app:cardCornerRadius="50dp"
-            app:contentPadding="18dp"
-            app:cardPreventCornerOverlap="true"
-            >
+            app:cardBackgroundColor="@color/colorPrimaryDark"
+            app:cardCornerRadius="40dp"
+            app:contentPadding="16dp">
+
             <ImageView
-                android:id="@+id/my_iv"
-                android:scaleType="centerInside"
+                android:id="@+id/iconMenu"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                android:scaleType="centerInside"
+                tools:srcCompat="@drawable/calendar" />
         </androidx.cardview.widget.CardView>
     </RelativeLayout>
 
