@@ -49,6 +49,9 @@ dependencies {
     implementation 'android.arch.work:work-runtime-ktx:2.3.4'
     implementation 'com.google.firebase:firebase-crashlytics:17.4.1'
 
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+
     implementation project(path: ':anychart')
 
 }
