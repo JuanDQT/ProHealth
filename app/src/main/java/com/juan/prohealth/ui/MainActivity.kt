@@ -1,4 +1,4 @@
-package com.juan.prohealth
+package com.juan.prohealth.ui
 
 import android.app.ProgressDialog
 import android.content.Context
@@ -15,29 +15,38 @@ import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.andrognito.flashbar.Flashbar
 import com.androidnetworking.error.ANError
 import com.androidnetworking.interfaces.JSONObjectRequestListener
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.gtomato.android.ui.transformer.FlatMerryGoRoundTransformer
-import com.juan.prohealth.adapters.DoseAdapter
+import com.juan.prohealth.*
 import com.juan.prohealth.database.Control
 import com.juan.prohealth.database.User
 import com.juan.prohealth.databinding.ActivityMainBinding
+import com.juan.prohealth.ui.adapters.DoseAdapter
 import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.collections.Map
+import kotlin.collections.MutableMap
+import kotlin.collections.count
+import kotlin.collections.filter
+import kotlin.collections.first
+import kotlin.collections.mutableMapOf
+import kotlin.collections.set
 import kotlin.concurrent.schedule
 
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var binding: ActivityMainBinding
-
-    val RANGO_AZUL: String = "rangoBajoAzul.json"
-    val RANGO_ROJO: String = "rangoAltoRojo.json"
+    private lateinit var viewModel: MainViewModel
+    private val RANGO_AZUL: String = "rangoBajoAzul.json"
+    private val RANGO_ROJO: String = "rangoAltoRojo.json"
     var flashBar: Flashbar? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {

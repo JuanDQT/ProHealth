@@ -63,7 +63,7 @@
         </activity>
         <activity android:name=".CalendarioActivity" />
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.MainActivity"
             android:theme="@style/SplashTheme" />
 
         <uses-library
