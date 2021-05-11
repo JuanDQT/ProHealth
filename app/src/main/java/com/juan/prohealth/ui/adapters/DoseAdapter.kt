@@ -1,4 +1,4 @@
-package com.juan.prohealth.adapters;
+package com.juan.prohealth.ui.adapters;
 
 import android.content.Context
 import android.graphics.Typeface
