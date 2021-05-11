@@ -3,7 +3,7 @@ package com.juan.prohealth.data.local
 import android.content.SharedPreferences
 import com.juan.prohealth.source.StorageDataSource
 
-class SharedPreferenceDataSource(private val sharedPreferences: SharedPreferences) :
+class StorageValidationDataSource(private val sharedPreferences: SharedPreferences) :
     StorageDataSource {
 
     companion object{
@@ -52,7 +52,7 @@ class SharedPreferenceDataSource(private val sharedPreferences: SharedPreference
 
     override fun getString(key: String): String {
         val defaultValue = ""
-        sharedPreferences.let {
+        sharedPreferences?.let {
             return it.getString(key, defaultValue)
         }
         return defaultValue
