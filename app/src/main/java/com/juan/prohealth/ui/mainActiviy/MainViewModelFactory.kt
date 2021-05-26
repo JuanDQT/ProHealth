@@ -1,4 +1,4 @@
-package com.juan.prohealth.ui
+package com.juan.prohealth.ui.mainActiviy
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

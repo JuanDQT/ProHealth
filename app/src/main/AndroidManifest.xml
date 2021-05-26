@@ -50,7 +50,7 @@
             android:theme="@style/SplashTheme"
             />
         <activity
-            android:name=".PreinicioActivity"
+            android:name=".ui.firstActivity.PreinicioActivity"
             android:theme="@style/SplashTheme" />
         <activity
             android:name=".SplashScreenActivity"
@@ -63,7 +63,7 @@
         </activity>
         <activity android:name=".CalendarioActivity" />
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".ui.mainActiviy.MainActivity"
             android:theme="@style/SplashTheme" />
 
         <uses-library

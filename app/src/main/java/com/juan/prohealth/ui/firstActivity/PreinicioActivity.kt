@@ -1,4 +1,4 @@
-package com.juan.prohealth
+package com.juan.prohealth.ui.firstActivity
 
 import android.app.ProgressDialog
 import android.content.Intent
@@ -6,11 +6,9 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.androidnetworking.error.ANError
 import com.androidnetworking.interfaces.JSONObjectRequestListener
-import com.juan.prohealth.data.local.SharedPreference
-import com.juan.prohealth.data.local.LocalStorageDataSource
+import com.juan.prohealth.*
 import com.juan.prohealth.databinding.ActivityPreinicioBinding
-import com.juan.prohealth.repository.ValidationRepository
-import com.juan.prohealth.ui.MainActivity
+import com.juan.prohealth.ui.mainActiviy.MainActivity
 import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
