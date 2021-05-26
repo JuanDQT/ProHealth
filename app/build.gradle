@@ -46,7 +46,7 @@ dependencies {
     implementation 'com.amitshekhar.android:android-networking:1.0.1'
     implementation 'com.github.tizisdeepan:eventscalendar:1.6.1'
     implementation 'com.andrognito.flashbar:flashbar:1.0.3'
-    implementation 'android.arch.work:work-runtime-ktx:2.3.4'
+    implementation 'androidx.work:work-runtime-ktx:2.5.0'
     implementation 'com.google.firebase:firebase-crashlytics:17.4.1'
 
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1'
