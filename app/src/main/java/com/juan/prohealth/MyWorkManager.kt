@@ -9,7 +9,7 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.work.*
 import com.juan.prohealth.database.Control
-import com.juan.prohealth.database.User
+import com.juan.prohealth.database.User2
 import com.juan.prohealth.ui.mainActiviy.MainActivity
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -58,7 +58,7 @@ class MyWorkManager(context: Context, workerParamaters: WorkerParameters): Worke
                 return
 
             val workers: ArrayList<WorkRequest> = arrayListOf()
-            val userTime: Array<Int> = User.getCurrentTimeNotification()
+            val userTime: Array<Int> = User2.getCurrentTimeNotification()
 
             for (x in controls) {
                 val tiempoRestante = Calendar.getInstance().fromDate(x.fecha!!, userTime[0], userTime[1]).timeInMillis - System.currentTimeMillis().clearSeconds()

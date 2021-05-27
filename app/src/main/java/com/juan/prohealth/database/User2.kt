@@ -1,22 +1,14 @@
 package com.juan.prohealth.database
 
 import com.juan.prohealth.MySharedPreferences
-import com.juan.prohealth.addDays
 import com.juan.prohealth.fromDate
 import io.realm.Realm
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
-import io.realm.kotlin.createObject
-import java.io.File
 import java.lang.Exception
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.ZoneId
 import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.math.min
 
-open class User : RealmObject() {
+open class User2 : RealmObject() {
 
     @PrimaryKey
     private var id: String? = ""
@@ -27,14 +19,14 @@ open class User : RealmObject() {
     companion object {
         fun crearUsuarioInvitado() {
             Realm.getDefaultInstance().executeTransaction {
-                val user = it.createObject(User::class.java, "-1")
+                val user = it.createObject(User2::class.java, "-1")
                 user.name = "Invitado"
             }
         }
 
         fun userAlreadyExists(idServidor: String, nameUser: String) {
             Realm.getDefaultInstance().executeTransactionAsync {
-                val user = it.createObject(User::class.java)
+                val user = it.createObject(User2::class.java)
                 user.id = idServidor
                 user.name = nameUser
             }
@@ -43,7 +35,7 @@ open class User : RealmObject() {
         fun isInvitado(): Boolean {
             // Registro con id -1 significa que es un invitado, y que aun no ha recibido id del servidor..
             Realm.getDefaultInstance().use {
-                return it.where(User::class.java).equalTo("id", "-1").count() > 0
+                return it.where(User2::class.java).equalTo("id", "-1").count() > 0
             }
         }
 
@@ -54,7 +46,7 @@ open class User : RealmObject() {
 
         fun getCurrentTimeNotification(): Array<Int> {
             Realm.getDefaultInstance().use {
-                val currentUser =  it.where(User::class.java).equalTo("id", MySharedPreferences.shared.getString(MySharedPreferences.shared.LOGGED_CURRENT_USER)).findFirst()
+                val currentUser =  it.where(User2::class.java).equalTo("id", MySharedPreferences.shared.getString(MySharedPreferences.shared.LOGGED_CURRENT_USER)).findFirst()
                 currentUser?.let {
                     return arrayOf(it.horaAlarma, it.minutoAlarma)
                 }
@@ -65,7 +57,7 @@ open class User : RealmObject() {
         fun settCurrentTimeNotification(hora: Int, minuto: Int): Boolean {
             return try {
                 Realm.getDefaultInstance().executeTransaction {
-                    val currentUser =  it.where(User::class.java).equalTo("id", MySharedPreferences.shared.getString(MySharedPreferences.shared.LOGGED_CURRENT_USER)).findFirst()
+                    val currentUser =  it.where(User2::class.java).equalTo("id", MySharedPreferences.shared.getString(MySharedPreferences.shared.LOGGED_CURRENT_USER)).findFirst()
                     currentUser?.let {
                         currentUser.horaAlarma = hora
                         currentUser.minutoAlarma = minuto
@@ -84,9 +76,9 @@ open class User : RealmObject() {
             MySharedPreferences.shared.addString(MySharedPreferences.shared.LOGGED_CURRENT_USER, idUser)
         }
 
-        fun getAll(): List<User> {
+        fun getAll(): List<User2> {
             Realm.getDefaultInstance().use {
-                return it.copyFromRealm(it.where(User::class.java).findAll())
+                return it.copyFromRealm(it.where(User2::class.java).findAll())
             }
         }
 

@@ -1,6 +1,5 @@
 package com.juan.prohealth.ui.mainActiviy
 
-import android.app.ProgressDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
@@ -17,8 +16,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.andrognito.flashbar.Flashbar
-import com.androidnetworking.error.ANError
-import com.androidnetworking.interfaces.JSONObjectRequestListener
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.gtomato.android.ui.transformer.FlatMerryGoRoundTransformer
@@ -26,12 +23,10 @@ import com.juan.prohealth.*
 import com.juan.prohealth.data.local.SharedPreference
 import com.juan.prohealth.data.local.StorageValidationDataSource
 import com.juan.prohealth.database.Control
-import com.juan.prohealth.database.User
+import com.juan.prohealth.database.User2
 import com.juan.prohealth.databinding.ActivityMainBinding
 import com.juan.prohealth.repository.ValidationRepository
 import com.juan.prohealth.ui.adapters.DoseAdapter
-import org.json.JSONObject
-import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.set
@@ -74,81 +69,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onResume() {
         super.onResume()
-
-
-        // A nivel de codigo, tiene que guardar, si SPFecha es nula(primera vez) actualizamos SPFecha and continue
-        // Si SPFecha existe(else) SPFeha == actual || SPFecha(+1 dia) == actual, actualizamos fecha, continue, else error + call
-
-        // Primera vez
-        val currentDate = MySharedPreferences.shared.getSystemDate()
-        if (currentDate == 0.toLong()) {
-            MySharedPreferences.shared.updateSystemDate(Date().clearTime().time)
-        } else {
-            if ((Date(currentDate) == Date().clearTime() || Date(currentDate).addDays(1) == Date().clearTime())) {
-                MySharedPreferences.shared.updateSystemDate(Date().clearTime().time)
-
-                // Tiempo uso expirado
-                if (Date(currentDate) > Date(MySharedPreferences.shared.getFechaFinPrueba())) {
-
-                    val pdLoading = ProgressDialog(this)
-                    pdLoading.setMessage(getString(R.string.validando))
-                    pdLoading.show()
-
-                    alert(
-                        "Alerta",
-                        "Versión de prueba expirada",
-                        "Aceptar",
-                        DialogInterface.OnClickListener { dialogInterface, i ->
-                            finishAffinity()
-                        },
-                        "Verificar renovación",
-                        DialogInterface.OnClickListener { dialogInterface, i ->
-                            // API
-                            SyncData.validateDevice(object : JSONObjectRequestListener {
-                                override fun onResponse(response: JSONObject?) {
-
-                                    response?.let {
-                                        val status = it.getInt("status")
-                                        if (status == 1) {
-                                            pdLoading.dismiss()
-
-                                            val fechaFin =
-                                                SimpleDateFormat("yyyy-MM-dd").parse(it.getString("fechaFin"))
-                                            MySharedPreferences.shared.setFechaFinPrueba(fechaFin.clearTime().time)
-
-                                            onResume()
-                                        }
-                                    }
-                                }
-
-                                override fun onError(anError: ANError?) {
-                                    pdLoading.dismiss()
-                                    alert(
-                                        getString(R.string.alerta),
-                                        getString(R.string.error_verificacion)
-                                    )
-                                }
-                            })
-
-                        }, closable = false
-                    )
-                }
-            } else {
-                alert(
-                    "Alerta",
-                    "Por favor, no juege con las fechas. Vuelva a situarla a ${Date(currentDate).customFormat()}",
-                    "Aceptar",
-                    DialogInterface.OnClickListener { dialogInterface, i ->
-                        finishAffinity()
-                    })
-            }
-        }
-
-        Control.closeOlderControls()
-
-        pintarValores()
-        checkHasControlToday()
-
+        viewModel.doOnResume()
     }
 
     fun askForControl(valor: String?) {
@@ -215,7 +136,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             binding.btnINR.isEnabled = false
             binding.btnBorrar.isEnabled = true
             setDosisWidget()
-            if (Control.hasControlToday() && User.isAlarmTime())
+            if (Control.hasControlToday() && User2.isAlarmTime())
                 askForControl(Control.getControlDay(Date())?.recurso)
             else flashBar?.dismiss()
 

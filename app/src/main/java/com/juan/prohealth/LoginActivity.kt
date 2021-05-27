@@ -3,7 +3,7 @@ package com.juan.prohealth
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.juan.prohealth.database.User
+import com.juan.prohealth.database.User2
 import com.juan.prohealth.databinding.ActivityLoginBinding
 import com.juan.prohealth.ui.firstActivity.PreinicioActivity
 
@@ -16,8 +16,8 @@ class LoginActivity : AppCompatActivity() {
 
         binding.tvModoInvitado.setOnClickListener {
             // La primera vez, tendra id -1 en modo invitado
-            User.crearUsuarioInvitado()
-            User.setLogged("-1")
+            User2.crearUsuarioInvitado()
+            User2.setLogged("-1")
             startActivity(Intent(this, PreinicioActivity::class.java))
         }
 

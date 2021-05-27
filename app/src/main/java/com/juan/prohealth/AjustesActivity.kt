@@ -13,7 +13,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.juan.prohealth.database.Control
-import com.juan.prohealth.database.User
+import com.juan.prohealth.database.User2
 import com.juan.prohealth.databinding.ActivityAjustesBinding
 import io.github.lucasfsc.html2pdf.Html2Pdf
 import java.io.File
@@ -27,7 +27,7 @@ class AjustesActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityAjustesBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        binding.tvHora.text = getDateFormat(User.getCurrentTimeNotification())
+        binding.tvHora.text = getDateFormat(User2.getCurrentTimeNotification())
 
         binding.tvContactos.setOnClickListener { doAskMail() }
         binding.frameNotificaciones.setOnClickListener { doConfigNotification() }
@@ -40,8 +40,8 @@ class AjustesActivity : AppCompatActivity() {
     }
 
     fun doConfigNotification() {
-        val hour: Int = User.getCurrentTimeNotification()[0]
-        val minute: Int = User.getCurrentTimeNotification()[1]
+        val hour: Int = User2.getCurrentTimeNotification()[0]
+        val minute: Int = User2.getCurrentTimeNotification()[1]
         val mTimePicker: TimePickerDialog
         mTimePicker = TimePickerDialog(
             this, android.R.style.Theme_Holo_Dialog,
@@ -52,7 +52,7 @@ class AjustesActivity : AppCompatActivity() {
                     "Seleccionado: $selectedHour:$selectedMinute",
                     Toast.LENGTH_SHORT
                 ).show()
-                User.settCurrentTimeNotification(selectedHour, selectedMinute)
+                User2.settCurrentTimeNotification(selectedHour, selectedMinute)
                 binding.tvHora.text = getDateFormat(arrayOf(selectedHour, selectedMinute))
 
                 if (Control.hasPendingControls()) {
