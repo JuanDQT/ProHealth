@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.juan.prohealth.database.User
 import com.juan.prohealth.databinding.ActivityLoginBinding
+import com.juan.prohealth.ui.firstActivity.PreinicioActivity
 
 class LoginActivity : AppCompatActivity() {
 

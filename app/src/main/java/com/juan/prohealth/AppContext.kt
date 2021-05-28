@@ -80,7 +80,7 @@ class AppContext : Application() {
         fun validarInputTextSangre(inputText: String): Float? {
 
             inputText.toFloatOrNull()?.let {
-                if(it in 1..7)
+                if(it in 1f..7f)
                     return (it)
             }
 
