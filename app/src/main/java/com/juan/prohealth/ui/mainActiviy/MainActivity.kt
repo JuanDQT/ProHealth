@@ -55,7 +55,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         binding.btnEstadisticas.setOnClickListener(this)
         binding.btnCalendario.setOnClickListener(this)
         binding.btnAjustes.setOnClickListener(this)
+
+        subscribeUI()
     }
+
+
 
     private fun buildViewModel(): MainViewModel {
         val factory = MainViewModelFactory(validationRepository)
@@ -69,7 +73,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onResume() {
         super.onResume()
-        viewModel.doOnResume()
     }
 
     fun askForControl(valor: String?) {
@@ -131,14 +134,22 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
+    private fun subscribeUI() {
+        viewModel.statusINRButton.observe(this) {
+            binding.btnINR.isEnabled = it
+        }
+
+    }
+
+/*
     fun checkHasControlToday() {
         if (Control.hasPendingControls()) {
             binding.btnINR.isEnabled = false
             binding.btnBorrar.isEnabled = true
             setDosisWidget()
-            if (Control.hasControlToday() && User2.isAlarmTime())
+            if (Control.hasControlToday() && User2.isAlarmTime()) {
                 askForControl(Control.getControlDay(Date())?.recurso)
-            else flashBar?.dismiss()
+            } else flashBar?.dismiss()
 
         } else {
             binding.btnINR.isEnabled = true
@@ -150,6 +161,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             MyWorkManager.clearAllWorks()
         }
     }
+*/
 
     // Controlamos eventos click Botones
     override fun onClick(view: View?) {
@@ -168,14 +180,17 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     fun doAjustarIRN() {
         val data = Control.getAll()
         Log.e("MainActivity", "ANTES")
-        for (item in data)
-            Log.e("MainActivity", item.toString())
+        for (item in data) {
+        }
+        Log.e("MainActivity", item.toString())
 
         Control.restartIRN()
-        checkHasControlToday()
+        viewModel.checkHasControlToday()
+
         Log.e("MainActivity", "DESPUES")
-        for (item in Control.getAll())
-            Log.e("MainActivity", item.toString())
+        for (item in Control.getAll()) {
+        }
+        Log.e("MainActivity", item.toString())
     }
 
     fun doOpenEstadisticas() {
@@ -341,17 +356,19 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 MySharedPreferences.shared.addString("sangre", sangre)
                 MySharedPreferences.shared.addString("nivel", nivel)
                 Control.registrarControlActual(dataNiveles, sangre.toFloat(), nivel.toInt())
-                checkHasControlToday()
+                viewModel.checkHasControlToday()
 
                 MyWorkManager.setWorkers(Control.getActiveControlList(onlyPendings = true))
 
-                for (item in Control.getAll())
-                    Log.e("MainActivity", item.toString())
+                for (item in Control.getAll()) {
+                }
+                Log.e("MainActivity", item.toString())
 
                 pintarValores()
 
-                if (btnMails.isChecked)
-                    sendEmailPlanificacion()
+                if (btnMails.isChecked) {
+                }
+                sendEmailPlanificacion()
 
             })
 

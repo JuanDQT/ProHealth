@@ -1,7 +1,9 @@
 package com.juan.prohealth.database.daos
 
-import androidx.room.*
-import com.juan.prohealth.database.User2
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
 import com.juan.prohealth.database.entity.User
 
 @Dao
@@ -13,7 +15,7 @@ interface UserDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insert(user: User)
 
-    @Query("select * from user where id = :id")
+    @Query("select hour_alarm, minute_alarm from user where id = :id")
     fun getCurrentTimeNotification(id: Int): Array<Int>
 
     @Query("SELECT * FROM user WHERE id = :id")

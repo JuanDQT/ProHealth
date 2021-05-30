@@ -14,42 +14,6 @@ class UserRepo(var database: MyDatabase) {
 
     private var userDao: UserDao = database.userDao()
 
-    suspend fun findNeoByRangeDate(
-        dateInit: String,
-        dateFinish: String
-    ): NearEarthObjectResult =
-        withContext(Dispatchers.IO) {
-            NasaClient.service.searchNeoWsByDate(dateInit, dateFinish, apiKey)
-        }
-
-    suspend fun findNeoByOnlyStartDate(
-        startDate: String,
-    ): NearEarthObjectResult =
-        withContext(Dispatchers.IO) {
-            NasaClient.service.searchNeoWsByOnlyStartDate(startDate, apiKey)
-        }
-
-    suspend fun removeAsteroid(asteroid: Neo) =
-        withContext(Dispatchers.IO) {
-            asteroidDao.delete(asteroid)
-        }
-
-    suspend fun insertAsteroid(asteroid: Neo) =
-        withContext(Dispatchers.IO) {
-            asteroidDao.insert(asteroid)
-        }
-
-    suspend fun getAsteroidById(id: String): Neo? = withContext(Dispatchers.IO) {
-        asteroidDao.getById(id)
-    }
-
-    fun getAllAsteroidsSaved(): LiveData<List<Neo>> {
-        return asteroidDao.getAllLiveData()
-    }
-
-
-    //
-
     suspend fun crearUsuarioInvitado() {
         val newUser = User(0, "", 0, 0, 0)
         withContext(Dispatchers.IO) {
@@ -66,8 +30,8 @@ class UserRepo(var database: MyDatabase) {
 
     suspend fun isInvitado(): Boolean {
         // Registro con id -1 significa que es un invitado, y que aun no ha recibido id del servidor..
-        withContext(Dispatchers.IO) {
-            return userDao.isInvitado()
+        return withContext(Dispatchers.IO) {
+            userDao.isInvitado()
         }
     }
 
@@ -78,23 +42,21 @@ class UserRepo(var database: MyDatabase) {
     }
 
     suspend fun getCurrentTimeNotification(): Array<Int> {
-        withContext(Dispatchers.IO) {
-            return userDao.getCurrentTimeNotification(MySharedPreferences.shared.getString(
+        return withContext(Dispatchers.IO) {
+             userDao.getCurrentTimeNotification(MySharedPreferences.shared.getString(
                 MySharedPreferences.shared.LOGGED_CURRENT_USER))
         }
     }
 
     suspend fun settCurrentTimeNotification(hora: Int, minuto: Int): Boolean {
-        withContext(Dispatchers.IO) {
+        return withContext(Dispatchers.IO) {
             val user = userDao.getById(MySharedPreferences.shared.getString(
                 MySharedPreferences.shared.LOGGED_CURRENT_USER))
             user?.let {
                 it.hourAlarm = hora
                 it.minuteAlamr = minuto
                 userDao.update(user)
-                return true
             }
-            return false
         }
     }
 
@@ -106,8 +68,8 @@ class UserRepo(var database: MyDatabase) {
     }
 
     suspend fun getAll(): List<User> {
-        withContext(Dispatchers.IO) {
-            return userDao.getAll()
+        return withContext(Dispatchers.IO) {
+            userDao.getAll()
         }
     }
 

@@ -6,12 +6,14 @@ import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.androidnetworking.error.ANError
 import com.androidnetworking.interfaces.JSONObjectRequestListener
 import com.juan.prohealth.*
 import com.juan.prohealth.database.Control
 import com.juan.prohealth.database.User2
 import com.juan.prohealth.repository.ValidationRepository
+import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
@@ -19,15 +21,21 @@ import java.util.*
 class MainViewModel(private val validationRepository: ValidationRepository ) :
     ViewModel() {
 
-    private var _rangeFile = MutableLiveData<String>()
-    val rangeFile: LiveData<String> get() = _rangeFile
-
+    private var _statusINRButton = MutableLiveData(true)
+    val statusINRButton: LiveData<Boolean> get() = _statusINRButton
 
     // metodos
 
     fun checkHasControlToday() {
         if (Control.hasPendingControls()) {
-            binding.btnINR.isEnabled = false
+            viewModelScope.launch {
+            //LLAMO A SERVIDOR
+
+            }
+            //
+
+
+            _statusINRButton.value = false
             binding.btnBorrar.isEnabled = true
             setDosisWidget()
             if (Control.hasControlToday() && User2.isAlarmTime())
@@ -35,7 +43,7 @@ class MainViewModel(private val validationRepository: ValidationRepository ) :
             else flashBar?.dismiss()
 
         } else {
-            binding.btnINR.isEnabled = true
+            _statusINRButton.value = true
             binding.btnBorrar.isEnabled = false
             binding.carousel.visibility = View.GONE
             binding.ivArrowLeft.visibility = View.GONE
