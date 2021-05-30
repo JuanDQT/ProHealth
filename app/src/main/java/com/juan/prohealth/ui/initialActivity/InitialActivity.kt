@@ -1,27 +1,35 @@
-package com.juan.prohealth.ui.firstActivity
+package com.juan.prohealth.ui.initialActivity
 
 import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.androidnetworking.error.ANError
 import com.androidnetworking.interfaces.JSONObjectRequestListener
 import com.juan.prohealth.*
-import com.juan.prohealth.databinding.ActivityPreinicioBinding
+import com.juan.prohealth.data.local.SharedPreference
+import com.juan.prohealth.data.local.StorageValidationDataSource
+import com.juan.prohealth.databinding.ActivityInitialBinding
+import com.juan.prohealth.repository.ValidationRepository
 import com.juan.prohealth.ui.mainActiviy.MainActivity
 import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
 
-class PreinicioActivity : AppCompatActivity() {
+class InitialActivity : AppCompatActivity() {
+
+    private lateinit var validationRepository: ValidationRepository
+    private lateinit var viewModel: InitialMainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding = ActivityPreinicioBinding.inflate(layoutInflater)
+        val binding = ActivityInitialBinding.inflate(layoutInflater)
+        buildDependencies()
+        viewModel = buildViewModel()
         setContentView(binding.root)
-
         // Comprobamos que ya esta guardado
-        if (goInicioActivity()) {
+        if (viewModel.isInSharedPreferences()) {
             val intent = Intent(this, MainActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NO_HISTORY
             startActivity(intent)
@@ -62,7 +70,7 @@ class PreinicioActivity : AppCompatActivity() {
                                     binding.etNivel.text.toString()
                                 )
                                 val intent =
-                                    Intent(this@PreinicioActivity, MainActivity::class.java)
+                                    Intent(this@InitialActivity, MainActivity::class.java)
                                 startActivity(intent)
                             } else
                                 alert(getString(R.string.alerta), "Vuelvelo a intentar mas tarde")
@@ -87,7 +95,17 @@ class PreinicioActivity : AppCompatActivity() {
 
     }
 
-    fun goInicioActivity(): Boolean {
+    private fun buildViewModel(): InitialMainViewModel {
+        val factory = InitialModelFactory(validationRepository)
+        return ViewModelProvider(this, factory).get(InitialMainViewModel::class.java)
+    }
+
+    private fun buildDependencies() {
+        val sharedPreference = SharedPreference.getInstance(this.applicationContext)
+        validationRepository = ValidationRepository(StorageValidationDataSource(sharedPreference))
+    }
+
+    private fun isExistInSharedPreferences(): Boolean {
         // Comprobamos que los valores existan en el sharedPreferences.
         return MySharedPreferences.shared.exists(arrayOf("nivel"))
     }

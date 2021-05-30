@@ -5,7 +5,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.juan.prohealth.database.User
 import com.juan.prohealth.databinding.ActivityLoginBinding
-import com.juan.prohealth.ui.firstActivity.PreinicioActivity
+import com.juan.prohealth.ui.initialActivity.InitialActivity
 
 class LoginActivity : AppCompatActivity() {
 
@@ -18,7 +18,7 @@ class LoginActivity : AppCompatActivity() {
             // La primera vez, tendra id -1 en modo invitado
             User.crearUsuarioInvitado()
             User.setLogged("-1")
-            startActivity(Intent(this, PreinicioActivity::class.java))
+            startActivity(Intent(this, InitialActivity::class.java))
         }
 
         binding.btnLogin.setOnClickListener {

@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.os.Handler
 import com.juan.prohealth.database.User
 import com.juan.prohealth.databinding.ActivitySplashScreenBinding
-import com.juan.prohealth.ui.firstActivity.PreinicioActivity
+import com.juan.prohealth.ui.initialActivity.InitialActivity
 
 class SplashScreenActivity : AppCompatActivity() {
 
@@ -16,7 +16,7 @@ class SplashScreenActivity : AppCompatActivity() {
         val binding = ActivitySplashScreenBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val activityDestination = if (User.isLogged()) PreinicioActivity::class.java else LoginActivity::class.java
+        val activityDestination = if (User.isLogged()) InitialActivity::class.java else LoginActivity::class.java
 
         handler = Handler()
         handler.postDelayed({
