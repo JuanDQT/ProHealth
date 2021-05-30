@@ -1,4 +1,4 @@
-package com.juan.prohealth.ui.firstActivity
+package com.juan.prohealth.ui.initialActivity
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
