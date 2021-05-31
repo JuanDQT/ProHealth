@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.juan.prohealth.*
 import com.juan.prohealth.database.Control
 import com.juan.prohealth.databinding.ItemDosisBinding
+import com.juan.prohealth.ui.common.*
 import java.util.*
 
 class DoseAdapter(var controls: ArrayList<Control>) :

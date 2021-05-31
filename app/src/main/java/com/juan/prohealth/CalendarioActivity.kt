@@ -8,6 +8,9 @@ import com.events.calendar.utils.EventsCalendarUtil
 import com.events.calendar.views.EventsCalendar
 import com.juan.prohealth.database.Control
 import com.juan.prohealth.databinding.ActivityCalendarioBinding
+import com.juan.prohealth.ui.common.clearTime
+import com.juan.prohealth.ui.common.fromDate
+import com.juan.prohealth.ui.common.setBackgroundResource
 import java.util.*
 
 
