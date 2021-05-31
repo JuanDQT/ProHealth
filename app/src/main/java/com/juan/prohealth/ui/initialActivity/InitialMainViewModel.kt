@@ -10,8 +10,8 @@ class InitialMainViewModel(private val validationRepository: ValidationRepositor
     private var _isStored = MutableLiveData<Boolean>()
     val isStored: LiveData<Boolean> get() = _isStored
 
-    fun isInSharedPreferences(): Boolean {
-        return if (validationRepository.checkIfExist(arrayOf("nivel"))) true
+    fun isInSharedPreferences(doseLevelName: Array<String>): Boolean {
+        return if (validationRepository.checkIfExist(doseLevelName)) true
         else return false
     }
 

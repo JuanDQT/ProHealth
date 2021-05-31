@@ -18,9 +18,9 @@ class StorageValidationDataSource(private val sharedPreferences: SharedPreferenc
         if (keys.count() < 1)
             return false
 
-        sharedPreferences?.let {
+        sharedPreferences?.let {sharedPreferences->
             for (key in keys) {
-                if (!it.contains(key))
+                if (!sharedPreferences.contains(key))
                     return false
             }
             return true

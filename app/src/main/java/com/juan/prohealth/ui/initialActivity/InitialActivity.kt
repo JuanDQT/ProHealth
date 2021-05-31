@@ -26,12 +26,12 @@ class InitialActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityInitialBinding.inflate(layoutInflater)
         buildDependencies()
         viewModel = buildViewModel()
+        binding = ActivityInitialBinding.inflate(layoutInflater)
         setContentView(binding.root)
         // Comprobamos que ya esta guardado
-        if (viewModel.isInSharedPreferences()) {
+        if (viewModel.isInSharedPreferences(arrayOf(DOSE_LEVEL_TEXT))) {
             val intent = Intent(this, MainActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NO_HISTORY
             startActivity(intent)
@@ -39,12 +39,11 @@ class InitialActivity : AppCompatActivity() {
         }
 
         binding.btnSaveDose.setOnClickListener { setFirstDoseLevel() }
-
     }
 
     private fun setFirstDoseLevel() {
         viewModel.addString(
-            "nivel",
+            DOSE_LEVEL_TEXT,
             binding.etNivel.text.toString()
         )
         val intent =
@@ -80,7 +79,7 @@ class InitialActivity : AppCompatActivity() {
                             //MySharedPreferences.shared.setFechaFinPrueba(value)
 
                             viewModel.addString(
-                                "nivel",
+                                DOSE_LEVEL_TEXT,
                                 binding.etNivel.text.toString()
                             )
                             /*       MySharedPreferences.shared.addString(
@@ -121,6 +120,10 @@ class InitialActivity : AppCompatActivity() {
 
     private fun isExistInSharedPreferencesOld(): Boolean {
         // Comprobamos que los valores existan en el sharedPreferences.
-        return MySharedPreferences.shared.exists(arrayOf("nivel"))
+        return MySharedPreferences.shared.exists(arrayOf(DOSE_LEVEL_TEXT))
+    }
+
+    companion object {
+        private const val DOSE_LEVEL_TEXT: String = "nivel"
     }
 }
