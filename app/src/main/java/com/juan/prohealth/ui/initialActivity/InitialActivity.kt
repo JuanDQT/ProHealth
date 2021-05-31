@@ -12,6 +12,7 @@ import com.juan.prohealth.data.local.SharedPreference
 import com.juan.prohealth.data.local.StorageValidationDataSource
 import com.juan.prohealth.databinding.ActivityInitialBinding
 import com.juan.prohealth.repository.ValidationRepository
+import com.juan.prohealth.ui.common.*
 import com.juan.prohealth.ui.mainActiviy.MainActivity
 import org.json.JSONObject
 import java.text.SimpleDateFormat
@@ -21,10 +22,11 @@ class InitialActivity : AppCompatActivity() {
 
     private lateinit var validationRepository: ValidationRepository
     private lateinit var viewModel: InitialMainViewModel
+    private lateinit var binding: ActivityInitialBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding = ActivityInitialBinding.inflate(layoutInflater)
+        binding = ActivityInitialBinding.inflate(layoutInflater)
         buildDependencies()
         viewModel = buildViewModel()
         setContentView(binding.root)
@@ -36,62 +38,74 @@ class InitialActivity : AppCompatActivity() {
             return
         }
 
-        binding.btnINR.setOnClickListener {
+        binding.btnSaveDose.setOnClickListener { setFirstDoseLevel() }
 
-            //Guardamos valores en String
-            val inputNivelSangreText = binding.etNivel.text.toString()
-            //Validamos estos valores
-            if (AppContext.validarInputNivel(inputNivelSangreText)) {
-                // Guardamos los valores en sharedPrederences
+    }
 
+    private fun setFirstDoseLevel() {
+        viewModel.addString(
+            "nivel",
+            binding.etNivel.text.toString()
+        )
+        val intent =
+            Intent(this@InitialActivity, MainActivity::class.java)
+        startActivity(intent)
+    }
 
-                //
-                val pdLoading = ProgressDialog(this)
-                pdLoading.setMessage(getString(R.string.validando))
-                pdLoading.show()
+    private fun setFirstDoseWithVerificationFromServerOld() {
+        val inputBloodLevel = binding.etNivel.text.toString()
 
-                //
-                SyncData.validateDevice(object : JSONObjectRequestListener {
-                    override fun onResponse(response: JSONObject?) {
+        if (AppContext.validarInputNivel(inputBloodLevel)) {
+            // Guardamos los valores en sharedPrederences
 
-                        response?.let {
-                            val status = it.getInt("status")
-                            pdLoading.dismiss()
-
-                            if (status == 1) {
-
-                                val fechaFin =
-                                    SimpleDateFormat("yyyy-MM-dd").parse(it.getString("fechaFin"))
-                                MySharedPreferences.shared.setFechaFinPrueba(fechaFin.clearTime().time)
-
-
-                                MySharedPreferences.shared.addString(
-                                    "nivel",
-                                    binding.etNivel.text.toString()
-                                )
-                                val intent =
-                                    Intent(this@InitialActivity, MainActivity::class.java)
-                                startActivity(intent)
-                            } else
-                                alert(getString(R.string.alerta), "Vuelvelo a intentar mas tarde")
-                        }
-                    }
-
-                    override fun onError(anError: ANError?) {
-                        pdLoading.dismiss()
-                        alert(getString(R.string.alerta), getString(R.string.error_verificacion))
-                    }
-                })
-            }
-
-
+            val pdLoading = ProgressDialog(this)
+            pdLoading.setMessage(getString(R.string.validando))
+            pdLoading.show()
             //
+            SyncData.validateDevice(object : JSONObjectRequestListener {
+                override fun onResponse(response: JSONObject?) {
 
-            // respuesta, guardar en fecha fin..
+                    response?.let {
+                        val status = it.getInt("status")
+                        pdLoading.dismiss()
 
-            // continue
+                        if (status == 1) {
 
+                            val finalDate =
+                                SimpleDateFormat("yyyy-MM-dd").parse(it.getString("fechaFin"))
+
+                            val value = finalDate.clearTime().time
+
+                            viewModel.setFinalDate(value)
+                            //MySharedPreferences.shared.setFechaFinPrueba(value)
+
+                            viewModel.addString(
+                                "nivel",
+                                binding.etNivel.text.toString()
+                            )
+                            /*       MySharedPreferences.shared.addString(
+                                            "nivel",
+                                            binding.etNivel.text.toString()
+                                        )*/
+                            val intent =
+                                Intent(this@InitialActivity, MainActivity::class.java)
+                            startActivity(intent)
+                        } else
+                            alert(getString(R.string.alerta), "Vuelvelo a intentar mas tarde")
+                    }
+                }
+
+                override fun onError(anError: ANError?) {
+                    pdLoading.dismiss()
+                    alert(getString(R.string.alerta), getString(R.string.error_verificacion))
+                }
+            })
         }
+        //
+
+        // respuesta, guardar en fecha fin..
+
+        // continue
 
     }
 
@@ -105,7 +119,7 @@ class InitialActivity : AppCompatActivity() {
         validationRepository = ValidationRepository(StorageValidationDataSource(sharedPreference))
     }
 
-    private fun isExistInSharedPreferences(): Boolean {
+    private fun isExistInSharedPreferencesOld(): Boolean {
         // Comprobamos que los valores existan en el sharedPreferences.
         return MySharedPreferences.shared.exists(arrayOf("nivel"))
     }

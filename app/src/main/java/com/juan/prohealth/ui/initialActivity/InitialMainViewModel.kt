@@ -15,6 +15,14 @@ class InitialMainViewModel(private val validationRepository: ValidationRepositor
         else return false
     }
 
+    fun setFinalDate(epochDate: Long) {
+        validationRepository.setFinalTestDate(epochDate)
+    }
+
+    fun addString(key: String, value: String) {
+        validationRepository.addString(key, value)
+    }
+
     fun isInSharedPreferencesNew() {
         _isStored.value = validationRepository.checkIfExist(arrayOf("nivel"))
     }
