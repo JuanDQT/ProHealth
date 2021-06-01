@@ -20,12 +20,16 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.gtomato.android.ui.transformer.FlatMerryGoRoundTransformer
 import com.juan.prohealth.*
+import com.juan.prohealth.data.local.RoomControlDataSource
 import com.juan.prohealth.data.local.SharedPreference
 import com.juan.prohealth.data.local.StorageValidationDataSource
-import com.juan.prohealth.database.Control
-import com.juan.prohealth.database.User2
+import com.juan.prohealth.database.Control2
+import com.juan.prohealth.database.MyDatabase
+import com.juan.prohealth.database.UserRepo
 import com.juan.prohealth.databinding.ActivityMainBinding
+import com.juan.prohealth.repository.ControlRepository
 import com.juan.prohealth.repository.ValidationRepository
+import com.juan.prohealth.source.ControlLocalDataSource
 import com.juan.prohealth.ui.adapters.DoseAdapter
 import java.util.*
 import kotlin.collections.ArrayList
@@ -38,6 +42,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var binding: ActivityMainBinding
     private lateinit var viewModel: MainViewModel
     private lateinit var validationRepository: ValidationRepository
+    private lateinit var controlRepository: ControlRepository
     private val RANGO_AZUL: String = "rangoBajoAzul.json"
     private val RANGO_ROJO: String = "rangoAltoRojo.json"
     var flashBar: Flashbar? = null
@@ -62,18 +67,44 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
 
     private fun buildViewModel(): MainViewModel {
-        val factory = MainViewModelFactory(validationRepository)
+        val factory = MainViewModelFactory(validationRepository, controlRepository)
         return ViewModelProvider(this, factory).get(MainViewModel::class.java)
     }
 
     private fun buildDependencies() {
         val sharedPreference = SharedPreference.getInstance(this.applicationContext)
+        val database = MyDatabase.getDatabase(this)
+        val controlLocal = RoomControlDataSource(database)
         validationRepository = ValidationRepository(StorageValidationDataSource(sharedPreference))
+        controlRepository = ControlRepository(controlLocal)
     }
 
     override fun onResume() {
         super.onResume()
+        viewModel.doCloseOlderControls()
+        checkHasControlToday()
+        setDosisWidget()
     }
+
+    fun checkHasControlToday() {
+        if (Control.hasPendingControls()) {
+            binding.btnINR.isEnabled = false
+            binding.btnBorrar.isEnabled = true
+            if (Control.hasControlToday() && User2.isAlarmTime()) {
+                askForControl(Control.getControlDay(Date())?.recurso)
+            } else flashBar?.dismiss()
+
+        } else {
+            binding.btnINR.isEnabled = true
+            binding.btnBorrar.isEnabled = false
+            binding.carousel.visibility = View.GONE
+            binding.ivArrowLeft.visibility = View.GONE
+            binding.ivArrowRight.visibility = View.GONE
+            flashBar?.dismiss()
+            MyWorkManager.clearAllWorks()
+        }
+    }
+
 
     fun askForControl(valor: String?) {
 
@@ -109,8 +140,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     // TODO: preguntar, si cuando un control acaba, ese mismo dia puede planificar nuevos controles, incluyendo el mismo dia? se daria el caso? si es superior mejor..
     fun updateControlStatus(status: Boolean) {
-        Control.updateCurrentControl(status)
-        pintarValores()
+        Control2.updateCurrentControl(status)
     }
 
     fun setDosisWidget() {
@@ -124,7 +154,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
         binding.carousel.transformer = transformer
         binding.carousel.isInfinite = true
-        val items = ArrayList(Control.getActiveControlList())
+        val items = ArrayList(Control2.getActiveControlList())
         binding.carousel.adapter = DoseAdapter(items)
 
         if (items != null && items.count() > 0) {
@@ -135,33 +165,21 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun subscribeUI() {
-        viewModel.statusINRButton.observe(this) {
-            binding.btnINR.isEnabled = it
+        viewModel.statusINRButton.observe(this) { value ->
+            binding.btnINR.isEnabled = value
+        }
+        viewModel.statusDeleteBtn.observe(this) { value ->
+            binding.btnBorrar.isEnabled = value
+        }
+        viewModel.bloodValue.observe(this) { value ->
+            binding.tvSangreValor.text = "${value.toString().replace(".", ",")}"
+        }
+        viewModel.doseValue.observe(this) { value ->
+            binding.tvDosisValor.text = "${value}"
         }
 
     }
 
-/*
-    fun checkHasControlToday() {
-        if (Control.hasPendingControls()) {
-            binding.btnINR.isEnabled = false
-            binding.btnBorrar.isEnabled = true
-            setDosisWidget()
-            if (Control.hasControlToday() && User2.isAlarmTime()) {
-                askForControl(Control.getControlDay(Date())?.recurso)
-            } else flashBar?.dismiss()
-
-        } else {
-            binding.btnINR.isEnabled = true
-            binding.btnBorrar.isEnabled = false
-            binding.carousel.visibility = View.GONE
-            binding.ivArrowLeft.visibility = View.GONE
-            binding.ivArrowRight.visibility = View.GONE
-            flashBar?.dismiss()
-            MyWorkManager.clearAllWorks()
-        }
-    }
-*/
 
     // Controlamos eventos click Botones
     override fun onClick(view: View?) {
@@ -178,17 +196,17 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     fun doAjustarIRN() {
-        val data = Control.getAll()
+        val data = Control2.getAll()
         Log.e("MainActivity", "ANTES")
         for (item in data) {
         }
         Log.e("MainActivity", item.toString())
 
-        Control.restartIRN()
+        Control2.restartIRN()
         viewModel.checkHasControlToday()
 
         Log.e("MainActivity", "DESPUES")
-        for (item in Control.getAll()) {
+        for (item in Control2.getAll()) {
         }
         Log.e("MainActivity", item.toString())
     }
@@ -231,7 +249,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         val editText = view.findViewById<EditText>(R.id.etValor)
 
         // Buscamos si hay historial..
-        val ultimosControles = Control.getUltimosIRN()
+        val ultimosControles = Control2.getUltimosIRN()
 
         if (ultimosControles.count() > 0) {
             val layoutHistorico = view.findViewById<LinearLayout>(R.id.ll_historico)
@@ -318,7 +336,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         irnActual.text = MySharedPreferences.shared.getSangre()
         irnNew.text = sangre
 
-        if (!Control.any()) {
+        if (!Control2.any()) {
             val irnText = view.findViewById<TextView>(R.id.tvIRN_text)
             val frameIRN = view.findViewById<FrameLayout>(R.id.frame_IRN)
             irnText.visibility = View.GONE
@@ -355,16 +373,15 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 // Actualizamos la sangre y nivel
                 MySharedPreferences.shared.addString("sangre", sangre)
                 MySharedPreferences.shared.addString("nivel", nivel)
-                Control.registrarControlActual(dataNiveles, sangre.toFloat(), nivel.toInt())
+                Control2.registrarControlActual(dataNiveles, sangre.toFloat(), nivel.toInt())
                 viewModel.checkHasControlToday()
 
-                MyWorkManager.setWorkers(Control.getActiveControlList(onlyPendings = true))
+                MyWorkManager.setWorkers(Control2.getActiveControlList(onlyPendings = true))
 
-                for (item in Control.getAll()) {
+                for (item in Control2.getAll()) {
                 }
                 Log.e("MainActivity", item.toString())
 
-                pintarValores()
 
                 if (btnMails.isChecked) {
                 }
@@ -377,7 +394,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     fun sendEmailPlanificacion() {
-        val data = Html.fromHtml(Control.getActiveControlListToEmail())
+        val data = Html.fromHtml(Control2.getActiveControlListToEmail())
         val emailIntent = Intent(
             Intent.ACTION_SENDTO,
             Uri.fromParts("mailto", MySharedPreferences.shared.getString("emails"), null)
@@ -385,11 +402,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Planificacion IRN")
         emailIntent.putExtra(Intent.EXTRA_TEXT, data)
         startActivity(Intent.createChooser(emailIntent, "Enviar mail..."))
-    }
-
-    fun pintarValores() {
-        binding.tvSangreValor.text = "${MySharedPreferences.shared.getSangre().replace(".", ",")}"
-        binding.tvDosisValor.text = "${MySharedPreferences.shared.getNivel()}"
     }
 
     /**

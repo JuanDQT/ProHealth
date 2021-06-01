@@ -2,6 +2,7 @@ package com.juan.prohealth.ui.mainActiviy
 
 import android.app.ProgressDialog
 import android.content.DialogInterface
+import android.util.Log
 import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,47 +11,63 @@ import androidx.lifecycle.viewModelScope
 import com.androidnetworking.error.ANError
 import com.androidnetworking.interfaces.JSONObjectRequestListener
 import com.juan.prohealth.*
-import com.juan.prohealth.database.Control
+import com.juan.prohealth.database.Control2
+import com.juan.prohealth.database.ControlRepo
 import com.juan.prohealth.database.User2
+import com.juan.prohealth.database.UserRepo
+import com.juan.prohealth.repository.ControlRepository
 import com.juan.prohealth.repository.ValidationRepository
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.logging.Level.INFO
 
-class MainViewModel(private val validationRepository: ValidationRepository ) :
+class MainViewModel(private val userRepository: UserRepo, private val controlRepository: ControlRepository ) :
     ViewModel() {
 
     private var _statusINRButton = MutableLiveData(true)
     val statusINRButton: LiveData<Boolean> get() = _statusINRButton
 
+    private var _statusDeleteBtn = MutableLiveData(false)
+    val statusDeleteBtn: LiveData<Boolean> get() = _statusDeleteBtn
+
+    private var _bloodValue = MutableLiveData(0f)
+    val bloodValue: LiveData<Float> get() = _bloodValue
+
+    private var _doseValue = MutableLiveData(0)
+    val doseValue: LiveData<Int> get() = _doseValue
+
+    // New
+    fun doCloseOlderControls() {
+        viewModelScope.launch {
+            controlRepository.closeOldControls()
+        }
+    }
+
     // metodos
 
     fun checkHasControlToday() {
-        if (Control.hasPendingControls()) {
-            viewModelScope.launch {
-            //LLAMO A SERVIDOR
+        viewModelScope.launch {
+            if (controlRepository.hasPendingControls()) {
+                _statusINRButton.value = false
+                _statusDeleteBtn.value = true
+//                setDosisWidget()
+                if (controlRepository.hasPendingControlToday() && User2.isAlarmTime())
+                    askForControl(Control2.getControlDay(Date())?.recurso)
+                else flashBar?.dismiss()
 
+            } else {
+                _statusINRButton.value = true
+                _statusDeleteBtn.value = false
+                binding.carousel.visibility = View.GONE
+                binding.ivArrowLeft.visibility = View.GONE
+                binding.ivArrowRight.visibility = View.GONE
+                flashBar?.dismiss()
+                MyWorkManager.clearAllWorks()
             }
-            //
-
-
-            _statusINRButton.value = false
-            binding.btnBorrar.isEnabled = true
-            setDosisWidget()
-            if (Control.hasControlToday() && User2.isAlarmTime())
-                askForControl(Control.getControlDay(Date())?.recurso)
-            else flashBar?.dismiss()
-
-        } else {
-            _statusINRButton.value = true
-            binding.btnBorrar.isEnabled = false
-            binding.carousel.visibility = View.GONE
-            binding.ivArrowLeft.visibility = View.GONE
-            binding.ivArrowRight.visibility = View.GONE
-            flashBar?.dismiss()
-            MyWorkManager.clearAllWorks()
         }
+
     }
 
     fun doOnResume() {
@@ -123,7 +140,7 @@ class MainViewModel(private val validationRepository: ValidationRepository ) :
             }
         }
 
-        Control.closeOlderControls()
+        Control2.closeOlderControls()
 
         pintarValores()
         checkHasControlToday()

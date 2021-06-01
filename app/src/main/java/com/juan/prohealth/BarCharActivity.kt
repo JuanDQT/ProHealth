@@ -10,7 +10,7 @@ import com.anychart.enums.Anchor
 import com.anychart.enums.MarkerType
 import com.anychart.enums.TooltipPositionMode
 import com.anychart.graphics.vector.Stroke
-import com.juan.prohealth.database.Control
+import com.juan.prohealth.database.Control2
 import com.juan.prohealth.databinding.ActivityBarCharBinding
 
 class BarCharActivity : AppCompatActivity() {
@@ -91,7 +91,7 @@ class BarCharActivity : AppCompatActivity() {
     fun getDemoPoints(): MutableList<DataEntry> {
         val list = arrayListOf<DataEntry>()
 
-        Control.getHistoric().let { controles ->
+        Control2.getHistoric().let { controles ->
             if (controles.count() > 0) {
                 for (item in controles) {
                     list.add(ValueDataEntry(item.fechaInicio?.customFormat("dd/MM"), item.sangre))

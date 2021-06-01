@@ -85,6 +85,8 @@ open class User2 : RealmObject() {
         fun isAlarmTime(): Boolean {
             val userTime: Array<Int> = getCurrentTimeNotification()
 
+            // TODO: añadir a repo, y devolver boleano
+            SELECT count(*) from control where TIME(‘now’) > *time(hhmm, HORA_MINUTO)
             val cal = Calendar.getInstance().fromDate(Date(), userTime[0], userTime[1])
             return Date().after(cal.time)
         }

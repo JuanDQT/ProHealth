@@ -11,7 +11,7 @@ import io.realm.annotations.PrimaryKey
 import java.lang.Exception
 import java.util.*
 
-open class Control : RealmObject() {
+open class Control2 : RealmObject() {
 
     @PrimaryKey private var id: Int? = null
     open var sangre: Float = 0f
@@ -26,7 +26,7 @@ open class Control : RealmObject() {
 
         fun getNextKey(realm: Realm): Int {
             return try {
-                val number: Number? = realm.where(Control::class.java).max("id")
+                val number: Number? = realm.where(Control2::class.java).max("id")
 
                 if (number != null) {
                     number.toInt() + 1
@@ -42,7 +42,7 @@ open class Control : RealmObject() {
                 for (x in 0 until planificacion.size) {
                     realm.beginTransaction()
 //                    val control: Control = realm.createObject(Control::class.java, UUID.randomUUID().toString())
-                    val control: Control = realm.createObject(Control::class.java, getNextKey(realm))
+                    val control: Control2 = realm.createObject(Control2::class.java, getNextKey(realm))
                     control.sangre = sangre
                     control.nivelDosis = nivel
                     control.recurso = planificacion[x]
@@ -56,14 +56,14 @@ open class Control : RealmObject() {
 
         fun getUltimosIRN(limit: Int = 10): Array<String> {
             Realm.getDefaultInstance().use {
-                val data = it.where(Control::class.java).findAll().map { c -> c.sangre.toString() }.distinct().takeLast(limit)
+                val data = it.where(Control2::class.java).findAll().map { c -> c.sangre.toString() }.distinct().takeLast(limit)
                 return data.toTypedArray()
             }
         }
 
         fun any(): Boolean {
             Realm.getDefaultInstance().use {
-                val data = it.where(Control::class.java).findFirst()
+                val data = it.where(Control2::class.java).findFirst()
                 return data != null
             }
         }
@@ -71,10 +71,10 @@ open class Control : RealmObject() {
         // Control pendiente de hoy
         fun hasControlToday(): Boolean {
             Realm.getDefaultInstance().use {
-                val total = it.where(Control::class.java).count()
+                val total = it.where(Control2::class.java).count()
 
                 if (total > 0) {
-                    val data = it.where(Control::class.java).equalTo("fecha", Date().clearTime()).and().isNull("medicado").findFirst()
+                    val data = it.where(Control2::class.java).equalTo("fecha", Date().clearTime()).and().isNull("medicado").findFirst()
                     return data != null
                 }
                 return false;
@@ -83,7 +83,7 @@ open class Control : RealmObject() {
 
         fun updateCurrentControl(status: Boolean) {
             Realm.getDefaultInstance().executeTransaction {
-                val data = it.where(Control::class.java).equalTo("fecha", Date().clearTime()).and().isNull("medicado").findFirst()
+                val data = it.where(Control2::class.java).equalTo("fecha", Date().clearTime()).and().isNull("medicado").findFirst()
                 data?.let {
                     data.medicado = status
                 }
@@ -92,8 +92,8 @@ open class Control : RealmObject() {
 
         fun closeOlderControls() {
             Realm.getDefaultInstance().executeTransaction {
-                val index = it.where(Control::class.java).equalTo("fecha", Date().clearTime()).findFirst()
-                val olders = it.where(Control::class.java).equalTo("fechaInicio", index?.fechaInicio).and().lessThan("fecha", Date().clearTime()).and().isNull("medicado").findAll()
+                val index = it.where(Control2::class.java).equalTo("fecha", Date().clearTime()).findFirst()
+                val olders = it.where(Control2::class.java).equalTo("fechaInicio", index?.fechaInicio).and().lessThan("fecha", Date().clearTime()).and().isNull("medicado").findAll()
                 for(x in olders)
                     x.medicado = false
             }
@@ -102,9 +102,9 @@ open class Control : RealmObject() {
         // Controles hoy, o manana, etc
         fun hasPendingControls(): Boolean {
             Realm.getDefaultInstance().use {
-                val total = it.where(Control::class.java).count()
+                val total = it.where(Control2::class.java).count()
                 if (total > 0) {
-                    val data = it.where(Control::class.java).greaterThanOrEqualTo("fecha", Date().clearTime()).and().isNull("medicado").findFirst()
+                    val data = it.where(Control2::class.java).greaterThanOrEqualTo("fecha", Date().clearTime()).and().isNull("medicado").findFirst()
                     return data != null
                 }
                 return false;
@@ -112,25 +112,25 @@ open class Control : RealmObject() {
         }
 
         // Se usa para la grafica..
-        fun getHistoric(): List<Control> {
+        fun getHistoric(): List<Control2> {
             Realm.getDefaultInstance().use {
-                return it.copyFromRealm(it.where(Control::class.java).findAll()).distinctBy { it.fechaInicio?.date?.toUInt()  }
+                return it.copyFromRealm(it.where(Control2::class.java).findAll()).distinctBy { it.fechaInicio?.date?.toUInt()  }
             }
         }
 
-        fun getAll(): List<Control> {
+        fun getAll(): List<Control2> {
             Realm.getDefaultInstance().use {
-                return it.copyFromRealm(it.where(Control::class.java).findAll())
+                return it.copyFromRealm(it.where(Control2::class.java).findAll())
             }
         }
 
-        fun getActiveControlList(onlyPendings: Boolean = false): List<Control> {
+        fun getActiveControlList(onlyPendings: Boolean = false): List<Control2> {
             Realm.getDefaultInstance().use {
-                val index = it.where(Control::class.java).equalTo("fecha", Date().clearTime()).findFirst()
+                val index = it.where(Control2::class.java).equalTo("fecha", Date().clearTime()).findFirst()
                 if(onlyPendings)
-                    return it.copyFromRealm(it.where(Control::class.java).equalTo("fechaInicio", index?.fechaInicio).and().isNull("medicado").findAll())
+                    return it.copyFromRealm(it.where(Control2::class.java).equalTo("fechaInicio", index?.fechaInicio).and().isNull("medicado").findAll())
                 else
-                    return it.copyFromRealm(it.where(Control::class.java).equalTo("fechaInicio", index?.fechaInicio).findAll())
+                    return it.copyFromRealm(it.where(Control2::class.java).equalTo("fechaInicio", index?.fechaInicio).findAll())
             }
         }
 
@@ -191,7 +191,7 @@ open class Control : RealmObject() {
                 Realm.getDefaultInstance().use {
                     val date = Date().clearTime()
                     Log.e("MainActivity", date.toString())
-                    val toDelete =  it.where(Control::class.java).greaterThanOrEqualTo("fecha", date).findAll()
+                    val toDelete =  it.where(Control2::class.java).greaterThanOrEqualTo("fecha", date).findAll()
                     for (item in toDelete) {
                         it.beginTransaction()
                         item.deleteFromRealm()
@@ -204,9 +204,9 @@ open class Control : RealmObject() {
             }
         }
 
-        fun getControlDay(fecha: Date): Control?{
+        fun getControlDay(fecha: Date): Control2?{
             Realm.getDefaultInstance().use {
-                var dataCheck = it.where(Control::class.java).equalTo("fecha", fecha.clearTime()).findFirst()
+                var dataCheck = it.where(Control2::class.java).equalTo("fecha", fecha.clearTime()).findFirst()
                 if(dataCheck!=null){
                     return it.copyFromRealm(dataCheck)
                 }

@@ -12,7 +12,7 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import com.juan.prohealth.database.Control
+import com.juan.prohealth.database.Control2
 import com.juan.prohealth.database.User2
 import com.juan.prohealth.databinding.ActivityAjustesBinding
 import io.github.lucasfsc.html2pdf.Html2Pdf
@@ -55,8 +55,8 @@ class AjustesActivity : AppCompatActivity() {
                 User2.settCurrentTimeNotification(selectedHour, selectedMinute)
                 binding.tvHora.text = getDateFormat(arrayOf(selectedHour, selectedMinute))
 
-                if (Control.hasPendingControls()) {
-                    MyWorkManager.setWorkers(Control.getActiveControlList(onlyPendings = true))
+                if (Control2.hasPendingControls()) {
+                    MyWorkManager.setWorkers(Control2.getActiveControlList(onlyPendings = true))
                     Toast.makeText(this, "Alarmas actualizadas", Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(this, "No hay alarma programada", Toast.LENGTH_SHORT).show()
@@ -98,7 +98,7 @@ class AjustesActivity : AppCompatActivity() {
         // Lets to transorm to PDF
         Html2Pdf.Companion.Builder()
             .context(this)
-            .html(Control.exportDataMail())
+            .html(Control2.exportDataMail())
             .file(tempFile)
             .build().convertToPdf(object : Html2Pdf.OnCompleteConversion {
                 override fun onFailed() {

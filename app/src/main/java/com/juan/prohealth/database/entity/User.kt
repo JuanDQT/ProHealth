@@ -13,10 +13,12 @@ data class User(
     @PrimaryKey(autoGenerate = true)
     var id: Int,
     val name: String,
+    val blood: Float,
+    val level: Int,
     @ColumnInfo(name = "hour_alarm")
     val hourAlarm: Int,
     @ColumnInfo(name = "minute_alarm")
-    val minuteAlamr: Int,
+    val minuteAlarm: Int,
     @ColumnInfo(name = "id_server")
     val idServer: Int
 ): Parcelable

@@ -6,7 +6,7 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.events.calendar.utils.EventsCalendarUtil
 import com.events.calendar.views.EventsCalendar
-import com.juan.prohealth.database.Control
+import com.juan.prohealth.database.Control2
 import com.juan.prohealth.databinding.ActivityCalendarioBinding
 import java.util.*
 
@@ -29,7 +29,7 @@ class CalendarioActivity : AppCompatActivity(), EventsCalendar.Callback {
         )
         selectedDate?.let {
             var fechaSeleccionada = it.time.clearTime()
-            var registroDay = Control.getControlDay(fechaSeleccionada)
+            var registroDay = Control2.getControlDay(fechaSeleccionada)
             if (registroDay == null) {
                 binding.tvDosis.text = ""
                 binding.tvSangre.text = ""
@@ -94,7 +94,7 @@ class CalendarioActivity : AppCompatActivity(), EventsCalendar.Callback {
 
     fun pintarDiasCalendario() {
 
-        val items = Control.getAll()
+        val items = Control2.getAll()
 
         if (items.count() > 0) {
             val itemsToCalendar: Array<Calendar> =

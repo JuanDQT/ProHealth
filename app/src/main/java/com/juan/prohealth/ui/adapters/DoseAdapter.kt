@@ -7,11 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.juan.prohealth.*
-import com.juan.prohealth.database.Control
+import com.juan.prohealth.database.Control2
 import com.juan.prohealth.databinding.ItemDosisBinding
 import java.util.*
 
-class DoseAdapter(var controls: ArrayList<Control>) :
+class DoseAdapter(var controls: ArrayList<Control2>) :
     RecyclerView.Adapter<DoseAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -26,7 +26,7 @@ class DoseAdapter(var controls: ArrayList<Control>) :
     class ViewHolder(private val binding: ItemDosisBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(control: Control, context: Context) {
+        fun bind(control: Control2, context: Context) {
 
             val resourceControl = control.recurso
             val dateControl = control.fecha

@@ -8,7 +8,7 @@ import android.graphics.Color
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.work.*
-import com.juan.prohealth.database.Control
+import com.juan.prohealth.database.Control2
 import com.juan.prohealth.database.User2
 import com.juan.prohealth.ui.mainActiviy.MainActivity
 import java.util.*
@@ -51,7 +51,7 @@ class MyWorkManager(context: Context, workerParamaters: WorkerParameters): Worke
         }
 
         // Creamos los trabajos programados
-        fun setWorkers(controls: List<Control>) {
+        fun setWorkers(controls: List<Control2>) {
             clearAllWorks()
 
             if(controls.count() == 0)
