@@ -21,15 +21,15 @@ import com.google.android.material.chip.ChipGroup
 import com.gtomato.android.ui.transformer.FlatMerryGoRoundTransformer
 import com.juan.prohealth.*
 import com.juan.prohealth.data.local.RoomControlDataSource
+import com.juan.prohealth.data.local.RoomUserDataSource
 import com.juan.prohealth.data.local.SharedPreference
 import com.juan.prohealth.data.local.StorageValidationDataSource
 import com.juan.prohealth.database.Control2
 import com.juan.prohealth.database.MyDatabase
-import com.juan.prohealth.database.UserRepo
 import com.juan.prohealth.databinding.ActivityMainBinding
 import com.juan.prohealth.repository.ControlRepository
+import com.juan.prohealth.repository.UserRepository
 import com.juan.prohealth.repository.ValidationRepository
-import com.juan.prohealth.source.ControlLocalDataSource
 import com.juan.prohealth.ui.adapters.DoseAdapter
 import java.util.*
 import kotlin.collections.ArrayList
@@ -43,6 +43,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var viewModel: MainViewModel
     private lateinit var validationRepository: ValidationRepository
     private lateinit var controlRepository: ControlRepository
+    private lateinit var userRepository:UserRepository
     private val RANGO_AZUL: String = "rangoBajoAzul.json"
     private val RANGO_ROJO: String = "rangoAltoRojo.json"
     var flashBar: Flashbar? = null
@@ -64,19 +65,21 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         subscribeUI()
     }
 
-
-
-    private fun buildViewModel(): MainViewModel {
-        val factory = MainViewModelFactory(validationRepository, controlRepository)
-        return ViewModelProvider(this, factory).get(MainViewModel::class.java)
-    }
-
     private fun buildDependencies() {
         val sharedPreference = SharedPreference.getInstance(this.applicationContext)
         val database = MyDatabase.getDatabase(this)
         val controlLocal = RoomControlDataSource(database)
+        val userLocal = RoomUserDataSource(database)
+
         validationRepository = ValidationRepository(StorageValidationDataSource(sharedPreference))
         controlRepository = ControlRepository(controlLocal)
+        userRepository = UserRepository(userLocal)
+    }
+
+
+    private fun buildViewModel(): MainViewModel {
+        val factory = MainViewModelFactory(validationRepository, controlRepository, userRepository)
+        return ViewModelProvider(this, factory).get(MainViewModel::class.java)
     }
 
     override fun onResume() {

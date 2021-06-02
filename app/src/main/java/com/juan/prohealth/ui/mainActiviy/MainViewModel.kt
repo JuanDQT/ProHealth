@@ -2,7 +2,6 @@ package com.juan.prohealth.ui.mainActiviy
 
 import android.app.ProgressDialog
 import android.content.DialogInterface
-import android.util.Log
 import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -12,18 +11,20 @@ import com.androidnetworking.error.ANError
 import com.androidnetworking.interfaces.JSONObjectRequestListener
 import com.juan.prohealth.*
 import com.juan.prohealth.database.Control2
-import com.juan.prohealth.database.ControlRepo
 import com.juan.prohealth.database.User2
-import com.juan.prohealth.database.UserRepo
 import com.juan.prohealth.repository.ControlRepository
+import com.juan.prohealth.repository.UserRepository
 import com.juan.prohealth.repository.ValidationRepository
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.logging.Level.INFO
 
-class MainViewModel(private val userRepository: UserRepo, private val controlRepository: ControlRepository ) :
+class MainViewModel(
+    private val validationRepository: ValidationRepository,
+    private val controlRepository: ControlRepository,
+    private val userRepository: UserRepository
+) :
     ViewModel() {
 
     private var _statusINRButton = MutableLiveData(true)
