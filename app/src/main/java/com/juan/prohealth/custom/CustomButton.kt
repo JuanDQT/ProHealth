@@ -6,7 +6,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.RelativeLayout
 import com.juan.prohealth.R
-import com.juan.prohealth.alignTo
+import com.juan.prohealth.ui.common.alignTo
 import com.juan.prohealth.databinding.CustomButtonBinding
 
 class CustomButton @JvmOverloads constructor(

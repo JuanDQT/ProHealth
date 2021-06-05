@@ -1,4 +1,4 @@
-package com.juan.prohealth
+package com.juan.prohealth.ui.mainActiviy
 
 import android.app.ProgressDialog
 import android.content.Context
@@ -13,36 +13,46 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.*
+import com.juan.prohealth.ui.common.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.andrognito.flashbar.Flashbar
 import com.androidnetworking.error.ANError
 import com.androidnetworking.interfaces.JSONObjectRequestListener
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.gtomato.android.ui.transformer.FlatMerryGoRoundTransformer
-import com.juan.prohealth.adapters.DoseAdapter
+import com.juan.prohealth.*
+import com.juan.prohealth.data.local.SharedPreference
+import com.juan.prohealth.data.local.StorageValidationDataSource
 import com.juan.prohealth.database.Control
 import com.juan.prohealth.database.User
 import com.juan.prohealth.databinding.ActivityMainBinding
+import com.juan.prohealth.repository.ValidationRepository
+import com.juan.prohealth.ui.adapters.DoseAdapter
 import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.collections.set
 import kotlin.concurrent.schedule
 
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var binding: ActivityMainBinding
-
-    val RANGO_AZUL: String = "rangoBajoAzul.json"
-    val RANGO_ROJO: String = "rangoAltoRojo.json"
+    private lateinit var viewModel: MainViewModel
+    private lateinit var validationRepository: ValidationRepository
+    private val RANGO_AZUL: String = "rangoBajoAzul.json"
+    private val RANGO_ROJO: String = "rangoAltoRojo.json"
     var flashBar: Flashbar? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
+        buildDependencies()
+        viewModel = buildViewModel()
         setContentView(binding.root)
 
         binding.btnBorrar.setOnClickListener(this)
@@ -51,6 +61,16 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         binding.btnEstadisticas.setOnClickListener(this)
         binding.btnCalendario.setOnClickListener(this)
         binding.btnAjustes.setOnClickListener(this)
+    }
+
+    private fun buildViewModel(): MainViewModel {
+        val factory = MainViewModelFactory(validationRepository)
+        return ViewModelProvider(this, factory).get(MainViewModel::class.java)
+    }
+
+    private fun buildDependencies() {
+        val sharedPreference = SharedPreference.getInstance(this.applicationContext)
+        validationRepository = ValidationRepository(StorageValidationDataSource(sharedPreference))
     }
 
     override fun onResume() {

@@ -10,6 +10,9 @@ import androidx.core.app.NotificationCompat
 import androidx.work.*
 import com.juan.prohealth.database.Control
 import com.juan.prohealth.database.User
+import com.juan.prohealth.ui.common.clearSeconds
+import com.juan.prohealth.ui.common.fromDate
+import com.juan.prohealth.ui.mainActiviy.MainActivity
 import java.util.*
 import java.util.concurrent.TimeUnit
 
