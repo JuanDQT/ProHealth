@@ -31,6 +31,7 @@ import com.juan.prohealth.repository.ControlRepository
 import com.juan.prohealth.repository.UserRepository
 import com.juan.prohealth.repository.ValidationRepository
 import com.juan.prohealth.ui.adapters.DoseAdapter
+import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.set
@@ -43,10 +44,19 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var viewModel: MainViewModel
     private lateinit var validationRepository: ValidationRepository
     private lateinit var controlRepository: ControlRepository
-    private lateinit var userRepository:UserRepository
+    private lateinit var userRepository: UserRepository
     private val RANGO_AZUL: String = "rangoBajoAzul.json"
     private val RANGO_ROJO: String = "rangoAltoRojo.json"
-    var flashBar: Flashbar? = null
+    private val flashBar: Flashbar by lazy { instanceFlashBar() }
+    private val inrAlertDialog: AlertDialog by lazy { instanceINRAlertDialog() }
+    private val planificationAlertDialog: AlertDialog by lazy { instancePlanificationAlertDialog() }
+    private lateinit var userResourceImage: String
+    private var bloodLastValues = emptyArray<Float>()
+    private var currentBloodValue = 0f
+
+    private var sangreString = ""
+    private var nivelString = ""
+    private var dataNieveles = emptyArray<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,185 +73,37 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         binding.btnAjustes.setOnClickListener(this)
 
         subscribeUI()
+        instanceFlashBar()
+        instanceINRAlertDialog()
     }
 
-    private fun buildDependencies() {
-        val sharedPreference = SharedPreference.getInstance(this.applicationContext)
-        val database = MyDatabase.getDatabase(this)
-        val controlLocal = RoomControlDataSource(database)
-        val userLocal = RoomUserDataSource(database)
-
-        validationRepository = ValidationRepository(StorageValidationDataSource(sharedPreference))
-        controlRepository = ControlRepository(controlLocal)
-        userRepository = UserRepository(userLocal)
+    private fun instanceFlashBar(): Flashbar {
+        return Flashbar.Builder(this)
+            .gravity(Flashbar.Gravity.BOTTOM)
+            .title(getString(R.string.title_notificacion))
+            .message(String.format(getString(R.string.msg_notificacion, userResourceImage)))
+            .enableSwipeToDismiss()
+            .backgroundColorRes(R.color.colorPrimaryDark)
+            .positiveActionText("Si")
+            .negativeActionText("Hoy no tomare")
+            .positiveActionTextColorRes(R.color.colorAccent)
+            .negativeActionTextColorRes(R.color.colorAccent)
+            .positiveActionTapListener(object : Flashbar.OnActionTapListener {
+                override fun onActionTapped(bar: Flashbar) {
+                    viewModel.updateCurrentControlStatus(true)
+                    bar.dismiss()
+                }
+            })
+            .negativeActionTapListener(object : Flashbar.OnActionTapListener {
+                override fun onActionTapped(bar: Flashbar) {
+                    viewModel.updateCurrentControlStatus(false)
+                    bar.dismiss()
+                }
+            })
+            .build()
     }
 
-
-    private fun buildViewModel(): MainViewModel {
-        val factory = MainViewModelFactory(validationRepository, controlRepository, userRepository)
-        return ViewModelProvider(this, factory).get(MainViewModel::class.java)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        viewModel.doCloseOlderControls()
-        checkHasControlToday()
-        setDosisWidget()
-    }
-
-    fun checkHasControlToday() {
-        if (Control.hasPendingControls()) {
-            binding.btnINR.isEnabled = false
-            binding.btnBorrar.isEnabled = true
-            if (Control.hasControlToday() && User2.isAlarmTime()) {
-                askForControl(Control.getControlDay(Date())?.recurso)
-            } else flashBar?.dismiss()
-
-        } else {
-            binding.btnINR.isEnabled = true
-            binding.btnBorrar.isEnabled = false
-            binding.carousel.visibility = View.GONE
-            binding.ivArrowLeft.visibility = View.GONE
-            binding.ivArrowRight.visibility = View.GONE
-            flashBar?.dismiss()
-            MyWorkManager.clearAllWorks()
-        }
-    }
-
-
-    fun askForControl(valor: String?) {
-
-        if (flashBar == null || (flashBar != null && !flashBar!!.isShown())) {
-            flashBar = Flashbar.Builder(this)
-                .gravity(Flashbar.Gravity.BOTTOM)
-                .title(getString(R.string.title_notificacion))
-                .message(String.format(getString(R.string.msg_notificacion, valor)))
-                .enableSwipeToDismiss()
-                .backgroundColorRes(R.color.colorPrimaryDark)
-                .positiveActionText("Si")
-                .negativeActionText("Hoy no tomare")
-                .positiveActionTextColorRes(R.color.colorAccent)
-                .negativeActionTextColorRes(R.color.colorAccent)
-                .positiveActionTapListener(object : Flashbar.OnActionTapListener {
-                    override fun onActionTapped(bar: Flashbar) {
-                        updateControlStatus(true)
-                        bar.dismiss()
-                    }
-                })
-                .negativeActionTapListener(object : Flashbar.OnActionTapListener {
-                    override fun onActionTapped(bar: Flashbar) {
-                        updateControlStatus(false)
-                        bar.dismiss()
-                    }
-                })
-                .build()
-
-            flashBar?.show()
-        }
-
-    }
-
-    // TODO: preguntar, si cuando un control acaba, ese mismo dia puede planificar nuevos controles, incluyendo el mismo dia? se daria el caso? si es superior mejor..
-    fun updateControlStatus(status: Boolean) {
-        Control2.updateCurrentControl(status)
-    }
-
-    fun setDosisWidget() {
-        binding.carousel.visibility = View.VISIBLE
-        val transformer = FlatMerryGoRoundTransformer()
-        transformer.viewPerspective = 0.2
-        transformer.farAlpha = 0.0
-        binding.ivArrowLeft.visibility = View.VISIBLE
-        binding.ivArrowRight.visibility = View.VISIBLE
-        transformer.farScale = -1.5
-
-        binding.carousel.transformer = transformer
-        binding.carousel.isInfinite = true
-        val items = ArrayList(Control2.getActiveControlList())
-        binding.carousel.adapter = DoseAdapter(items)
-
-        if (items != null && items.count() > 0) {
-            val position =
-                items.indexOf(items.filter { f -> f.fecha == Date().clearTime() }.first())
-            binding.carousel.smoothScrollToPosition(position)
-        }
-    }
-
-    private fun subscribeUI() {
-        viewModel.statusINRButton.observe(this) { value ->
-            binding.btnINR.isEnabled = value
-        }
-        viewModel.statusDeleteBtn.observe(this) { value ->
-            binding.btnBorrar.isEnabled = value
-        }
-        viewModel.bloodValue.observe(this) { value ->
-            binding.tvSangreValor.text = "${value.toString().replace(".", ",")}"
-        }
-        viewModel.doseValue.observe(this) { value ->
-            binding.tvDosisValor.text = "${value}"
-        }
-
-    }
-
-
-    // Controlamos eventos click Botones
-    override fun onClick(view: View?) {
-        view?.let {
-            when (it.id) {
-                R.id.btnBorrar -> doAjustarIRN()
-                R.id.btnINR -> doAskINR()
-                R.id.btnGmap -> doOpenMaps()
-                R.id.btnEstadisticas -> doOpenEstadisticas()
-                R.id.btnCalendario -> doCalendario()
-                R.id.btnAjustes -> startActivity(Intent(this, AjustesActivity::class.java))
-            }
-        }
-    }
-
-    fun doAjustarIRN() {
-        val data = Control2.getAll()
-        Log.e("MainActivity", "ANTES")
-        for (item in data) {
-        }
-        Log.e("MainActivity", item.toString())
-
-        Control2.restartIRN()
-        viewModel.checkHasControlToday()
-
-        Log.e("MainActivity", "DESPUES")
-        for (item in Control2.getAll()) {
-        }
-        Log.e("MainActivity", item.toString())
-    }
-
-    fun doOpenEstadisticas() {
-        startActivity(Intent(this, BarCharActivity::class.java))
-    }
-
-    fun doOpenMaps() {
-        if (comprabarSiExisteApp("com.google.android.apps.maps", getApplicationContext())) {
-            // Buscar farmacias de guardia cercanas a mi posicion usando APP existente
-            val gmmIntentUri = Uri.parse("geo:0,0?q=farmacia+de+guardia")
-            val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
-            mapIntent.setPackage("com.google.android.apps.maps")
-            mapIntent.resolveActivity(packageManager)?.let {
-                startActivity(mapIntent)
-            }
-            //Manera 2º en caso de no tener gmaps ejecutar Activity
-            // val intent = Intent(this, UbicacionActivity::class.java)
-            //startActivity(intent)
-        } else {
-            Toast.makeText(this, "Se necesita tener instalado Google Maps", Toast.LENGTH_LONG)
-                .show()
-        }
-    }
-
-    /**
-     * Cuando introducimos una NUEVA lectura de Sangre aqui recalculamos los dias de control ( 4 o 7 )
-     * validamos el campo nivel de sangre que recibimos y aplicamos los calculos
-     * para seleccionar los valores de salida e imprimirlos
-     */
-    fun doAskINR() {
+    private fun instanceINRAlertDialog(): AlertDialog {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Introducir")
         builder.setMessage("Por favor, introduce un valor INR entre 1 y 7")
@@ -312,22 +174,154 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
             Timer("SettingUp", false).schedule(500) {
                 runOnUiThread {
-                    doAskPlanificacion(
-                        sangre = "${AppContext.validarInputTextSangre(editText.text.toString())}",
-                        nivel = nivelyDias["nivel"].toString(),
-                        dataNiveles = dataNiveles
-                    )
+                    sangreString = "${AppContext.validarInputTextSangre(editText.text.toString())}"
+                    nivelString = nivelyDias["nivel"].toString()
+                    dataNieveles = dataNiveles.toTypedArray()
+                    planificationAlertDialog.show()
                 }
             }
         })
 
-        builder.create()
-        positiveButton = builder.show().getButton(AlertDialog.BUTTON_POSITIVE) as Button?
+        val ad = builder.create()
+        positiveButton = ad.getButton(AlertDialog.BUTTON_POSITIVE) as Button?
         positiveButton?.isEnabled = false
-
+        return ad
     }
 
-    fun doAskPlanificacion(sangre: String, nivel: String, dataNiveles: ArrayList<String>) {
+    private fun buildDependencies() {
+        val sharedPreference = SharedPreference.getInstance(this.applicationContext)
+        val database = MyDatabase.getDatabase(this)
+        val controlLocal = RoomControlDataSource(database)
+        val userLocal = RoomUserDataSource(database)
+
+        validationRepository = ValidationRepository(StorageValidationDataSource(sharedPreference))
+        controlRepository = ControlRepository(controlLocal)
+        userRepository = UserRepository(userLocal)
+    }
+
+
+    private fun buildViewModel(): MainViewModel {
+        val factory = MainViewModelFactory(validationRepository, controlRepository, userRepository)
+        return ViewModelProvider(this, factory).get(MainViewModel::class.java)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.doCloseOlderControls()
+        viewModel.checkHasControlToday()
+        setDosisWidget()
+    }
+
+    // TODO: armando, liveData con adapter?
+    fun setDosisWidget() {
+        binding.carousel.visibility = View.VISIBLE
+        val transformer = FlatMerryGoRoundTransformer()
+        transformer.viewPerspective = 0.2
+        transformer.farAlpha = 0.0
+        binding.ivArrowLeft.visibility = View.VISIBLE
+        binding.ivArrowRight.visibility = View.VISIBLE
+        transformer.farScale = -1.5
+
+        binding.carousel.transformer = transformer
+        binding.carousel.isInfinite = true
+        // Aqui. Metodo ControlRepo creado: getActiveControlList()
+        val items = ArrayList(Control2.getActiveControlList())
+        binding.carousel.adapter = DoseAdapter(items)
+
+        if (items.count() > 0) {
+            val position =
+                items.indexOf(items.filter { f -> f.fecha == Date().clearTime() }.first())
+            binding.carousel.smoothScrollToPosition(position)
+        }
+    }
+
+    private fun subscribeUI() {
+        viewModel.statusINRButton.observe(this) { value ->
+            binding.btnINR.isEnabled = value
+        }
+        viewModel.statusDeleteBtn.observe(this) { value ->
+            binding.btnBorrar.isEnabled = value
+        }
+        viewModel.bloodValue.observe(this) { value ->
+            currentBloodValue = value
+            binding.tvSangreValor.text = "${value.toString().replace(".", ",")}"
+        }
+        viewModel.doseValue.observe(this) { value ->
+            binding.tvDosisValor.text = "${value}"
+        }
+        viewModel.showAlertControl.observe(this) { value ->
+            if (value) {
+            }
+            flashBar.show()
+        }
+        viewModel.dismissFlashBar.observe(this) { value ->
+            flashBar?.let {
+                if (value) {
+                }
+                it.dismiss()
+            }
+        }
+        viewModel.visibilityGroupCarousel.observe(this) { value ->
+            binding.carousel.visibility = value
+            binding.ivArrowLeft.visibility = value
+            binding.ivArrowRight.visibility = value
+        }
+
+        viewModel.userResourceImage.observe(this) {
+            userResourceImage = it
+        }
+
+        viewModel.lastBloodValues.observe(this) { array ->
+            bloodLastValues = array
+        }
+    }
+
+
+    // Controlamos eventos click Botones
+    override fun onClick(view: View?) {
+        view?.let {
+            when (it.id) {
+                R.id.btnBorrar -> doDeleteLastINRGroup()
+                R.id.btnINR -> inrAlertDialog.show()
+                R.id.btnGmap -> doOpenMaps()
+                R.id.btnEstadisticas -> startActivity(Intent(this, BarCharActivity::class.java))
+                R.id.btnCalendario -> startActivity(Intent(this, CalendarioActivity::class.java))
+                R.id.btnAjustes -> startActivity(Intent(this, AjustesActivity::class.java))
+            }
+        }
+    }
+
+    fun doDeleteLastINRGroup() {
+        viewModel.deleteLastControlGroup()
+        viewModel.checkHasControlToday()
+    }
+
+    fun doOpenMaps() {
+        if (comprabarSiExisteApp("com.google.android.apps.maps", getApplicationContext())) {
+            // Buscar farmacias de guardia cercanas a mi posicion usando APP existente
+            val gmmIntentUri = Uri.parse("geo:0,0?q=farmacia+de+guardia")
+            val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+            mapIntent.setPackage("com.google.android.apps.maps")
+            mapIntent.resolveActivity(packageManager)?.let {
+                startActivity(mapIntent)
+            }
+            //Manera 2º en caso de no tener gmaps ejecutar Activity
+            // val intent = Intent(this, UbicacionActivity::class.java)
+            //startActivity(intent)
+        } else {
+            Toast.makeText(this, "Se necesita tener instalado Google Maps", Toast.LENGTH_LONG)
+                .show()
+        }
+    }
+
+    /**
+     * Cuando introducimos una NUEVA lectura de Sangre aqui recalculamos los dias de control ( 4 o 7 )
+     * validamos el campo nivel de sangre que recibimos y aplicamos los calculos
+     * para seleccionar los valores de salida e imprimirlos
+     */
+
+    // antes: doAskPlanificacion
+    fun instancePlanificationAlertDialog(): AlertDialog {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Informacion")
 
@@ -336,10 +330,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         val irnNew = view.findViewById<TextView>(R.id.tvIRNNew)
         val btnMails = view.findViewById<CheckBox>(R.id.cb_mails)
 
-        irnActual.text = MySharedPreferences.shared.getSangre()
-        irnNew.text = sangre
+        irnActual.text = "${currentBloodValue}"
+        irnNew.text = sangreString
 
-        if (!Control2.any()) {
+        // TODO: revisar
+        if (currentBloodValue == 0f) {
             val irnText = view.findViewById<TextView>(R.id.tvIRN_text)
             val frameIRN = view.findViewById<FrameLayout>(R.id.frame_IRN)
             irnText.visibility = View.GONE
@@ -350,7 +345,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         for (x in 0 until 7) {
             val layout = view.findViewWithTag<LinearLayout>("l${x}")
 
-            if (x >= dataNiveles.size) {
+            if (x >= dataNieveles.size) {
                 layout.visibility = View.GONE
                 continue
             }
@@ -359,12 +354,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
             // sobrescribimos valor
             val textView = view.findViewWithTag<TextView>("t${x}")
-            textView.text = if (dataNiveles[x].isNullOrEmpty()) "No toca" else dataNiveles[x]
+            textView.text = if (dataNieveles[x].isNullOrEmpty()) "No toca" else dataNieveles[x]
 
             // sobreescribimos imagen
-            if (!dataNiveles[x].isNullOrEmpty()) {
+            if (!dataNieveles[x].isNullOrEmpty()) {
                 val imageView = view.findViewWithTag<ImageView>("i${x}")
-                imageView.setBackgroundResource(AppContext.getImageNameByJSON(dataNiveles[x]))
+                imageView.setBackgroundResource(AppContext.getImageNameByJSON(dataNieveles[x]))
             }
 
         }
@@ -374,17 +369,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             "Planificar",
             DialogInterface.OnClickListener { dialogInterface, i ->
                 // Actualizamos la sangre y nivel
-                MySharedPreferences.shared.addString("sangre", sangre)
-                MySharedPreferences.shared.addString("nivel", nivel)
-                Control2.registrarControlActual(dataNiveles, sangre.toFloat(), nivel.toInt())
+                viewModel.updateUserData(sangreString.toFloat(), nivelString.toInt())
+                viewModel.insertNewControls(dataNieveles, sangreString.toFloat(), nivelString.toInt())
                 viewModel.checkHasControlToday()
 
                 MyWorkManager.setWorkers(Control2.getActiveControlList(onlyPendings = true))
-
-                for (item in Control2.getAll()) {
-                }
-                Log.e("MainActivity", item.toString())
-
 
                 if (btnMails.isChecked) {
                 }
@@ -392,8 +381,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
             })
 
-        builder.create()
-        builder.show()
+        return builder.create()
     }
 
     fun sendEmailPlanificacion() {
@@ -484,9 +472,5 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         } catch (e: PackageManager.NameNotFoundException) {
             false
         }
-    }
-
-    fun doCalendario() {
-        startActivity(Intent(this, CalendarioActivity::class.java))
     }
 }

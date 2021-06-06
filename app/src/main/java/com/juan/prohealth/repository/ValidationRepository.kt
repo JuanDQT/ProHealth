@@ -1,24 +1,24 @@
 package com.juan.prohealth.repository
 
-import com.juan.prohealth.source.StorageDataSource
+import com.juan.prohealth.source.IStorageDataSource
 
-class ValidationRepository(private val storageDataSource: StorageDataSource) {
+class ValidationRepository(private val iStorageDataSource: IStorageDataSource) {
 
-    fun getDoseLevel(): String = storageDataSource.getDoseLevel()
+    fun getDoseLevel(): String = iStorageDataSource.getDoseLevel()
 
-    fun setFinalTestDate(long: Long) = storageDataSource.setFinalTestDate(long)
+    fun setFinalTestDate(long: Long) = iStorageDataSource.setFinalTestDate(long)
 
-    fun checkIfExist(keys: Array<String>): Boolean = storageDataSource.exists(keys)
+    fun checkIfExist(keys: Array<String>): Boolean = iStorageDataSource.exists(keys)
 
-    fun getBloodLevel(): String = storageDataSource.getBloodLevel()
+    fun getBloodLevel(): String = iStorageDataSource.getBloodLevel()
 
-    fun addString(key: String, value: String) = storageDataSource.addString(key, value)
+    fun addString(key: String, value: String) = iStorageDataSource.addString(key, value)
 
-    fun getString(key: String): String = storageDataSource.getString(key)
+    fun getString(key: String): String = iStorageDataSource.getString(key)
 
-    fun getSystemData(): Long = storageDataSource.getSystemDate()
+    fun getSystemData(): Long = iStorageDataSource.getSystemDate()
 
-    fun updateSystemDate(value: Long) = storageDataSource.updateSystemDate(value)
+    fun updateSystemDate(value: Long) = iStorageDataSource.updateSystemDate(value)
 
-    fun getFinalTestDate(): Long = storageDataSource.getFinalTestDate()
+    fun getFinalTestDate(): Long = iStorageDataSource.getFinalTestDate()
 }

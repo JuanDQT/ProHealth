@@ -2,11 +2,11 @@ package com.juan.prohealth.data.local
 
 import com.juan.prohealth.database.MyDatabase
 import com.juan.prohealth.database.entity.User
-import com.juan.prohealth.source.UserLocalDataSource
+import com.juan.prohealth.source.IUserLocalDataSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class RoomUserDataSource(var database: MyDatabase) : UserLocalDataSource {
+class RoomUserDataSource(var database: MyDatabase) : IUserLocalDataSource {
 
     var userDao = database.userDao()
 
@@ -18,7 +18,7 @@ class RoomUserDataSource(var database: MyDatabase) : UserLocalDataSource {
 
     override suspend fun userAlreadyExists(idServidor: Int, nameUser: String) {
         withContext(Dispatchers.IO) {
-            TODO()
+            //userDao.user Revisar que hacia esto..
         }
     }
 
@@ -28,15 +28,33 @@ class RoomUserDataSource(var database: MyDatabase) : UserLocalDataSource {
         }
     }
 
-    override suspend fun getCurrentTimeNotification(): Array<Int> {
+    override suspend fun getTimeNotification(): Array<Int> {
         return withContext(Dispatchers.IO) {
-            TODO()
+            userDao.getTimeNotification()
+        }
+    }
+
+    override suspend fun getIdCurrentUser(): Int {
+        return withContext(Dispatchers.IO) {
+            userDao.getIdCurrentUser()
         }
     }
 
     override suspend fun getAll(): List<User> {
         return withContext(Dispatchers.IO) {
             userDao.getAll()
+        }
+    }
+
+    override suspend fun getBloodValue(): Float {
+        return withContext(Dispatchers.IO) {
+            userDao.getBloodValue()
+        }
+    }
+
+    override suspend fun updateUserData(bloodValue: Float, level: Int) {
+        return withContext(Dispatchers.IO) {
+            userDao.updateUserData(bloodValue, level)
         }
     }
 }

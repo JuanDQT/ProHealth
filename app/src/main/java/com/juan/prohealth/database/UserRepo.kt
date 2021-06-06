@@ -14,14 +14,13 @@ class UserRepo(var database: MyDatabase) {
 
     private var userDao: UserDao = database.userDao()
 
-    suspend fun crearUsuarioInvitado() {
-        val newUser = User(0, "", 0, 0, 0)
+    suspend fun crearUsuarioInvitado(user: User) {
         withContext(Dispatchers.IO) {
-            userDao.insert(newUser)
+            userDao.insert(user)
         }
     }
 
-    suspend fun userAlreadyExists(idServidor: Int, nameUser: String) {
+    suspend fun crearUsuario(idServidor: Int, nameUser: String) {
         val newUser = User(0, nameUser, 0, 0, idServidor)
         withContext(Dispatchers.IO) {
             userDao.insert(newUser)

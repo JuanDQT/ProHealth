@@ -16,20 +16,33 @@ import java.util.*
 @Dao
 interface ControlDao {
 
-    @Query("update control set medicado = 0 where medicado = 0 and execution_date < date()")
-    suspend fun closeOldControls()
+    @Query("update control set medicated = 1 where medicated = 0 and execution_date < date() and user_id = :idUser")
+    suspend fun updateStateToCloseControls(idUser: Int)
 
-    @Query("select count(*) from control where date() >= execution_date and medicado = 0")
-    fun getNumberPendingControls(): Int
+    @Query("select count(*) from control where date() >= execution_date and medicated = 0 and user_id = :idUser")
+    fun getNumberPendingControls(idUser: Int): Int
 
-    @Query("select count(*) from control where execution_date = date() and medicado = 0")
-    fun getNumberOfControlsToday(): Int
+    @Query("select count(*) from control where execution_date = date() and medicated = 0 and user_id = :idUser")
+    fun getNumberOfControlsToday(idUser: Int): Int
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insert(user: Control)
 
-    @Query("select * from user")
-    suspend fun getAll(): List<User>
+    @Query("SELECT resource from control where user_id = :idUser and execution_date = date() and cast(strftime('%H', datetime()) as int) >= :hour and cast(strftime('%M', datetime()) as int) >= :minute")
+    suspend fun checkPendingControlToday(hour: Int, minute: Int, idUser: Int): String
+
+    @Query("update control set medicated = :status where execution_date = date() and medicated = 0 and user_id = :idUser")
+    suspend fun updateCurrentControl(idUser: Int, status: Boolean)
+
+    // Coge los dias del ultimo grupo de control
+    @Query("SELECT * FROM control WHERE user_id = :idUser AND medicated = :medicated AND group_control = (SELECT group_control FROM control WHERE user_id = :idUser order by id limit 1)")
+    suspend fun getActiveControlList(idUser: Int, medicated: Boolean): List<Control>
+
+    @Query("DELETE FROM control WHERE group_control = (SELECT group_control FROM control WHERE user_id = :idUser order by id limit 1)")
+    suspend fun deleteLastControlGroup(idUser: Int)
+
+    @Query("SELECT distinct(blood) FROM control order by id desc limit :limit")
+    suspend fun getLastBloodValues(limit: Int = 10): Array<String>
 }
 
 

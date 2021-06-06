@@ -12,6 +12,8 @@ import com.androidnetworking.interfaces.JSONObjectRequestListener
 import com.juan.prohealth.*
 import com.juan.prohealth.database.Control2
 import com.juan.prohealth.database.User2
+import com.juan.prohealth.database.entity.Control
+import com.juan.prohealth.database.entity.User
 import com.juan.prohealth.repository.ControlRepository
 import com.juan.prohealth.repository.UserRepository
 import com.juan.prohealth.repository.ValidationRepository
@@ -39,112 +41,88 @@ class MainViewModel(
     private var _doseValue = MutableLiveData(0)
     val doseValue: LiveData<Int> get() = _doseValue
 
+    private var _showAlertControl = MutableLiveData(false)
+    val showAlertControl: LiveData<Boolean> get() = _showAlertControl
+
+    private var _dismissFlashBar = MutableLiveData(true)
+    val dismissFlashBar: LiveData<Boolean> get() = _dismissFlashBar
+
+    private var _visibilityGroupCarousel = MutableLiveData(0)
+    val visibilityGroupCarousel: LiveData<Int> get() = _visibilityGroupCarousel
+
+    private var _userResourceImage = MutableLiveData<String>("")
+    val userResourceImage: LiveData<String> get() = _userResourceImage
+
+    private var _lastBloodValues = MutableLiveData(emptyArray<Float>())
+    val lastBloodValues: LiveData<Array<Float>> get() = _lastBloodValues
+
     // New
     fun doCloseOlderControls() {
         viewModelScope.launch {
-            controlRepository.closeOldControls()
+            controlRepository.updateStateToCloseControls(userRepository.getIdCurrentUser())
         }
     }
 
-    // metodos
+    fun deleteLastControlGroup() {
+        viewModelScope.launch {
+            controlRepository.deleteLastControlGroup(userRepository.getIdCurrentUser())
+        }
+    }
+
+    fun getBloodValue() {
+        viewModelScope.launch {
+            _bloodValue.value = userRepository.getBloodValue()
+        }
+    }
 
     fun checkHasControlToday() {
         viewModelScope.launch {
-            if (controlRepository.hasPendingControls()) {
+            if (controlRepository.hasPendingControls(userRepository.getIdCurrentUser())) {
                 _statusINRButton.value = false
                 _statusDeleteBtn.value = true
-//                setDosisWidget()
-                if (controlRepository.hasPendingControlToday() && User2.isAlarmTime())
-                    askForControl(Control2.getControlDay(Date())?.recurso)
-                else flashBar?.dismiss()
-
+                //setDosisWidget()
+                _userResourceImage.value = checkDoAlertControlAndReturnResource()
+                _showAlertControl.value = !_userResourceImage.value.isNullOrEmpty()
+                _dismissFlashBar.value = _showAlertControl.value
             } else {
                 _statusINRButton.value = true
                 _statusDeleteBtn.value = false
-                binding.carousel.visibility = View.GONE
-                binding.ivArrowLeft.visibility = View.GONE
-                binding.ivArrowRight.visibility = View.GONE
-                flashBar?.dismiss()
+                _visibilityGroupCarousel.value = View.GONE
+                _dismissFlashBar.value = true
                 MyWorkManager.clearAllWorks()
             }
         }
-
     }
 
-    fun doOnResume() {
-
-        // A nivel de codigo, tiene que guardar, si SPFecha es nula(primera vez) actualizamos SPFecha and continue
-        // Si SPFecha existe(else) SPFeha == actual || SPFecha(+1 dia) == actual, actualizamos fecha, continue, else error + call
-
-        // Primera vez
-        val currentDate = MySharedPreferences.shared.getSystemDate()
-        if (currentDate == 0.toLong()) {
-            MySharedPreferences.shared.updateSystemDate(Date().clearTime().time)
-        } else {
-            if ((Date(currentDate) == Date().clearTime() || Date(currentDate).addDays(1) == Date().clearTime())) {
-                MySharedPreferences.shared.updateSystemDate(Date().clearTime().time)
-
-                // Tiempo uso expirado
-                if (Date(currentDate) > Date(MySharedPreferences.shared.getFechaFinPrueba())) {
-
-                    val pdLoading = ProgressDialog(this)
-                    pdLoading.setMessage(getString(R.string.validando))
-                    pdLoading.show()
-
-                    alert(
-                        "Alerta",
-                        "Versión de prueba expirada",
-                        "Aceptar",
-                        DialogInterface.OnClickListener { dialogInterface, i ->
-                            finishAffinity()
-                        },
-                        "Verificar renovación",
-                        DialogInterface.OnClickListener { dialogInterface, i ->
-                            // API
-                            SyncData.validateDevice(object : JSONObjectRequestListener {
-                                override fun onResponse(response: JSONObject?) {
-
-                                    response?.let {
-                                        val status = it.getInt("status")
-                                        if (status == 1) {
-                                            pdLoading.dismiss()
-
-                                            val fechaFin =
-                                                SimpleDateFormat("yyyy-MM-dd").parse(it.getString("fechaFin"))
-                                            MySharedPreferences.shared.setFechaFinPrueba(fechaFin.clearTime().time)
-
-                                            onResume()
-                                        }
-                                    }
-                                }
-
-                                override fun onError(anError: ANError?) {
-                                    pdLoading.dismiss()
-                                    alert(
-                                        getString(R.string.alerta),
-                                        getString(R.string.error_verificacion)
-                                    )
-                                }
-                            })
-
-                        }, closable = false
-                    )
-                }
-            } else {
-                alert(
-                    "Alerta",
-                    "Por favor, no juege con las fechas. Vuelva a situarla a ${Date(currentDate).customFormat()}",
-                    "Aceptar",
-                    DialogInterface.OnClickListener { dialogInterface, i ->
-                        finishAffinity()
-                    })
-            }
+    fun updateUserData(bloodValue: Float, level: Int) {
+        viewModelScope.launch {
+            userRepository.updateUserData(bloodValue, level)
         }
-
-        Control2.closeOlderControls()
-
-        pintarValores()
-        checkHasControlToday()
     }
 
+    fun insertNewControls(planificacion: Array<String>, sangre: Float, nivel: Int) {
+        viewModelScope.launch {
+            for (x in 0 until planificacion.size) {
+                val mControl = Control(executionDate = Date().addDays(x).clearTime(), startDate = Date().clearTime(), endDate = Date().addDays(planificacion.size - 1).clearTime())
+                mControl.blood = sangre
+                mControl.doseLevel = nivel
+                mControl.resource = planificacion[x]
+                controlRepository.insert(mControl)
+            }
+
+        }
+    }
+
+    private fun checkDoAlertControlAndReturnResource(): String {
+        viewModelScope.launch {
+            controlRepository.hasPedingControlToday(userRepository.getIdCurrentUser(), userRepository.getCurrentTimeNotification())
+        }
+        return ""
+    }
+
+    fun updateCurrentControlStatus(value: Boolean) {
+        viewModelScope.launch {
+            controlRepository.updateCurrentControl(value, userRepository.getIdCurrentUser())
+        }
+    }
 }

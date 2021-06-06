@@ -12,6 +12,7 @@ import java.lang.Exception
 import java.util.*
 import kotlin.math.min
 
+// TODO: ESTA CLASE NO SERVIRA. MIGRAR
 class ControlRepo(var database: MyDatabase) {
 
     private var controlDao: ControlDao = database.controlDao()
@@ -84,12 +85,7 @@ class ControlRepo(var database: MyDatabase) {
         return MySharedPreferences.shared.exists(arrayOf(MySharedPreferences.shared.LOGGED_CURRENT_USER))
     }
 
-    suspend fun getCurrentTimeNotification(): Array<Int> {
-        return withContext(Dispatchers.IO) {
-             userDao.getCurrentTimeNotification(MySharedPreferences.shared.getString(
-                MySharedPreferences.shared.LOGGED_CURRENT_USER))
-        }
-    }
+
 
     suspend fun settCurrentTimeNotification(hora: Int, minuto: Int): Boolean {
         return withContext(Dispatchers.IO) {
@@ -113,6 +109,13 @@ class ControlRepo(var database: MyDatabase) {
     suspend fun getAll(): List<User> {
         return withContext(Dispatchers.IO) {
             userDao.getAll()
+        }
+    }
+
+    suspend fun getCurrentTimeNotification(): Array<Int> {
+        return withContext(Dispatchers.IO) {
+            userDao.getCurrentTimeNotification(MySharedPreferences.shared.getString(
+                MySharedPreferences.shared.LOGGED_CURRENT_USER))
         }
     }
 

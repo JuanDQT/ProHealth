@@ -1,6 +1,6 @@
 package com.juan.prohealth.source
 
-interface StorageDataSource {
+interface IStorageDataSource {
     fun exists(keys: Array<String>): Boolean
     fun getDoseLevel(): String
     fun getBloodLevel(): String

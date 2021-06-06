@@ -2,32 +2,59 @@ package com.juan.prohealth.data.local
 
 import com.juan.prohealth.database.MyDatabase
 import com.juan.prohealth.database.daos.ControlDao
-import com.juan.prohealth.source.ControlLocalDataSource
+import com.juan.prohealth.database.entity.Control
+import com.juan.prohealth.source.IControlLocalDataSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class RoomControlDataSource(var database: MyDatabase) : ControlLocalDataSource {
+class RoomControlDataSource(var database: MyDatabase) : IControlLocalDataSource {
 
     private var controlDao: ControlDao = database.controlDao()
 
-    // First
-    override suspend fun closeOldControls() {
+    override suspend fun updateStateToCloseControls(idUser: Int) {
         withContext(Dispatchers.IO) {
-            controlDao.closeOldControls()
+            controlDao.updateStateToCloseControls(idUser)
         }
     }
 
-    // Controles hoy, o manana, etc
-    override suspend fun hasPendingControls(): Boolean {
+    override suspend fun checkPendingControlToday(idUser: Int, hour: Int, minute: Int): String {
         return withContext(Dispatchers.IO) {
-            controlDao.getNumberPendingControls() > 0
+            controlDao.checkPendingControlToday(idUser, hour, minute)
+        }
+    }
+    override suspend fun hasPendingControls(idUser: Int): Boolean {
+        return withContext(Dispatchers.IO) {
+            controlDao.getNumberPendingControls(idUser) > 0
         }
     }
 
-    // Control pendiente de hoy
-    override suspend fun hasPendingControlToday(): Boolean {
+    override suspend fun updateCurrentControl(idUser: Int, value: Boolean) {
         return withContext(Dispatchers.IO) {
-            controlDao.getNumberOfControlsToday() > 0
+            controlDao.updateCurrentControl(idUser, value)
+        }
+    }
+
+    override suspend fun getActiveControlList(idUser: Int, medicated: Boolean): List<Control> {
+        return withContext(Dispatchers.IO) {
+            controlDao.getActiveControlList(idUser, medicated)
+        }
+    }
+
+    override suspend fun deleteLastControlGroup(idUser: Int) {
+        return withContext(Dispatchers.IO) {
+            controlDao.deleteLastControlGroup(idUser)
+        }
+    }
+
+    override suspend fun getLastBloodValues(idUser: Int): Array<String> {
+        return withContext(Dispatchers.IO) {
+            controlDao.getLastBloodValues(idUser)
+        }
+    }
+
+    override suspend fun insert(control: Control) {
+        return withContext(Dispatchers.IO) {
+            controlDao.insert(control)
         }
     }
 }

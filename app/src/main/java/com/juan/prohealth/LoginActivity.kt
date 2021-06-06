@@ -18,6 +18,7 @@ class LoginActivity : AppCompatActivity() {
             // La primera vez, tendra id -1 en modo invitado
             User2.crearUsuarioInvitado()
             User2.setLogged("-1")
+            user2.setOnline(true)
             startActivity(Intent(this, PreinicioActivity::class.java))
         }
 
