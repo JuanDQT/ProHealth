@@ -56,4 +56,5 @@ dependencies {
 
     implementation project(path: ':anychart')
 
+    implementation 'com.karumi:dexter:6.0.2'
 }
