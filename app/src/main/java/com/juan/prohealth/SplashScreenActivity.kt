@@ -4,7 +4,6 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
-import com.juan.prohealth.database.User2
 import com.juan.prohealth.databinding.ActivitySplashScreenBinding
 import com.juan.prohealth.ui.firstActivity.PreinicioActivity
 

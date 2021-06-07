@@ -6,7 +6,6 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.events.calendar.utils.EventsCalendarUtil
 import com.events.calendar.views.EventsCalendar
-import com.juan.prohealth.database.Control2
 import com.juan.prohealth.databinding.ActivityCalendarioBinding
 import java.util.*
 

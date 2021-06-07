@@ -10,7 +10,6 @@ import com.anychart.enums.Anchor
 import com.anychart.enums.MarkerType
 import com.anychart.enums.TooltipPositionMode
 import com.anychart.graphics.vector.Stroke
-import com.juan.prohealth.database.Control2
 import com.juan.prohealth.databinding.ActivityBarCharBinding
 
 class BarCharActivity : AppCompatActivity() {

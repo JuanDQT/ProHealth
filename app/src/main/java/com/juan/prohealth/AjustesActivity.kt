@@ -12,8 +12,6 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import com.juan.prohealth.database.Control2
-import com.juan.prohealth.database.User2
 import com.juan.prohealth.databinding.ActivityAjustesBinding
 import io.github.lucasfsc.html2pdf.Html2Pdf
 import java.io.File

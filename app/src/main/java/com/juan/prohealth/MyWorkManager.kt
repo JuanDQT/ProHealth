@@ -8,8 +8,6 @@ import android.graphics.Color
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.work.*
-import com.juan.prohealth.database.Control2
-import com.juan.prohealth.database.User2
 import com.juan.prohealth.ui.mainActiviy.MainActivity
 import java.util.*
 import java.util.concurrent.TimeUnit
