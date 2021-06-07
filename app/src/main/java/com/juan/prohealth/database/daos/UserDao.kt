@@ -14,10 +14,10 @@ interface UserDao {
     suspend fun isInvitado(): Boolean
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insert(user: User)
+    suspend fun insert(user: User)
 
     @Query("select hour_alarm, minute_alarm from user where state_logging = 1")
-    fun getTimeNotification(): Array<Int>
+    suspend fun getTimeNotification(): Array<Int>
 
     @Query("SELECT * FROM user WHERE id = :id")
     suspend fun getById(id: Int): User?

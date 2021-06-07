@@ -1,16 +1,8 @@
 package com.juan.prohealth.database.daos
 
-import android.util.Log
+
 import androidx.room.*
-import com.juan.prohealth.AppContext
-import com.juan.prohealth.addDays
-import com.juan.prohealth.clearTime
-import com.juan.prohealth.customFormat
-import com.juan.prohealth.database.Control2
 import com.juan.prohealth.database.entity.Control
-import com.juan.prohealth.database.entity.User
-import io.realm.Realm
-import java.lang.Exception
 import java.util.*
 
 @Dao
@@ -20,13 +12,13 @@ interface ControlDao {
     suspend fun updateStateToCloseControls(idUser: Int)
 
     @Query("select count(*) from control where date() >= execution_date and medicated = 0 and user_id = :idUser")
-    fun getNumberPendingControls(idUser: Int): Int
+    suspend fun getNumberPendingControls(idUser: Int): Int
 
     @Query("select count(*) from control where execution_date = date() and medicated = 0 and user_id = :idUser")
-    fun getNumberOfControlsToday(idUser: Int): Int
+    suspend fun getNumberOfControlsToday(idUser: Int): Int
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insert(user: Control)
+    suspend fun insert(user: Control)
 
     @Query("SELECT resource from control where user_id = :idUser and execution_date = date() and cast(strftime('%H', datetime()) as int) >= :hour and cast(strftime('%M', datetime()) as int) >= :minute")
     suspend fun checkPendingControlToday(hour: Int, minute: Int, idUser: Int): String
