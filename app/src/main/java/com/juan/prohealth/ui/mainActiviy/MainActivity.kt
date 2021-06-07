@@ -47,6 +47,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private val RANGO_AZUL: String = "rangoBajoAzul.json"
     private val RANGO_ROJO: String = "rangoAltoRojo.json"
     var flashBar: Flashbar? = null
+    private val locationPermission = PermissionRequester(this, ACCESS_COARSE_LOCATION)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -237,7 +238,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             when (it.id) {
                 R.id.btnBorrar -> doAjustarIRN()
                 R.id.btnINR -> doAskINR()
-                R.id.btnGmap -> doOpenMaps()
+                R.id.btnGmap -> checkPermissionLocation()
                 R.id.btnEstadisticas -> doOpenEstadisticas()
                 R.id.btnCalendario -> doCalendario()
                 R.id.btnAjustes -> startActivity(Intent(this, AjustesActivity::class.java))
@@ -262,21 +263,17 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         startActivity(Intent(this, BarCharActivity::class.java))
     }
 
-    fun doOpenMaps() {
-        if (comprabarSiExisteApp("com.google.android.apps.maps", getApplicationContext())) {
-            // Buscar farmacias de guardia cercanas a mi posicion usando APP existente
+    private fun showNearPharmaciesWithGmapsApp() {
+
+        if (checkIfExistGmapsApp("com.google.android.apps.maps", getApplicationContext())) {
             val gmmIntentUri = Uri.parse("geo:0,0?q=farmacia+de+guardia")
             val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
             mapIntent.setPackage("com.google.android.apps.maps")
             mapIntent.resolveActivity(packageManager)?.let {
                 startActivity(mapIntent)
             }
-            //Manera 2º en caso de no tener gmaps ejecutar Activity
-            // val intent = Intent(this, UbicacionActivity::class.java)
-            //startActivity(intent)
         } else {
-            Toast.makeText(this, "Se necesita tener instalado Google Maps", Toast.LENGTH_LONG)
-                .show()
+            toast("Do not have install Google Maps application")
         }
     }
 
@@ -524,7 +521,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 */
 
-    fun comprabarSiExisteApp(nombrePaquete: String, context: Context): Boolean {
+    private fun checkIfExistGmapsApp(nombrePaquete: String, context: Context): Boolean {
         val pm = context.packageManager
         return try {
             pm.getPackageInfo(nombrePaquete, PackageManager.GET_ACTIVITIES)
@@ -536,5 +533,26 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     fun doCalendario() {
         startActivity(Intent(this, CalendarioActivity::class.java))
+    }
+
+    private fun checkPermissionLocation() {
+        locationPermission.request { isGranted ->
+            if (isGranted) showNearPharmaciesWithGmapsApp() else showAlertMessageUi()
+        }
+    }
+
+    private fun showAlertMessageUi() {
+        AlertDialog.Builder(this)
+            .setTitle("Location Permission is required")
+            .setMessage("This permission is required to know your actual position and to can looking for near pharmacies")
+            .setPositiveButton("Allow") { dialog, _ ->
+                dialog.cancel()
+                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                val uri = Uri.fromParts("package", this.packageName, null)
+                intent.data = uri
+                startActivity(intent)
+            }
+            .setNegativeButton("Deny") { dialog, _ -> dialog.cancel() }
+            .show()
     }
 }
