@@ -4,12 +4,14 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import com.juan.prohealth.database.daos.ControlDao
+import com.juan.prohealth.database.daos.DbConverters
 import com.juan.prohealth.database.daos.UserDao
 import com.juan.prohealth.database.entity.Control
 import com.juan.prohealth.database.entity.User
 
-
+@TypeConverters(DbConverters::class)
 @Database(entities = [User::class, Control::class], version = 1)
 abstract class MyDatabase : RoomDatabase() {
 
