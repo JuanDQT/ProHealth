@@ -1,25 +1,18 @@
 package com.juan.prohealth.ui.mainActiviy
 
-import android.app.ProgressDialog
-import android.content.DialogInterface
 import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.androidnetworking.error.ANError
-import com.androidnetworking.interfaces.JSONObjectRequestListener
-import com.juan.prohealth.*
-import com.juan.prohealth.database.Control2
-import com.juan.prohealth.database.User2
+import com.juan.prohealth.MyWorkManager
+import com.juan.prohealth.addDays
+import com.juan.prohealth.clearTime
 import com.juan.prohealth.database.entity.Control
-import com.juan.prohealth.database.entity.User
 import com.juan.prohealth.repository.ControlRepository
 import com.juan.prohealth.repository.UserRepository
 import com.juan.prohealth.repository.ValidationRepository
 import kotlinx.coroutines.launch
-import org.json.JSONObject
-import java.text.SimpleDateFormat
 import java.util.*
 
 class MainViewModel(
@@ -28,6 +21,10 @@ class MainViewModel(
     private val userRepository: UserRepository
 ) :
     ViewModel() {
+
+    init {
+        getActiveControlList()//Check "refresh"
+    }
 
     private var _statusINRButton = MutableLiveData(true)
     val statusINRButton: LiveData<Boolean> get() = _statusINRButton
@@ -41,6 +38,7 @@ class MainViewModel(
     private var _doseValue = MutableLiveData(0)
     val doseValue: LiveData<Int> get() = _doseValue
 
+    //Valores que controlan Visualizaciones?
     private var _showAlertControl = MutableLiveData(false)
     val showAlertControl: LiveData<Boolean> get() = _showAlertControl
 
@@ -52,9 +50,12 @@ class MainViewModel(
 
     private var _userResourceImage = MutableLiveData<String>("")
     val userResourceImage: LiveData<String> get() = _userResourceImage
-
+    //
     private var _lastBloodValues = MutableLiveData(emptyArray<Float>())
     val lastBloodValues: LiveData<Array<Float>> get() = _lastBloodValues
+
+    private var _controls = MutableLiveData<List<Control>>()
+    val controls: LiveData<List<Control>> get() = _controls
 
     // New
     fun doCloseOlderControls() {
@@ -103,7 +104,11 @@ class MainViewModel(
     fun insertNewControls(planificacion: Array<String>, sangre: Float, nivel: Int) {
         viewModelScope.launch {
             for (x in 0 until planificacion.size) {
-                val mControl = Control(executionDate = Date().addDays(x).clearTime(), startDate = Date().clearTime(), endDate = Date().addDays(planificacion.size - 1).clearTime())
+                val mControl = Control(
+                    executionDate = Date().addDays(x).clearTime(),
+                    startDate = Date().clearTime(),
+                    endDate = Date().addDays(planificacion.size - 1).clearTime()
+                )
                 mControl.blood = sangre
                 mControl.doseLevel = nivel
                 mControl.resource = planificacion[x]
@@ -115,7 +120,10 @@ class MainViewModel(
 
     private fun checkDoAlertControlAndReturnResource(): String {
         viewModelScope.launch {
-            controlRepository.hasPedingControlToday(userRepository.getIdCurrentUser(), userRepository.getCurrentTimeNotification())
+            controlRepository.hasPedingControlToday(
+                userRepository.getIdCurrentUser(),
+                userRepository.getCurrentTimeNotification()
+            )
         }
         return ""
     }
@@ -123,6 +131,13 @@ class MainViewModel(
     fun updateCurrentControlStatus(value: Boolean) {
         viewModelScope.launch {
             controlRepository.updateCurrentControl(value, userRepository.getIdCurrentUser())
+        }
+    }
+
+    fun getActiveControlList(medicated: Boolean= false) {
+        viewModelScope.launch {
+            val userCurrent = userRepository.getIdCurrentUser()
+            _controls.value = controlRepository.getActiveControlList(userCurrent,medicated)
         }
     }
 }
