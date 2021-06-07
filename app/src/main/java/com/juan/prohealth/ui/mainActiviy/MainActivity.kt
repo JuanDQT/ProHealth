@@ -9,7 +9,6 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.Html
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
@@ -24,7 +23,6 @@ import com.juan.prohealth.data.local.RoomControlDataSource
 import com.juan.prohealth.data.local.RoomUserDataSource
 import com.juan.prohealth.data.local.SharedPreference
 import com.juan.prohealth.data.local.StorageValidationDataSource
-import com.juan.prohealth.database.Control2
 import com.juan.prohealth.database.MyDatabase
 import com.juan.prohealth.databinding.ActivityMainBinding
 import com.juan.prohealth.repository.ControlRepository
@@ -33,7 +31,6 @@ import com.juan.prohealth.repository.ValidationRepository
 import com.juan.prohealth.ui.adapters.DoseAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.collections.set
 import kotlin.concurrent.schedule
 
@@ -53,6 +50,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var userResourceImage: String
     private var bloodLastValues = emptyArray<Float>()
     private var currentBloodValue = 0f
+    private lateinit var adapter:DoseAdapter
 
     private var sangreString = ""
     private var nivelString = ""
@@ -64,17 +62,35 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         buildDependencies()
         viewModel = buildViewModel()
         setContentView(binding.root)
+        setUpUi()
+        subscribeUI()
+    }
 
+    private fun setUpUi() {
+        adapter = DoseAdapter(emptyList())
+        binding.carousel.adapter = adapter
         binding.btnBorrar.setOnClickListener(this)
         binding.btnINR.setOnClickListener(this)
         binding.btnGmap.setOnClickListener(this)
         binding.btnEstadisticas.setOnClickListener(this)
         binding.btnCalendario.setOnClickListener(this)
         binding.btnAjustes.setOnClickListener(this)
-
-        subscribeUI()
         instanceFlashBar()
         instanceINRAlertDialog()
+        configureWidget()
+    }
+
+    private fun configureWidget() {
+        binding.carousel.visibility = View.VISIBLE
+        val transformer = FlatMerryGoRoundTransformer()
+        transformer.viewPerspective = 0.2
+        transformer.farAlpha = 0.0
+        binding.ivArrowLeft.visibility = View.VISIBLE
+        binding.ivArrowRight.visibility = View.VISIBLE
+        transformer.farScale = -1.5
+
+        binding.carousel.transformer = transformer
+        binding.carousel.isInfinite = true
     }
 
     private fun instanceFlashBar(): Flashbar {
@@ -209,30 +225,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         super.onResume()
         viewModel.doCloseOlderControls()
         viewModel.checkHasControlToday()
-        setDosisWidget()
-    }
-
-    // TODO: armando, liveData con adapter?
-    fun setDosisWidget() {
-        binding.carousel.visibility = View.VISIBLE
-        val transformer = FlatMerryGoRoundTransformer()
-        transformer.viewPerspective = 0.2
-        transformer.farAlpha = 0.0
-        binding.ivArrowLeft.visibility = View.VISIBLE
-        binding.ivArrowRight.visibility = View.VISIBLE
-        transformer.farScale = -1.5
-
-        binding.carousel.transformer = transformer
-        binding.carousel.isInfinite = true
-        // Aqui. Metodo ControlRepo creado: getActiveControlList()
-        val items = ArrayList(Control2.getActiveControlList())
-        binding.carousel.adapter = DoseAdapter(items)
-
-        if (items.count() > 0) {
-            val position =
-                items.indexOf(items.filter { f -> f.fecha == Date().clearTime() }.first())
-            binding.carousel.smoothScrollToPosition(position)
-        }
     }
 
     private fun subscribeUI() {
@@ -274,6 +266,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         viewModel.lastBloodValues.observe(this) { array ->
             bloodLastValues = array
         }
+
+        viewModel.controls.observe(this,{activeControls ->
+            adapter.setItems(activeControls)
+        })
     }
 
 
