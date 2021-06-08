@@ -1,5 +1,6 @@
 package com.juan.prohealth.ui.mainActiviy
 
+import android.Manifest.permission.ACCESS_COARSE_LOCATION
 import android.app.ProgressDialog
 import android.content.Context
 import android.content.DialogInterface
@@ -7,6 +8,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.text.Editable
 import android.text.Html
 import android.text.TextWatcher
