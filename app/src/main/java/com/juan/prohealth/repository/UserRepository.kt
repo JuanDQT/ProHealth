@@ -1,5 +1,6 @@
 package com.juan.prohealth.repository
 
+import androidx.lifecycle.LiveData
 import com.juan.prohealth.database.entity.User
 import com.juan.prohealth.source.IUserLocalDataSource
 
@@ -23,6 +24,10 @@ class UserRepository(private var iUserLocalDataSource: IUserLocalDataSource) {
 
     suspend fun updateUserData(bloodValue: Float, level: Int) {
         return iUserLocalDataSource.updateUserData(bloodValue, level)
+    }
+
+    suspend fun getCurrentUser(): User {
+        return iUserLocalDataSource.getCurrentUser()
     }
 
 }

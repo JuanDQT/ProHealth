@@ -3,10 +3,7 @@ package com.juan.prohealth
 import android.app.Application
 import android.content.Context
 import android.provider.Settings
-import android.telephony.TelephonyManager
 import android.widget.Toast
-import androidx.core.content.ContextCompat.getSystemService
-import com.juan.prohealth.database.CustomMigration
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import org.json.JSONObject

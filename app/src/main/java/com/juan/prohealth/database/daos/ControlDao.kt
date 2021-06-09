@@ -34,7 +34,7 @@ interface ControlDao {
     suspend fun deleteLastControlGroup(idUser: Int)
 
     @Query("SELECT distinct(blood) FROM control order by id desc limit :limit")
-    suspend fun getLastBloodValues(limit: Int = 10): Array<String>
+    suspend fun getLastBloodValues(limit: Int = 10): Array<Float>
 }
 
 

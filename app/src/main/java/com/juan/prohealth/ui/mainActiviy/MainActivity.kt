@@ -24,6 +24,7 @@ import com.juan.prohealth.data.local.RoomUserDataSource
 import com.juan.prohealth.data.local.SharedPreference
 import com.juan.prohealth.data.local.StorageValidationDataSource
 import com.juan.prohealth.database.MyDatabase
+import com.juan.prohealth.database.entity.Control
 import com.juan.prohealth.databinding.ActivityMainBinding
 import com.juan.prohealth.repository.ControlRepository
 import com.juan.prohealth.repository.UserRepository
@@ -54,6 +55,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     private var sangreString = ""
     private var nivelString = ""
+    private var controlListActive = emptyList<Control>()
     private var dataNieveles = emptyArray<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -130,20 +132,19 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         val editText = view.findViewById<EditText>(R.id.etValor)
 
         // Buscamos si hay historial..
-        val ultimosControles = Control2.getUltimosIRN()
 
-        if (ultimosControles.count() > 0) {
+        if (bloodLastValues.count() > 0) {
             val layoutHistorico = view.findViewById<LinearLayout>(R.id.ll_historico)
             layoutHistorico.visibility = View.VISIBLE
             val chipGroup = view.findViewById<ChipGroup>(R.id.chipGroup)
 
-            for (x in 0 until ultimosControles.count()) {
+            for (x in 0 until bloodLastValues.count()) {
                 val chip = getLayoutInflater().inflate(
                     R.layout.layout_chip_choice,
                     chipGroup,
                     false
                 ) as Chip
-                chip.text = ultimosControles[x]
+                chip.text = "${bloodLastValues[x]}"
                 chipGroup.addView(chip)
 
                 chip.setOnClickListener {
@@ -263,12 +264,14 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             userResourceImage = it
         }
 
-        viewModel.lastBloodValues.observe(this) { array ->
-            bloodLastValues = array
+        viewModel.lastBloodValues.observe(this) { lastBloodValue ->
+            bloodLastValues = lastBloodValue
         }
 
         viewModel.controls.observe(this,{activeControls ->
-            adapter.setItems(activeControls)
+            controlListActive = activeControls
+            adapter.setItems(controlListActive)
+
         })
     }
 
@@ -329,7 +332,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         irnActual.text = "${currentBloodValue}"
         irnNew.text = sangreString
 
-        // TODO: revisar
         if (currentBloodValue == 0f) {
             val irnText = view.findViewById<TextView>(R.id.tvIRN_text)
             val frameIRN = view.findViewById<FrameLayout>(R.id.frame_IRN)
@@ -368,8 +370,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 viewModel.updateUserData(sangreString.toFloat(), nivelString.toInt())
                 viewModel.insertNewControls(dataNieveles, sangreString.toFloat(), nivelString.toInt())
                 viewModel.checkHasControlToday()
-
-                MyWorkManager.setWorkers(Control2.getActiveControlList(onlyPendings = true))
+                // TODO: Recoge los valroes para mostrarlo en un ALERT. Implemendado guardado en variable observable y recogido
+                MyWorkManager.setWorkers(controlListActive)
 
                 if (btnMails.isChecked) {
                 }
@@ -380,6 +382,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         return builder.create()
     }
 
+    // TODO: Recoge los valroes para mostrarlo en un ALERT
     fun sendEmailPlanificacion() {
         val data = Html.fromHtml(Control2.getActiveControlListToEmail())
         val emailIntent = Intent(

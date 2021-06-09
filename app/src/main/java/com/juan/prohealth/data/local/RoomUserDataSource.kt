@@ -40,6 +40,12 @@ class RoomUserDataSource(var database: MyDatabase) : IUserLocalDataSource {
         }
     }
 
+    override suspend fun getCurrentUser(): User {
+        return withContext(Dispatchers.IO) {
+            userDao.getCurrentUser()
+        }
+    }
+
     override suspend fun getAll(): List<User> {
         return withContext(Dispatchers.IO) {
             userDao.getAll()

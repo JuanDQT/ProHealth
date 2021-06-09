@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.juan.prohealth.databinding.ActivityAjustesBinding
 import io.github.lucasfsc.html2pdf.Html2Pdf
 import java.io.File
+import java.util.*
 
 
 class AjustesActivity : AppCompatActivity() {
@@ -25,14 +26,15 @@ class AjustesActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityAjustesBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        binding.tvHora.text = getDateFormat(User2.getCurrentTimeNotification())
+        //binding.tvHora.text = getDateFormat(User2.getCurrentTimeNotification())
+        binding.tvHora.text = ""
 
         binding.tvContactos.setOnClickListener { doAskMail() }
         binding.frameNotificaciones.setOnClickListener { doConfigNotification() }
         binding.tvExportar.setOnClickListener { doExportarMail() }
     }
 
-
+    // TODO: revisar
     fun getDateFormat(dateArray: Array<Int>): String {
         return "${dateArray[0]}:${dateArray[1].toString().padStart(2, '0')}"
     }

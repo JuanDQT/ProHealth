@@ -16,9 +16,6 @@ interface UserDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(user: User)
 
-    @Query("select hour_alarm, minute_alarm from user where state_logging = 1")
-    suspend fun getTimeNotification(): Array<Int>
-
     @Query("SELECT * FROM user WHERE id = :id")
     suspend fun getById(id: Int): User?
 
@@ -33,5 +30,8 @@ interface UserDao {
 
     @Query("UPDATE user set blood = :bloodValue, level = :level where state_logging = 1")
     suspend fun updateUserData(bloodValue: Float, level: Int)
+
+    @Query("SELECT * FROM user WHERE state_logging = 1")
+    suspend fun getCurrentUser(): User
 
 }

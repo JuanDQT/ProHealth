@@ -9,6 +9,7 @@ import com.juan.prohealth.MyWorkManager
 import com.juan.prohealth.addDays
 import com.juan.prohealth.clearTime
 import com.juan.prohealth.database.entity.Control
+import com.juan.prohealth.database.entity.User
 import com.juan.prohealth.repository.ControlRepository
 import com.juan.prohealth.repository.UserRepository
 import com.juan.prohealth.repository.ValidationRepository
@@ -25,7 +26,6 @@ class MainViewModel(
     init {
         getActiveControlList()//Check "refresh"
     }
-
     private var _statusINRButton = MutableLiveData(true)
     val statusINRButton: LiveData<Boolean> get() = _statusINRButton
 
@@ -121,8 +121,7 @@ class MainViewModel(
     private fun checkDoAlertControlAndReturnResource(): String {
         viewModelScope.launch {
             controlRepository.hasPedingControlToday(
-                userRepository.getIdCurrentUser(),
-                userRepository.getCurrentTimeNotification()
+                userRepository.getCurrentUser()
             )
         }
         return ""

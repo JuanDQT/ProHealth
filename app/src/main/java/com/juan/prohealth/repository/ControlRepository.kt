@@ -1,6 +1,7 @@
 package com.juan.prohealth.repository
 
 import com.juan.prohealth.database.entity.Control
+import com.juan.prohealth.database.entity.User
 import com.juan.prohealth.source.IControlLocalDataSource
 
 class ControlRepository(private val iControlLocalDataSource: IControlLocalDataSource) {
@@ -13,8 +14,8 @@ class ControlRepository(private val iControlLocalDataSource: IControlLocalDataSo
         return iControlLocalDataSource.hasPendingControls(idUser)
     }
 
-    suspend fun hasPedingControlToday(idUser: Int, time: Array<Int>): String {
-        return iControlLocalDataSource.checkPendingControlToday(idUser, time[0], time[1])
+    suspend fun hasPedingControlToday(user: User): String {
+        return iControlLocalDataSource.checkPendingControlToday(user.id, user.hourAlarm, user.minuteAlarm)
     }
 
     suspend fun updateCurrentControl(value: Boolean, idUser: Int) {
