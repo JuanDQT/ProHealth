@@ -57,4 +57,11 @@ dependencies {
     implementation project(path: ':anychart')
 
     implementation 'com.karumi:dexter:6.0.2'
+
+    def room_version = "2.3.0"
+    implementation "androidx.room:room-runtime:$room_version"
+    //To use Kotlin annotation processing tool (kapt)
+    kapt "androidx.room:room-compiler:$room_version"
+    //Kotlin Extensions and Coroutines support for Room
+    implementation "androidx.room:room-ktx:$room_version"
 }
