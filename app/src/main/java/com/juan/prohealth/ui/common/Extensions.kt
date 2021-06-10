@@ -10,6 +10,7 @@ import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.RelativeLayout
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.juan.prohealth.AppContext
 import java.text.SimpleDateFormat
@@ -137,4 +138,8 @@ fun View.alignTo(position: Int) {
     val currentLayoutParams = this.layoutParams as RelativeLayout.LayoutParams
     currentLayoutParams.addRule(position)
     this.layoutParams = currentLayoutParams
+}
+
+fun Context.toast(message:String){
+    Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 }
