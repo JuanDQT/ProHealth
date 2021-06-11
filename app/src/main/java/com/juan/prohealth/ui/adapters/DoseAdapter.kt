@@ -1,5 +1,6 @@
 package com.juan.prohealth.ui.adapters;
 
+
 import android.content.Context
 import android.graphics.Typeface
 import android.view.LayoutInflater
@@ -7,12 +8,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.juan.prohealth.*
-import com.juan.prohealth.database.Control
-import com.juan.prohealth.databinding.ItemDosisBinding
 import com.juan.prohealth.ui.common.*
+import com.juan.prohealth.database.room.Control
+
+import com.juan.prohealth.databinding.ItemDosisBinding
 import java.util.*
 
-class DoseAdapter(var controls: ArrayList<Control>) :
+class DoseAdapter(var controls: List<Control>) :
     RecyclerView.Adapter<DoseAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -29,8 +31,8 @@ class DoseAdapter(var controls: ArrayList<Control>) :
 
         fun bind(control: Control, context: Context) {
 
-            val resourceControl = control.recurso
-            val dateControl = control.fecha
+            val resourceControl = control.resource
+            val dateControl = control.executionDate
 
             if (dateControl != null) {
 
@@ -66,4 +68,9 @@ class DoseAdapter(var controls: ArrayList<Control>) :
     }
 
     override fun getItemCount(): Int = if (controls.size > 0) controls.size else 0
+
+    fun setItems(controls: List<Control>) {
+        this.controls = controls
+        notifyDataSetChanged()
+    }
 }
