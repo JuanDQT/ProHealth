@@ -8,8 +8,9 @@ import android.graphics.Color
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.work.*
-import com.juan.prohealth.database.Control
+import com.juan.prohealth.database.Control as RealmControl
 import com.juan.prohealth.database.User
+import com.juan.prohealth.database.room.Control
 import com.juan.prohealth.ui.common.clearSeconds
 import com.juan.prohealth.ui.common.fromDate
 import com.juan.prohealth.ui.mainActiviy.MainActivity
