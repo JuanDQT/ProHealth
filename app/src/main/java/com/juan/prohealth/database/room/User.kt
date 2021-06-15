@@ -23,5 +23,5 @@ data class User(
     @ColumnInfo(name = "id_server")
     val idServer: Int = 0,
     @ColumnInfo(name = "state_logging")
-    val stateLogging: Boolean = false
+    val stateLogging: Boolean = true
 ): Parcelable
