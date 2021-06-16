@@ -64,10 +64,10 @@ class MyWorkManager(context: Context, workerParamaters: WorkerParameters): Worke
             val userTime: Array<Int> = User.getCurrentTimeNotification()
 
             for (x in controls) {
-                val tiempoRestante = Calendar.getInstance().fromDate(x.fecha!!, userTime[0], userTime[1]).timeInMillis - System.currentTimeMillis().clearSeconds()
-                val dataParams = Data.Builder().putString("valor", x.recurso).build()
-                val worker = OneTimeWorkRequest.Builder(MyWorkManager::class.java).setInitialDelay(tiempoRestante, TimeUnit.MILLISECONDS).addTag(TAG).setInputData(dataParams).build()
-                workers.add(worker)
+               // val tiempoRestante = Calendar.getInstance().fromDate(x.fecha!!, userTime[0], userTime[1]).timeInMillis - System.currentTimeMillis().clearSeconds()
+               // val dataParams = Data.Builder().putString("valor", x.recurso).build()
+               // val worker = OneTimeWorkRequest.Builder(MyWorkManager::class.java).setInitialDelay(tiempoRestante, TimeUnit.MILLISECONDS).addTag(TAG).setInputData(dataParams).build()
+               // workers.add(worker)
             }
             val instance = WorkManager.getInstance()
             instance.enqueue(workers)
