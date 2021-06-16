@@ -66,15 +66,15 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
         buildDependencies()
         viewModel = buildViewModel()
-        setContentView(binding.root)
         setUpUi()
         subscribeUI()
     }
 
     private fun setUpUi() {
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         adapter = DoseAdapter(emptyList())
         binding.btnBorrar.setOnClickListener(this)
         binding.btnINR.setOnClickListener(this)
@@ -82,8 +82,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         binding.btnEstadisticas.setOnClickListener(this)
         binding.btnCalendario.setOnClickListener(this)
         binding.btnAjustes.setOnClickListener(this)
-        instanceFlashBar()
-        instanceINRAlertDialog()
         configureWidget()
     }
 
@@ -240,7 +238,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         viewModel.doseValue.observe(this) { value ->
             binding.tvDosisValor.text = "${value}"
         }
-        viewModel.showAlertControl.observe(this) { value ->
+       /* viewModel.showAlertControl.observe(this) { value ->
             if (value) {
             }
             flashBar.show()
@@ -251,8 +249,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 }
                 it.dismiss()
             }
-        }
-        viewModel.visibilityGroupCarousel.observe(this) { value ->
+        }*/
+/*        viewModel.visibilityGroupCarousel.observe(this) { value ->
             binding.carousel.visibility = value
             binding.ivArrowLeft.visibility = value
             binding.ivArrowRight.visibility = value
@@ -264,19 +262,32 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
         viewModel.lastBloodValues.observe(this) { lastBloodValue ->
             bloodLastValues = lastBloodValue
-        }
+        }*/
 
-        viewModel.controls.observe(this, { activeControls ->
-            controlListActive = activeControls
-            adapter.setItems(controlListActive)
+        viewModel.currentActiveControls.observe(this, { activeControls ->
+            //controlListActive = activeControls
+            if(activeControls.isNullOrEmpty()){
+                toast("No tienes controles activos")
+                binding.carousel.visibility = View.GONE
+                binding.ivArrowLeft.visibility = View.GONE
+                binding.ivArrowRight.visibility = View.GONE
+                binding.btnBorrar.isEnabled = false
+                binding.btnINR.isEnabled = true
+            }else{
+                binding.btnINR.isEnabled = false
+                adapter.setItems(controlListActive)
+                toast("Tienes controles activos")
+                //Mostrar recordatorio en caso de que HOY su tabla Control para hoy este a FALSE
+                //Rellenar Recycler
+            }
 
         })
     }
 
     override fun onResume() {
         super.onResume()
-        viewModel.doCloseOlderControls()
-        viewModel.checkHasControlToday()
+       // viewModel.doCloseOlderControls()
+       // viewModel.checkHasControlToday()
     }
 
     // Controlamos eventos click Botones
@@ -377,14 +388,14 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                     sangreString.toFloat(),
                     nivelString.toInt()
                 )
-                viewModel.checkHasControlToday()
+                //viewModel.checkHasControlToday()
+            //    viewModel.getActiveControlList()
                 // TODO: Recoge los valroes para mostrarlo en un ALERT. Implemendado guardado en variable observable y recogido
-                MyWorkManager.setWorkers(controlListActive)
+               // MyWorkManager.setWorkers(controlListActive)
 
                 if (btnMails.isChecked) {
+                    sendEmailPlanificacion()
                 }
-                sendEmailPlanificacion()
-
             })
 
         return builder.create()

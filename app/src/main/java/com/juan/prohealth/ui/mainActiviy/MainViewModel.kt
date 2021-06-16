@@ -47,14 +47,14 @@ class MainViewModel(
     private var _visibilityGroupCarousel = MutableLiveData(0)
     val visibilityGroupCarousel: LiveData<Int> get() = _visibilityGroupCarousel
 
-    private var _userResourceImage = MutableLiveData<String>("")
+    private var _userResourceImage = MutableLiveData(" ")
     val userResourceImage: LiveData<String> get() = _userResourceImage
     //
     private var _lastBloodValues = MutableLiveData(emptyArray<Float>())
     val lastBloodValues: LiveData<Array<Float>> get() = _lastBloodValues
 
-    private var _controls = MutableLiveData<List<Control>>()
-    val controls: LiveData<List<Control>> get() = _controls
+    private var _currentActiveControls = MutableLiveData<List<Control>>(emptyList())
+    val currentActiveControls: LiveData<List<Control>> get() = _currentActiveControls
 
     // New
     fun doCloseOlderControls() {
@@ -77,7 +77,9 @@ class MainViewModel(
 
     fun checkHasControlToday() {
         viewModelScope.launch {
-            if (controlRepository.hasPendingControls(userRepository.getIdCurrentUser())) {
+            var idUser = userRepository.getIdCurrentUser()
+            var state = controlRepository.hasPendingControls(idUser)
+            if (state) {
                 _statusINRButton.value = false
                 _statusDeleteBtn.value = true
                 //setDosisWidget()
@@ -96,7 +98,10 @@ class MainViewModel(
 
     fun updateUserData(bloodValue: Float, level: Int) {
         viewModelScope.launch {
-            userRepository.updateUserData(bloodValue, level)
+            val currentUser = userRepository.getCurrentUser()
+            currentUser.blood = bloodValue
+            currentUser.level = level
+            userRepository.updateUser(currentUser)
         }
     }
 
@@ -112,6 +117,7 @@ class MainViewModel(
                 mControl.doseLevel = nivel
                 mControl.resource = planificacion[x]
                 controlRepository.insert(mControl)
+                TODO("No estamos asociando NINGUN ID USER")
             }
 
         }
@@ -132,10 +138,12 @@ class MainViewModel(
         }
     }
 
-    fun getActiveControlList(medicated: Boolean= false) {
+    fun getActiveControlList() {
         viewModelScope.launch {
-            val userCurrent = userRepository.getIdCurrentUser()
-            _controls.value = controlRepository.getActiveControlList(userCurrent,medicated)
+            val currentUser = userRepository.getCurrentUser()
+            _currentActiveControls.value = controlRepository.getActiveControlList(currentUser.id,currentUser.stateLogging)
+            val allControls = controlRepository.getAllControls()
+            var random = "Test"
         }
     }
 }
