@@ -14,8 +14,8 @@ data class User(
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0,
     val name: String = "",
-    val blood: Float = 0f,
-    val level: Int = 0,
+    var blood: Float = 0f,
+    var level: Int = 0,
     @ColumnInfo(name = "hour_alarm")
     val hourAlarm: Int = 0,
     @ColumnInfo(name = "minute_alarm")
