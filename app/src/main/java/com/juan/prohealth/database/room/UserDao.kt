@@ -1,9 +1,6 @@
 package com.juan.prohealth.database.room
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 
 @Dao
 interface UserDao {
@@ -32,4 +29,6 @@ interface UserDao {
     @Query("SELECT * FROM user WHERE state_logging = 1")
     suspend fun getCurrentUser(): User
 
+    @Update
+    suspend fun update(user: User)
 }
