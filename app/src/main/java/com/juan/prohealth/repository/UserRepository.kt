@@ -17,8 +17,8 @@ class UserRepository(private var iUserLocalDataSource: IUserLocalDataSource) {
         return iUserLocalDataSource.getBloodValue()
     }
 
-    suspend fun updateUserData(bloodValue: Float, level: Int) {
-        return iUserLocalDataSource.updateUserData(bloodValue, level)
+    suspend fun updateUser(user: User) {
+        return iUserLocalDataSource.updateUser(user)
     }
 
     suspend fun getCurrentUser(): User {

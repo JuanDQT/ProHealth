@@ -37,4 +37,8 @@ class ControlRepository(private val iControlLocalDataSource: IControlLocalDataSo
     suspend fun insert(control: Control) {
         iControlLocalDataSource.insert(control)
     }
+
+    suspend fun getAllControls(): List<Control>{
+        return iControlLocalDataSource.getAll()
+    }
 }

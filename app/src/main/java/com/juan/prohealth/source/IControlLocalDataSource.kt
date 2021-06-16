@@ -11,4 +11,5 @@ interface IControlLocalDataSource {
     suspend fun deleteLastControlGroup(idUser: Int)
     suspend fun getLastBloodValues(idUser: Int): Array<Float>
     suspend fun insert(control: Control)
+    suspend fun getAll(): List<Control>
 }

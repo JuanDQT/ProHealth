@@ -12,5 +12,5 @@ interface IUserLocalDataSource {
     suspend fun isInvitado(): Boolean
     suspend fun getAll(): List<User>
     suspend fun getBloodValue(): Float
-    suspend fun updateUserData(bloodValue: Float, level: Int)
+    suspend fun updateUser(user:User)
 }

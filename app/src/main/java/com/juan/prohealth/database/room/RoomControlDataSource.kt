@@ -54,4 +54,10 @@ class RoomControlDataSource(var database: MyDatabase) : IControlLocalDataSource 
             controlDao.insert(control)
         }
     }
+
+    override suspend fun getAll(): List<Control> {
+        return withContext(Dispatchers.IO){
+            controlDao.getAllControl()
+        }
+    }
 }

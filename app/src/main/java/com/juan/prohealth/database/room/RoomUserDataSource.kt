@@ -51,9 +51,9 @@ class RoomUserDataSource(var database: MyDatabase) : IUserLocalDataSource {
         }
     }
 
-    override suspend fun updateUserData(bloodValue: Float, level: Int) {
+    override suspend fun updateUser(user:User) {
         return withContext(Dispatchers.IO) {
-            userDao.updateUserData(bloodValue, level)
+            userDao.update(user)
         }
     }
 }
