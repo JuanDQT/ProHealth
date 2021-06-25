@@ -5,13 +5,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.juan.prohealth.MyWorkManager
-import com.juan.prohealth.ui.common.*
 import com.juan.prohealth.database.room.Control
 import com.juan.prohealth.database.room.User
 import com.juan.prohealth.repository.ControlRepository
 import com.juan.prohealth.repository.UserRepository
 import com.juan.prohealth.repository.ValidationRepository
+import com.juan.prohealth.ui.common.addDays
+import com.juan.prohealth.ui.common.clearTime
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -23,10 +23,8 @@ class MainViewModel(
     ViewModel() {
 
     init {
-        getActiveControlList()//Check "refresh"
+        getActiveControlList()//"refresh"
     }
-    private var _statusINRButton = MutableLiveData(true)
-    val statusINRButton: LiveData<Boolean> get() = _statusINRButton
 
     private var _statusDeleteBtn = MutableLiveData(false)
     val statusDeleteBtn: LiveData<Boolean> get() = _statusDeleteBtn
@@ -50,10 +48,8 @@ class MainViewModel(
     private var _userResourceImage = MutableLiveData(" ")
     val userResourceImage: LiveData<String> get() = _userResourceImage
     //
-    private var _lastBloodValues = MutableLiveData(emptyArray<Float>())
-    val lastBloodValues: LiveData<Array<Float>> get() = _lastBloodValues
 
-    private var _currentActiveControls = MutableLiveData<List<Control>>(emptyList())
+    private var _currentActiveControls = MutableLiveData<List<Control>>()
     val currentActiveControls: LiveData<List<Control>> get() = _currentActiveControls
 
     // New
@@ -69,57 +65,68 @@ class MainViewModel(
         }
     }
 
-    fun getBloodValue() {
-        viewModelScope.launch {
-            _bloodValue.value = userRepository.getBloodValue()
-        }
+    fun checkHasControlTodayNew() {
+        TODO()
     }
 
     fun checkHasControlToday() {
         viewModelScope.launch {
             var idUser = userRepository.getIdCurrentUser()
             var state = controlRepository.hasPendingControls(idUser)
+
             if (state) {
-                _statusINRButton.value = false
                 _statusDeleteBtn.value = true
                 //setDosisWidget()
                 _userResourceImage.value = checkDoAlertControlAndReturnResource()
                 _showAlertControl.value = !_userResourceImage.value.isNullOrEmpty()
                 _dismissFlashBar.value = _showAlertControl.value
             } else {
-                _statusINRButton.value = true
                 _statusDeleteBtn.value = false
                 _visibilityGroupCarousel.value = View.GONE
                 _dismissFlashBar.value = true
-                MyWorkManager.clearAllWorks()
+                // MyWorkManager.clearAllWorks()
             }
         }
     }
 
-    fun updateUserData(bloodValue: Float, level: Int) {
+    private fun updateInfoPanelUi(user: User) {
+        _bloodValue.value = user.blood
+        _doseValue.value = user.level
+    }
+
+    fun updateUserData(
+        bloodValue: Float,
+        nivel: Int,
+        planificacion: Array<String>,
+        control: Control
+    ) {
         viewModelScope.launch {
             val currentUser = userRepository.getCurrentUser()
             currentUser.blood = bloodValue
-            currentUser.level = level
+            currentUser.level = nivel
             userRepository.updateUser(currentUser)
+
+            addControlsToUser(planificacion, control, bloodValue, nivel, currentUser)
+            getActiveControlList()
         }
     }
 
-    fun insertNewControls(planificacion: Array<String>, sangre: Float, nivel: Int) {
-        viewModelScope.launch {
-            for (x in 0 until planificacion.size) {
-                val mControl = Control(
-                    executionDate = Date().addDays(x).clearTime(),
-                    startDate = Date().clearTime(),
-                    endDate = Date().addDays(planificacion.size - 1).clearTime()
-                )
-                mControl.blood = sangre
-                mControl.doseLevel = nivel
-                mControl.resource = planificacion[x]
-                controlRepository.insert(mControl)
-                TODO("No estamos asociando NINGUN ID USER")
-            }
-
+    private suspend fun addControlsToUser(
+        planificacion: Array<String>,
+        control: Control,
+        bloodValue: Float,
+        nivel: Int,
+        currentUser: User
+    ) {
+        for (x in 0 until planificacion.size) {
+            control.executionDate = Date().addDays(x).clearTime()
+            control.startDate = Date().clearTime()
+            control.endDate = Date().addDays(planificacion.size - 1).clearTime()
+            control.blood = bloodValue
+            control.doseLevel = nivel
+            control.resource = planificacion[x]
+            control.idUser = currentUser.id
+            controlRepository.insert(control)
         }
     }
 
@@ -132,18 +139,21 @@ class MainViewModel(
         return ""
     }
 
-    fun updateCurrentControlStatus(value: Boolean) {
+    fun updateCurrentControlStatus(isMedicated: Boolean) {
         viewModelScope.launch {
-            controlRepository.updateCurrentControl(value, userRepository.getIdCurrentUser())
+            //controlRepository.updateCurrentControl(value, userRepository.getIdCurrentUser())
+            val controlToday = controlRepository.getControlByDate(Date().clearTime())
+            controlToday.medicated = isMedicated
+            controlRepository.updateControl(controlToday)
         }
     }
 
     fun getActiveControlList() {
         viewModelScope.launch {
-            val currentUser = userRepository.getCurrentUser()
-            _currentActiveControls.value = controlRepository.getActiveControlList(currentUser.id,currentUser.stateLogging)
-            val allControls = controlRepository.getAllControls()
-            var random = "Test"
+            val user = userRepository.getCurrentUser()
+            val activeControls = controlRepository.getActiveControlList(user.id)
+            _currentActiveControls.value = activeControls
+            updateInfoPanelUi(user)
         }
     }
 }

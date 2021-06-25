@@ -11,6 +11,7 @@ import android.provider.Settings
 import android.text.Editable
 import android.text.Html
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
@@ -59,7 +60,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     private var sangreString = ""
     private var nivelString = ""
-    private var controlListActive = emptyList<Control>()
     private var dataNiveles = emptyArray<String>()
 
     private val locationPermission = PermissionRequester(this, ACCESS_COARSE_LOCATION)
@@ -102,7 +102,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         return Flashbar.Builder(this)
             .gravity(Flashbar.Gravity.BOTTOM)
             .title(getString(R.string.title_notificacion))
-            .message(String.format(getString(R.string.msg_notificacion, userResourceImage)))
+            .message(String.format(getString(R.string.msg_notificacion, "test")))
             .enableSwipeToDismiss()
             .backgroundColorRes(R.color.colorPrimaryDark)
             .positiveActionText("Si")
@@ -225,9 +225,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun subscribeUI() {
-        viewModel.statusINRButton.observe(this) { value ->
-            binding.btnINR.isEnabled = value
-        }
+
         viewModel.statusDeleteBtn.observe(this) { value ->
             binding.btnBorrar.isEnabled = value
         }
@@ -250,12 +248,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 it.dismiss()
             }
         }*/
-/*        viewModel.visibilityGroupCarousel.observe(this) { value ->
-            binding.carousel.visibility = value
-            binding.ivArrowLeft.visibility = value
-            binding.ivArrowRight.visibility = value
-        }
-
+/*
         viewModel.userResourceImage.observe(this) {
             userResourceImage = it
         }
@@ -265,9 +258,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         }*/
 
         viewModel.currentActiveControls.observe(this, { activeControls ->
-            //controlListActive = activeControls
             if(activeControls.isNullOrEmpty()){
-                toast("No tienes controles activos")
+                Log.i("ActiveControls","No hay controles activos")
                 binding.carousel.visibility = View.GONE
                 binding.ivArrowLeft.visibility = View.GONE
                 binding.ivArrowRight.visibility = View.GONE
@@ -275,18 +267,23 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 binding.btnINR.isEnabled = true
             }else{
                 binding.btnINR.isEnabled = false
-                adapter.setItems(controlListActive)
-                toast("Tienes controles activos")
-                //Mostrar recordatorio en caso de que HOY su tabla Control para hoy este a FALSE
-                //Rellenar Recycler
+                binding.ivArrowLeft.visibility = View.VISIBLE
+                binding.ivArrowRight.visibility = View.VISIBLE
+                binding.carousel.visibility = View.VISIBLE
+                adapter.setItems(activeControls)
+                binding.carousel.adapter = adapter
+                Log.i("ActiveControls","Hay controles activos")
             }
 
         })
     }
 
+    private fun checkHasControlToday(){
+        flashBar.show()
+    }
     override fun onResume() {
         super.onResume()
-       // viewModel.doCloseOlderControls()
+        //viewModel.doCloseOlderControls()
        // viewModel.checkHasControlToday()
     }
 
@@ -382,17 +379,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             "Planificar",
             DialogInterface.OnClickListener { dialogInterface, i ->
                 // Actualizamos la sangre y nivel
-                viewModel.updateUserData(sangreString.toFloat(), nivelString.toInt())
-                viewModel.insertNewControls(
-                    dataNiveles,
-                    sangreString.toFloat(),
-                    nivelString.toInt()
-                )
-                //viewModel.checkHasControlToday()
-            //    viewModel.getActiveControlList()
+                viewModel.updateUserData(sangreString.toFloat(), nivelString.toInt(),  dataNiveles, Control())
                 // TODO: Recoge los valroes para mostrarlo en un ALERT. Implemendado guardado en variable observable y recogido
                // MyWorkManager.setWorkers(controlListActive)
-
                 if (btnMails.isChecked) {
                     sendEmailPlanificacion()
                 }
