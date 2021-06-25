@@ -30,9 +30,9 @@ class LoginActivity : AppCompatActivity() {
             // La primera vez, tendra id -1 en modo invitado
             RealmUser.crearUsuarioInvitado()
             RealmUser.setLogged("-1")
-            startActivity(Intent(this, InitialActivity::class.java))
-            var userRandom = User()
+            val userRandom = User()
             viewModel.createInvitedUser(userRandom)
+            startActivity(Intent(this, InitialActivity::class.java))
         }
 
         binding.btnLogin.setOnClickListener {
