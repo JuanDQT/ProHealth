@@ -13,15 +13,15 @@ data class User(
     // Probar generacion usuarios
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0,
-    val name: String = "",
+    var name: String = "",
     var blood: Float = 0f,
     var level: Int = 0,
     @ColumnInfo(name = "hour_alarm")
-    val hourAlarm: Int = 0,
+    var hourAlarm: Int = 0,
     @ColumnInfo(name = "minute_alarm")
-    val minuteAlarm: Int = 0,
+    var minuteAlarm: Int = 0,
     @ColumnInfo(name = "id_server")
-    val idServer: Int = 0,
+    var idServer: Int = 0,
     @ColumnInfo(name = "state_logging")
-    val stateLogging: Boolean = true
+    var stateLogging: Boolean = true
 ): Parcelable

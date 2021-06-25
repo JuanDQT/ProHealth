@@ -19,11 +19,11 @@ data class Control(
     @ColumnInfo(name = "dose_level")
     var doseLevel: Int = 0,
     @ColumnInfo(name = "execution_date")
-    val executionDate: Date = Calendar.getInstance().time,
+    var executionDate: Date = Calendar.getInstance().time,
     @ColumnInfo(name = "start_date")
-    val startDate: Date = Calendar.getInstance().time,
+    var startDate: Date = Calendar.getInstance().time,
     @ColumnInfo(name = "end_date")
-    val endDate: Date = Calendar.getInstance().time,
+    var endDate: Date = Calendar.getInstance().time,
     var resource: String = "",
     var medicated: Boolean = false,
     @ColumnInfo(name = "group_control")
