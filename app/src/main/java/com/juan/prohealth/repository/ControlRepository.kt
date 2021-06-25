@@ -3,6 +3,7 @@ package com.juan.prohealth.repository
 import com.juan.prohealth.database.room.Control
 import com.juan.prohealth.database.room.User
 import com.juan.prohealth.source.IControlLocalDataSource
+import java.util.*
 
 class ControlRepository(private val iControlLocalDataSource: IControlLocalDataSource) {
 
@@ -26,8 +27,8 @@ class ControlRepository(private val iControlLocalDataSource: IControlLocalDataSo
         iControlLocalDataSource.updateCurrentControl(idUser, value)
     }
 
-    suspend fun getActiveControlList(idUser: Int, value: Boolean): List<Control> {
-        return iControlLocalDataSource.getActiveControlList(idUser, value)
+    suspend fun getActiveControlList(idUser: Int, medicated: Boolean = false): List<Control> {
+        return iControlLocalDataSource.getActiveControlList(idUser, medicated)
     }
 
     suspend fun deleteLastControlGroup(idUser: Int) {
@@ -38,7 +39,15 @@ class ControlRepository(private val iControlLocalDataSource: IControlLocalDataSo
         iControlLocalDataSource.insert(control)
     }
 
-    suspend fun getAllControls(): List<Control>{
+    suspend fun getAllControls(): List<Control> {
         return iControlLocalDataSource.getAll()
+    }
+
+    suspend fun getControlByDate(date: Date): Control {
+        return iControlLocalDataSource.getControlByDate(date)
+    }
+
+    suspend fun updateControl(control: Control) {
+        iControlLocalDataSource.updateControl(control)
     }
 }

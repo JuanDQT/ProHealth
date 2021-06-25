@@ -1,6 +1,7 @@
 package com.juan.prohealth.source
 
 import com.juan.prohealth.database.room.Control
+import java.util.*
 
 interface IControlLocalDataSource {
     suspend fun updateStateToCloseControls(idUser: Int)
@@ -12,4 +13,6 @@ interface IControlLocalDataSource {
     suspend fun getLastBloodValues(idUser: Int): Array<Float>
     suspend fun insert(control: Control)
     suspend fun getAll(): List<Control>
+    suspend fun getControlByDate(date: Date): Control
+    suspend fun updateControl(control: Control)
 }

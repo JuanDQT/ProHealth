@@ -1,6 +1,7 @@
 package com.juan.prohealth.database.room
 
 import androidx.room.*
+import java.util.*
 
 @Dao
 interface ControlDao {
@@ -35,4 +36,10 @@ interface ControlDao {
 
     @Query("SELECT * FROM control")
     suspend fun getAllControl(): List<Control>
+
+    @Query("SELECT * FROM control WHERE execution_date = :date")
+    suspend fun getControlByDate(date:Date): Control
+
+    @Update
+    suspend fun update(control: Control)
 }
