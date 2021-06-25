@@ -10,7 +10,11 @@ import com.androidnetworking.interfaces.JSONObjectRequestListener
 import com.juan.prohealth.*
 import com.juan.prohealth.data.local.SharedPreference
 import com.juan.prohealth.data.local.StorageValidationDataSource
+import com.juan.prohealth.database.room.MyDatabase
+import com.juan.prohealth.database.room.RoomControlDataSource
+import com.juan.prohealth.database.room.RoomUserDataSource
 import com.juan.prohealth.databinding.ActivityInitialBinding
+import com.juan.prohealth.repository.UserRepository
 import com.juan.prohealth.repository.ValidationRepository
 import com.juan.prohealth.ui.common.*
 import com.juan.prohealth.ui.mainActiviy.MainActivity
@@ -21,6 +25,7 @@ import java.util.*
 class InitialActivity : AppCompatActivity() {
 
     private lateinit var validationRepository: ValidationRepository
+    private lateinit var userRepository: UserRepository
     private lateinit var viewModel: InitialMainViewModel
     private lateinit var binding: ActivityInitialBinding
 
@@ -42,10 +47,15 @@ class InitialActivity : AppCompatActivity() {
     }
 
     private fun setFirstDoseLevel() {
+        val doseLevel = binding.etNivel.text
+
         viewModel.addString(
             DOSE_LEVEL_TEXT,
-            binding.etNivel.text.toString()
+            doseLevel.toString()
         )
+
+        viewModel.saveFirstDoseLevel(doseLevel.toString().toInt())
+
         val intent =
             Intent(this@InitialActivity, MainActivity::class.java)
         startActivity(intent)
@@ -109,13 +119,16 @@ class InitialActivity : AppCompatActivity() {
     }
 
     private fun buildViewModel(): InitialMainViewModel {
-        val factory = InitialModelFactory(validationRepository)
+        val factory = InitialModelFactory(validationRepository,userRepository)
         return ViewModelProvider(this, factory).get(InitialMainViewModel::class.java)
     }
 
     private fun buildDependencies() {
         val sharedPreference = SharedPreference.getInstance(this.applicationContext)
         validationRepository = ValidationRepository(StorageValidationDataSource(sharedPreference))
+        val database = MyDatabase.getDatabase(this)
+        val userLocal = RoomUserDataSource(database)
+        userRepository = UserRepository(userLocal)
     }
 
     private fun isExistInSharedPreferencesOld(): Boolean {
