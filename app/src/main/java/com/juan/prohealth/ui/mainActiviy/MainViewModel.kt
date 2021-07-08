@@ -135,9 +135,11 @@ class MainViewModel(
 
     fun updateCurrentControlStatus(isMedicated: Boolean) {
         viewModelScope.launch {
-            val controlToday = controlRepository.getControlByDate(Date().clearTime())
-            controlToday.medicated = isMedicated
-            controlRepository.updateControl(controlToday)
+            if (isMedicated){
+                val controlToday = controlRepository.getPendingControlToday()
+                controlToday.medicated = isMedicated
+                controlRepository.updateControl(controlToday)
+            }
         }
     }
 

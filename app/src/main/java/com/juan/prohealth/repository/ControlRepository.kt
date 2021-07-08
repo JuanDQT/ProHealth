@@ -14,8 +14,8 @@ class ControlRepository(private val iControlLocalDataSource: IControlLocalDataSo
         return iControlLocalDataSource.hasPendingControls(idUser)
     }
 
-    suspend fun updateCurrentControl(value: Boolean, idUser: Int) {
-        iControlLocalDataSource.updateCurrentControl(idUser, value)
+    suspend fun updateCurrentControl(value: Int, idUser: Int) {
+        iControlLocalDataSource.updateCurrentControlToFinished(idUser, value)
     }
 
     suspend fun getActiveControlListByGroup(idUser: Int): List<Control> {
@@ -38,8 +38,8 @@ class ControlRepository(private val iControlLocalDataSource: IControlLocalDataSo
         return iControlLocalDataSource.getNewIdGroup()
     }
 
-    suspend fun getControlByDate(date: Date): Control {
-        return iControlLocalDataSource.getControlByDate(date)
+    suspend fun getPendingControlToday(): Control {
+        return iControlLocalDataSource.getPendingControlToday()
     }
 
     suspend fun checkIfHasPendingControlToday(isPending: Int): Boolean {

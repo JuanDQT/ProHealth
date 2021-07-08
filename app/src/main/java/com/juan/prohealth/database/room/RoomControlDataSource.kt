@@ -21,9 +21,9 @@ class RoomControlDataSource(var database: MyDatabase) : IControlLocalDataSource 
         }
     }
 
-    override suspend fun updateCurrentControl(idUser: Int, value: Boolean) {
+    override suspend fun updateCurrentControlToFinished(idUser: Int, value: Int) {
         return withContext(Dispatchers.IO) {
-            controlDao.updateCurrentControl(idUser, value)
+            controlDao.updatePendingControlToFinished(idUser, value)
         }
     }
 
@@ -69,9 +69,9 @@ class RoomControlDataSource(var database: MyDatabase) : IControlLocalDataSource 
         }
     }
 
-    override suspend fun getControlByDate(date: Date): Control {
+    override suspend fun getPendingControlToday(): Control {
         return withContext(Dispatchers.IO) {
-            controlDao.getControlByDate(date)
+            controlDao.getPendingControlToday()
         }
     }
 

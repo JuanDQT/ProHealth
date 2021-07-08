@@ -22,7 +22,7 @@ interface ControlDao {
     suspend fun getNumberOfControlsToday(idUser: Int): Int
 
     @Query("update control set medicated = :status where execution_date = date() and medicated = 0 and user_id = :idUser")
-    suspend fun updateCurrentControl(idUser: Int, status: Boolean)
+    suspend fun updatePendingControlToFinished(idUser: Int, status: Int)
 
     // Coge los dias del ultimo grupo de control
     @Query("SELECT * FROM control WHERE user_id = :idUser AND group_control = (SELECT group_control FROM control WHERE user_id = :idUser order by id limit 1)" )
@@ -46,7 +46,7 @@ interface ControlDao {
     @Query("SELECT COUNT(*) FROM control WHERE medicated = :isPending and  (execution_date = (CAST(strftime('%s', date())  AS  int) * 1000)) AND user_id = (SELECT id FROM user WHERE state_logging = 1)")
     suspend fun getNumberControlTodayWithSQuery(isPending: Int): Int
 
-    @Query("SELECT COUNT(*) FROM control WHERE medicated = :isPending and  (execution_date = (CAST(strftime('%s', date())  AS  int) * 1000)) AND user_id = (SELECT id FROM user WHERE state_logging = 1)")
-    suspend fun getControlByDate(isPending: Int): Control?
+    @Query("SELECT * FROM control WHERE medicated = 0 and  (execution_date = (CAST(strftime('%s', date())  AS  int) * 1000)) AND user_id = (SELECT id FROM user WHERE state_logging = 1)")
+    suspend fun getPendingControlToday(): Control
 
 }
