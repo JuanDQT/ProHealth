@@ -236,18 +236,18 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         viewModel.doseValue.observe(this) { value ->
             binding.tvDosisValor.text = "${value}"
         }
-       /* viewModel.showAlertControl.observe(this) { value ->
-            if (value) {
-            }
-            flashBar.show()
-        }
-        viewModel.dismissFlashBar.observe(this) { value ->
-            flashBar?.let {
-                if (value) {
-                }
-                it.dismiss()
-            }
-        }*/
+        /* viewModel.showAlertControl.observe(this) { value ->
+             if (value) {
+             }
+             flashBar.show()
+         }
+         viewModel.dismissFlashBar.observe(this) { value ->
+             flashBar?.let {
+                 if (value) {
+                 }
+                 it.dismiss()
+             }
+         }*/
 /*
         viewModel.userResourceImage.observe(this) {
             userResourceImage = it
@@ -256,35 +256,35 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         viewModel.lastBloodValues.observe(this) { lastBloodValue ->
             bloodLastValues = lastBloodValue
         }*/
-
+        viewModel.checkPendingControls.observe(this, { isPendingControls ->
+            if (isPendingControls) flashBar.show()
+            else Log.i("IsPendingControls","Doesn't have pending controls")
+        })
         viewModel.currentActiveControls.observe(this, { activeControls ->
-            if(activeControls.isNullOrEmpty()){
-                Log.i("ActiveControls","No hay controles activos")
+            if (activeControls.isNullOrEmpty()) {
+                Log.i("ActiveControls", "Hide Widget")
                 binding.carousel.visibility = View.GONE
                 binding.ivArrowLeft.visibility = View.GONE
                 binding.ivArrowRight.visibility = View.GONE
                 binding.btnBorrar.isEnabled = false
                 binding.btnINR.isEnabled = true
-            }else{
+            } else {
                 binding.btnINR.isEnabled = false
                 binding.ivArrowLeft.visibility = View.VISIBLE
                 binding.ivArrowRight.visibility = View.VISIBLE
                 binding.carousel.visibility = View.VISIBLE
                 adapter.setItems(activeControls)
                 binding.carousel.adapter = adapter
-                Log.i("ActiveControls","Hay controles activos")
+                Log.i("ActiveControls", "Show Widget")
             }
 
         })
     }
 
-    private fun checkHasControlToday(){
-        flashBar.show()
-    }
     override fun onResume() {
         super.onResume()
-        //viewModel.doCloseOlderControls()
-       // viewModel.checkHasControlToday()
+        //viewModel.doCloseOlderControls() Actualiza controles a medicated true...revisarlo
+        viewModel.checkHasControlToday()
     }
 
     // Controlamos eventos click Botones
@@ -379,9 +379,14 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             "Planificar",
             DialogInterface.OnClickListener { dialogInterface, i ->
                 // Actualizamos la sangre y nivel
-                viewModel.updateUserData(sangreString.toFloat(), nivelString.toInt(),  dataNiveles, Control())
+                viewModel.updateUserData(
+                    sangreString.toFloat(),
+                    nivelString.toInt(),
+                    dataNiveles,
+                    Control()
+                )
                 // TODO: Recoge los valroes para mostrarlo en un ALERT. Implemendado guardado en variable observable y recogido
-               // MyWorkManager.setWorkers(controlListActive)
+                // MyWorkManager.setWorkers(controlListActive)
                 if (btnMails.isChecked) {
                     sendEmailPlanificacion()
                 }

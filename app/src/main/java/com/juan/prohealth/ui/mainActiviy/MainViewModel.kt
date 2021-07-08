@@ -1,6 +1,5 @@
 package com.juan.prohealth.ui.mainActiviy
 
-import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -39,8 +38,8 @@ class MainViewModel(
     private var _showAlertControl = MutableLiveData(false)
     val showAlertControl: LiveData<Boolean> get() = _showAlertControl
 
-    private var _dismissFlashBar = MutableLiveData(true)
-    val dismissFlashBar: LiveData<Boolean> get() = _dismissFlashBar
+    private var _checkPendingControls = MutableLiveData(false)
+    val checkPendingControls: LiveData<Boolean> get() = _checkPendingControls
 
     private var _visibilityGroupCarousel = MutableLiveData(0)
     val visibilityGroupCarousel: LiveData<Int> get() = _visibilityGroupCarousel
@@ -65,27 +64,11 @@ class MainViewModel(
         }
     }
 
-    fun checkHasControlTodayNew() {
-        TODO()
-    }
-
     fun checkHasControlToday() {
         viewModelScope.launch {
-            var idUser = userRepository.getIdCurrentUser()
-            var state = controlRepository.hasPendingControls(idUser)
-
-            if (state) {
-                _statusDeleteBtn.value = true
-                //setDosisWidget()
-                _userResourceImage.value = checkDoAlertControlAndReturnResource()
-                _showAlertControl.value = !_userResourceImage.value.isNullOrEmpty()
-                _dismissFlashBar.value = _showAlertControl.value
-            } else {
-                _statusDeleteBtn.value = false
-                _visibilityGroupCarousel.value = View.GONE
-                _dismissFlashBar.value = true
-                // MyWorkManager.clearAllWorks()
-            }
+            val hasPendingControlsQuery =
+                controlRepository.checkIfHasPendingControlToday(isPending = 0)
+            _checkPendingControls.postValue(hasPendingControlsQuery)
         }
     }
 
@@ -96,52 +79,62 @@ class MainViewModel(
 
     fun updateUserData(
         bloodValue: Float,
-        nivel: Int,
+        doseLevel: Int,
         planificacion: Array<String>,
         control: Control
     ) {
         viewModelScope.launch {
             val currentUser = userRepository.getCurrentUser()
             currentUser.blood = bloodValue
-            currentUser.level = nivel
+            currentUser.level = doseLevel
             userRepository.updateUser(currentUser)
+            val groupControl = controlRepository.getNewIdGroup()
 
-            addControlsToUser(planificacion, control, bloodValue, nivel, currentUser)
+            addControlsToUser(
+                planificacion,
+                control,
+                bloodValue,
+                doseLevel,
+                currentUser.id,
+                groupControl
+            )
             getActiveControlList()
         }
     }
 
     private suspend fun addControlsToUser(
-        planificacion: Array<String>,
+        resourcePlanification: Array<String>,
         control: Control,
         bloodValue: Float,
-        nivel: Int,
-        currentUser: User
+        doseLevel: Int,
+        idUser: Int,
+        groupControl: Int
     ) {
-        for (x in 0 until planificacion.size) {
+        for (x in 0 until resourcePlanification.size) {
             control.executionDate = Date().addDays(x).clearTime()
             control.startDate = Date().clearTime()
-            control.endDate = Date().addDays(planificacion.size - 1).clearTime()
+            control.endDate = Date().addDays(resourcePlanification.size - 1).clearTime()
             control.blood = bloodValue
-            control.doseLevel = nivel
-            control.resource = planificacion[x]
-            control.idUser = currentUser.id
+            control.doseLevel = doseLevel
+            control.resource = resourcePlanification[x]
+            control.groupControl = groupControl
+            control.idUser = idUser
             controlRepository.insert(control)
         }
     }
 
     private fun checkDoAlertControlAndReturnResource(): String {
         viewModelScope.launch {
-            controlRepository.hasPedingControlToday(
-                userRepository.getCurrentUser()
-            )
+            /*    controlRepository.hasPedingControlToday(
+                    userRepository.getCurrentUser()
+                )*/
+            TODO()
         }
         return ""
     }
 
     fun updateCurrentControlStatus(isMedicated: Boolean) {
         viewModelScope.launch {
-            //controlRepository.updateCurrentControl(value, userRepository.getIdCurrentUser())
             val controlToday = controlRepository.getControlByDate(Date().clearTime())
             controlToday.medicated = isMedicated
             controlRepository.updateControl(controlToday)
@@ -151,7 +144,7 @@ class MainViewModel(
     fun getActiveControlList() {
         viewModelScope.launch {
             val user = userRepository.getCurrentUser()
-            val activeControls = controlRepository.getActiveControlList(user.id)
+            val activeControls = controlRepository.getActiveControlListByGroup(user.id)
             _currentActiveControls.value = activeControls
             updateInfoPanelUi(user)
         }
