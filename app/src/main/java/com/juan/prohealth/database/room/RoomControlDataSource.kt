@@ -15,12 +15,6 @@ class RoomControlDataSource(var database: MyDatabase) : IControlLocalDataSource 
         }
     }
 
-    override suspend fun checkPendingControlToday(idUser: Int, hour: Int, minute: Int): String {
-        return withContext(Dispatchers.IO) {
-            controlDao.checkPendingControlToday(idUser, hour, minute)
-        }
-    }
-
     override suspend fun hasPendingControls(idUser: Int): Boolean {
         return withContext(Dispatchers.IO) {
             controlDao.getNumberPendingControls(idUser) > 0
@@ -33,9 +27,9 @@ class RoomControlDataSource(var database: MyDatabase) : IControlLocalDataSource 
         }
     }
 
-    override suspend fun getActiveControlList(idUser: Int, medicated: Boolean): List<Control> {
+    override suspend fun getActiveControlList(idUser: Int): List<Control> {
         return withContext(Dispatchers.IO) {
-            controlDao.getActiveControlList(idUser, medicated)
+            controlDao.getActiveControlList(idUser)
         }
     }
 
@@ -63,15 +57,27 @@ class RoomControlDataSource(var database: MyDatabase) : IControlLocalDataSource 
         }
     }
 
+    override suspend fun updateControl(control: Control) {
+        withContext(Dispatchers.IO) {
+            controlDao.update(control)
+        }
+    }
+
+    override suspend fun getNewIdGroup(): Int {
+        return withContext(Dispatchers.IO) {
+            controlDao.generateNewIdGroupFromDb() ?: 1
+        }
+    }
+
     override suspend fun getControlByDate(date: Date): Control {
         return withContext(Dispatchers.IO) {
             controlDao.getControlByDate(date)
         }
     }
 
-    override suspend fun updateControl(control: Control) {
-        withContext(Dispatchers.IO) {
-            controlDao.update(control)
+    override suspend fun checkPendingControlToday(isPending: Int): Boolean {
+        return withContext(Dispatchers.IO) {
+            controlDao.getNumberControlTodayWithSQuery(isPending) > 0
         }
     }
 }

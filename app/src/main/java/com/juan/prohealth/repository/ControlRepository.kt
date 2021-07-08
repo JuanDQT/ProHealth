@@ -1,7 +1,6 @@
 package com.juan.prohealth.repository
 
 import com.juan.prohealth.database.room.Control
-import com.juan.prohealth.database.room.User
 import com.juan.prohealth.source.IControlLocalDataSource
 import java.util.*
 
@@ -15,20 +14,12 @@ class ControlRepository(private val iControlLocalDataSource: IControlLocalDataSo
         return iControlLocalDataSource.hasPendingControls(idUser)
     }
 
-    suspend fun hasPedingControlToday(user: User): String {
-        return iControlLocalDataSource.checkPendingControlToday(
-            user.id,
-            user.hourAlarm,
-            user.minuteAlarm
-        )
-    }
-
     suspend fun updateCurrentControl(value: Boolean, idUser: Int) {
         iControlLocalDataSource.updateCurrentControl(idUser, value)
     }
 
-    suspend fun getActiveControlList(idUser: Int, medicated: Boolean = false): List<Control> {
-        return iControlLocalDataSource.getActiveControlList(idUser, medicated)
+    suspend fun getActiveControlListByGroup(idUser: Int): List<Control> {
+        return iControlLocalDataSource.getActiveControlList(idUser)
     }
 
     suspend fun deleteLastControlGroup(idUser: Int) {
@@ -39,15 +30,19 @@ class ControlRepository(private val iControlLocalDataSource: IControlLocalDataSo
         iControlLocalDataSource.insert(control)
     }
 
-    suspend fun getAllControls(): List<Control> {
-        return iControlLocalDataSource.getAll()
+    suspend fun updateControl(control: Control) {
+        iControlLocalDataSource.updateControl(control)
+    }
+
+    suspend fun getNewIdGroup(): Int {
+        return iControlLocalDataSource.getNewIdGroup()
     }
 
     suspend fun getControlByDate(date: Date): Control {
         return iControlLocalDataSource.getControlByDate(date)
     }
 
-    suspend fun updateControl(control: Control) {
-        iControlLocalDataSource.updateControl(control)
+    suspend fun checkIfHasPendingControlToday(isPending: Int): Boolean {
+        return iControlLocalDataSource.checkPendingControlToday(isPending)
     }
 }
