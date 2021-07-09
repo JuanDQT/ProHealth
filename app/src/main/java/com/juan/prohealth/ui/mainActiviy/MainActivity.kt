@@ -52,12 +52,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private val RANGO_ROJO: String = "rangoAltoRojo.json"
 
     private val flashBar: Flashbar by lazy { instanceFlashBar() }
+    private lateinit var userResourceImage: String
     private val inrAlertDialog: AlertDialog by lazy { instanceINRAlertDialog() }
     private val planificationAlertDialog: AlertDialog by lazy { instancePlanificationAlertDialog() }
-    private lateinit var userResourceImage: String
+
     private var bloodLastValues = emptyArray<Float>()
     private var currentBloodValue = 0f
-
     private var sangreString = ""
     private var nivelString = ""
     private var dataNiveles = emptyArray<String>()
@@ -102,7 +102,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         return Flashbar.Builder(this)
             .gravity(Flashbar.Gravity.BOTTOM)
             .title(getString(R.string.title_notificacion))
-            .message(String.format(getString(R.string.msg_notificacion, "test")))
+            .message(String.format(getString(R.string.msg_notificacion, userResourceImage)))
             .enableSwipeToDismiss()
             .backgroundColorRes(R.color.colorPrimaryDark)
             .positiveActionText("Si")
@@ -236,26 +236,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         viewModel.doseValue.observe(this) { value ->
             binding.tvDosisValor.text = "${value}"
         }
-        /* viewModel.showAlertControl.observe(this) { value ->
-             if (value) {
-             }
-             flashBar.show()
-         }
-         viewModel.dismissFlashBar.observe(this) { value ->
-             flashBar?.let {
-                 if (value) {
-                 }
-                 it.dismiss()
-             }
-         }*/
-/*
-        viewModel.userResourceImage.observe(this) {
-            userResourceImage = it
+
+        viewModel.userResourceImage.observe(this) {resourceValue->
+            userResourceImage = resourceValue
         }
 
-        viewModel.lastBloodValues.observe(this) { lastBloodValue ->
-            bloodLastValues = lastBloodValue
-        }*/
         viewModel.checkPendingControls.observe(this, { isPendingControls ->
             if (isPendingControls) flashBar.show()
             else Log.i("IsPendingControls","Doesn't have pending controls")
@@ -283,11 +268,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onResume() {
         super.onResume()
-        //viewModel.doCloseOlderControls() Actualiza controles a medicated true...revisarlo
         viewModel.checkHasControlToday()
     }
 
-    // Controlamos eventos click Botones
     override fun onClick(view: View?) {
         view?.let {
             when (it.id) {

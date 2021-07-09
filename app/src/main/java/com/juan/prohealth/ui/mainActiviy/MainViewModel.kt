@@ -41,22 +41,12 @@ class MainViewModel(
     private var _checkPendingControls = MutableLiveData(false)
     val checkPendingControls: LiveData<Boolean> get() = _checkPendingControls
 
-    private var _visibilityGroupCarousel = MutableLiveData(0)
-    val visibilityGroupCarousel: LiveData<Int> get() = _visibilityGroupCarousel
-
     private var _userResourceImage = MutableLiveData(" ")
     val userResourceImage: LiveData<String> get() = _userResourceImage
     //
 
     private var _currentActiveControls = MutableLiveData<List<Control>>()
     val currentActiveControls: LiveData<List<Control>> get() = _currentActiveControls
-
-    // New
-    fun doCloseOlderControls() {
-        viewModelScope.launch {
-            controlRepository.updateStateToCloseControls(userRepository.getIdCurrentUser())
-        }
-    }
 
     fun deleteLastControlGroup() {
         viewModelScope.launch {
@@ -68,6 +58,10 @@ class MainViewModel(
         viewModelScope.launch {
             val hasPendingControlsQuery =
                 controlRepository.checkIfHasPendingControlToday(isPending = 0)
+
+            if (hasPendingControlsQuery) {
+                _userResourceImage.postValue(controlRepository.getPendingControlToday().resource)
+            }
             _checkPendingControls.postValue(hasPendingControlsQuery)
         }
     }
@@ -135,7 +129,7 @@ class MainViewModel(
 
     fun updateCurrentControlStatus(isMedicated: Boolean) {
         viewModelScope.launch {
-            if (isMedicated){
+            if (isMedicated) {
                 val controlToday = controlRepository.getPendingControlToday()
                 controlToday.medicated = isMedicated
                 controlRepository.updateControl(controlToday)
