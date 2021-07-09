@@ -12,19 +12,6 @@ interface ControlDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(user: Control)
 
-    @Query("update control set medicated = 1 where medicated = 0 and execution_date < date() and user_id = :idUser")
-    suspend fun updateStateToCloseControls(idUser: Int)
-
-    @Query("select count(*) from control where date() >= execution_date and medicated = 0 and user_id = :idUser")
-    suspend fun getNumberPendingControls(idUser: Int): Int
-
-    @Query("select count(*) from control where execution_date = date() and medicated = 0 and user_id = :idUser")
-    suspend fun getNumberOfControlsToday(idUser: Int): Int
-
-    @Query("update control set medicated = :status where execution_date = date() and medicated = 0 and user_id = :idUser")
-    suspend fun updatePendingControlToFinished(idUser: Int, status: Int)
-
-    // Coge los dias del ultimo grupo de control
     @Query("SELECT * FROM control WHERE user_id = :idUser AND group_control = (SELECT group_control FROM control WHERE user_id = :idUser order by id limit 1)" )
     suspend fun getActiveControlList(idUser: Int): List<Control>
 
@@ -37,8 +24,8 @@ interface ControlDao {
     @Query("SELECT MAX(group_control) + 1 FROM control")
     suspend fun generateNewIdGroupFromDb(): Int?
 
-    @Query("SELECT * FROM control")
-    suspend fun getAllControl(): List<Control>
+    @Query("SELECT * FROM control WHERE medicated = 0")
+    suspend fun getAllPendingControls(): List<Control>//By Group or By end_date
 
     @Query("SELECT * FROM control WHERE execution_date = :date")
     suspend fun getControlByDate(date:Date): Control
@@ -48,5 +35,4 @@ interface ControlDao {
 
     @Query("SELECT * FROM control WHERE medicated = 0 and  (execution_date = (CAST(strftime('%s', date())  AS  int) * 1000)) AND user_id = (SELECT id FROM user WHERE state_logging = 1)")
     suspend fun getPendingControlToday(): Control
-
 }

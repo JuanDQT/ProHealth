@@ -3,29 +3,10 @@ package com.juan.prohealth.database.room
 import com.juan.prohealth.source.IControlLocalDataSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.util.*
 
 class RoomControlDataSource(var database: MyDatabase) : IControlLocalDataSource {
 
     private var controlDao: ControlDao = database.controlDao()
-
-    override suspend fun updateStateToCloseControls(idUser: Int) {
-        withContext(Dispatchers.IO) {
-            controlDao.updateStateToCloseControls(idUser)
-        }
-    }
-
-    override suspend fun hasPendingControls(idUser: Int): Boolean {
-        return withContext(Dispatchers.IO) {
-            controlDao.getNumberPendingControls(idUser) > 0
-        }
-    }
-
-    override suspend fun updateCurrentControlToFinished(idUser: Int, value: Int) {
-        return withContext(Dispatchers.IO) {
-            controlDao.updatePendingControlToFinished(idUser, value)
-        }
-    }
 
     override suspend fun getActiveControlList(idUser: Int): List<Control> {
         return withContext(Dispatchers.IO) {
@@ -51,9 +32,9 @@ class RoomControlDataSource(var database: MyDatabase) : IControlLocalDataSource 
         }
     }
 
-    override suspend fun getAll(): List<Control> {
+    override suspend fun getAllPendingControls(): List<Control> {
         return withContext(Dispatchers.IO) {
-            controlDao.getAllControl()
+            controlDao.getAllPendingControls()
         }
     }
 

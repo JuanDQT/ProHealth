@@ -6,18 +6,6 @@ import java.util.*
 
 class ControlRepository(private val iControlLocalDataSource: IControlLocalDataSource) {
 
-    suspend fun updateStateToCloseControls(idUser: Int) {
-        iControlLocalDataSource.updateStateToCloseControls(idUser)
-    }
-
-    suspend fun hasPendingControls(idUser: Int): Boolean {
-        return iControlLocalDataSource.hasPendingControls(idUser)
-    }
-
-    suspend fun updateCurrentControl(value: Int, idUser: Int) {
-        iControlLocalDataSource.updateCurrentControlToFinished(idUser, value)
-    }
-
     suspend fun getActiveControlListByGroup(idUser: Int): List<Control> {
         return iControlLocalDataSource.getActiveControlList(idUser)
     }
