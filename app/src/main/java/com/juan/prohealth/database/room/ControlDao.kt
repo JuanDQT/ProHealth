@@ -16,7 +16,7 @@ interface ControlDao {
     suspend fun getActiveControlList(idUser: Int): List<Control>
 
     @Query("DELETE FROM control WHERE group_control = (SELECT group_control FROM control WHERE user_id = :idUser order by id limit 1)")
-    suspend fun deleteLastControlGroup(idUser: Int)
+    suspend fun deleteLastControlsByGroup(idUser: Int)
 
     @Query("SELECT distinct(blood) FROM control order by id desc limit :limit")
     suspend fun getLastBloodValues(limit: Int = 10): Array<Float>
