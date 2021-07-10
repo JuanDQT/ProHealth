@@ -16,6 +16,7 @@ import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import com.andrognito.flashbar.Flashbar
 import com.google.android.material.chip.Chip
@@ -54,7 +55,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private val flashBar: Flashbar by lazy { instanceFlashBar() }
     private lateinit var userResourceImage: String
     private val inrAlertDialog: AlertDialog by lazy { instanceINRAlertDialog() }
-    private val planificationAlertDialog: AlertDialog by lazy { instancePlanificationAlertDialog() }
+    private val planificationAlertDialog: AlertDialog by lazy { instancePlanningAlertDialog() }
 
     private var bloodLastValues = emptyArray<Float>()
     private var currentBloodValue = 0f
@@ -128,6 +129,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Introducir")
         builder.setMessage("Por favor, introduce un valor INR entre 1 y 7")
+
         var positiveButton: Button? = null
 
         val view: LinearLayout =
@@ -203,7 +205,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         })
 
         val ad = builder.create()
-        positiveButton = ad.getButton(AlertDialog.BUTTON_POSITIVE) as Button?
+        positiveButton = ad.getButton(AlertDialog.BUTTON_POSITIVE)
         positiveButton?.isEnabled = false
         return ad
     }
@@ -226,9 +228,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun subscribeUI() {
 
-        viewModel.statusDeleteBtn.observe(this) { value ->
-            binding.btnBorrar.isEnabled = value
-        }
         viewModel.bloodValue.observe(this) { value ->
             currentBloodValue = value
             binding.tvSangreValor.text = "${value.toString().replace(".", ",")}"
@@ -251,18 +250,18 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 binding.carousel.visibility = View.GONE
                 binding.ivArrowLeft.visibility = View.GONE
                 binding.ivArrowRight.visibility = View.GONE
-                binding.btnBorrar.isEnabled = false
-                binding.btnINR.isEnabled = true
+                binding.btnBorrar.visibility = View.GONE
+                binding.btnINR.visibility = View.VISIBLE
             } else {
-                binding.btnINR.isEnabled = false
+                binding.btnINR.visibility = View.GONE
                 binding.ivArrowLeft.visibility = View.VISIBLE
                 binding.ivArrowRight.visibility = View.VISIBLE
                 binding.carousel.visibility = View.VISIBLE
+                binding.btnBorrar.visibility = View.VISIBLE
                 adapter.setItems(activeControls)
                 binding.carousel.adapter = adapter
                 Log.i("ActiveControls", "Show Widget")
             }
-
         })
     }
 
@@ -274,23 +273,22 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     override fun onClick(view: View?) {
         view?.let {
             when (it.id) {
-                R.id.btnBorrar -> doDeleteLastINRGroup()
+                R.id.btnBorrar -> clickOnDeleteLastINRGroup()
                 R.id.btnINR -> inrAlertDialog.show()
                 R.id.btnGmap -> checkPermissionLocation()
-                R.id.btnEstadisticas -> doOpenEstadisticas()
-                R.id.btnCalendario -> doCalendario()
+                R.id.btnEstadisticas -> navigateToStatsGraphic()
+                R.id.btnCalendario -> navigateToCalendar()
                 R.id.btnAjustes -> startActivity(Intent(this, AjustesActivity::class.java))
             }
         }
     }
 
-
-    private fun doDeleteLastINRGroup() {
+    private fun clickOnDeleteLastINRGroup() {
         viewModel.deleteLastControlGroup()
         viewModel.checkHasControlToday()
     }
 
-    private fun doOpenEstadisticas() {
+    private fun navigateToStatsGraphic() {
         startActivity(Intent(this, BarCharActivity::class.java))
     }
 
@@ -315,7 +313,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
      */
 
     // antes: doAskPlanificacion
-    fun instancePlanificationAlertDialog(): AlertDialog {
+    private fun instancePlanningAlertDialog(): AlertDialog {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Informacion")
 
@@ -371,7 +369,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 // TODO: Recoge los valroes para mostrarlo en un ALERT. Implemendado guardado en variable observable y recogido
                 // MyWorkManager.setWorkers(controlListActive)
                 if (btnMails.isChecked) {
-                    sendEmailPlanificacion()
+                    sendPlanningEmail()
                 }
             })
 
@@ -379,7 +377,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     // TODO: Recoge los valores para mostrarlo en un ALERT
-    private fun sendEmailPlanificacion() {
+    private fun sendPlanningEmail() {
         val data = Html.fromHtml(RealmControl.getActiveControlListToEmail())
         val emailIntent = Intent(
             Intent.ACTION_SENDTO,
@@ -410,24 +408,24 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         when (valor) {
             // Azules
             in 1.0..1.5 -> {
-                map["nivel"] = (getNivelActual().toInt() + 2)
+                map["nivel"] = (getCurrentDoseLevel().toInt() + 2)
                 map["dias"] = 3
             }
             in 1.6..2.3 -> {
-                map["nivel"] = (getNivelActual().toInt() + 1)
+                map["nivel"] = (getCurrentDoseLevel().toInt() + 1)
                 map["dias"] = 4
             }
             in 2.4..3.6 -> {
-                map["nivel"] = (getNivelActual().toInt())
+                map["nivel"] = (getCurrentDoseLevel().toInt())
                 map["dias"] = 7
             }
             // Rojos
             in 3.7..4.9 -> {
-                map["nivel"] = (getNivelActual().toInt() - 1)
+                map["nivel"] = (getCurrentDoseLevel().toInt() - 1)
                 map["dias"] = 7
             }
             in 5.0..7.0 -> {
-                map["nivel"] = (getNivelActual().toInt() - 2)
+                map["nivel"] = (getCurrentDoseLevel().toInt() - 2)
                 map["dias"] = 4
             }
         }
@@ -439,7 +437,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
      * Obtenemos el valor del JSON que hemos
      * guardado en SharedPreferences
      */
-    private fun getNivelActual(): String {
+    private fun getCurrentDoseLevel(): String {
         return MySharedPreferences.shared.getNivel()
     }
 
@@ -459,17 +457,17 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 */
 
-    private fun checkIfExistGmapsApp(nombrePaquete: String, context: Context): Boolean {
+    private fun checkIfExistGmapsApp(namePackage: String, context: Context): Boolean {
         val pm = context.packageManager
         return try {
-            pm.getPackageInfo(nombrePaquete, PackageManager.GET_ACTIVITIES)
+            pm.getPackageInfo(namePackage, PackageManager.GET_ACTIVITIES)
             true
         } catch (e: PackageManager.NameNotFoundException) {
             false
         }
     }
 
-    private fun doCalendario() {
+    private fun navigateToCalendar() {
         startActivity(Intent(this, CalendarioActivity::class.java))
     }
 
