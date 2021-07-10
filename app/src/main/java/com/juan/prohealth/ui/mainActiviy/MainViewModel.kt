@@ -1,5 +1,6 @@
 package com.juan.prohealth.ui.mainActiviy
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -25,9 +26,6 @@ class MainViewModel(
         getActiveControlList()//"refresh"
     }
 
-    private var _statusDeleteBtn = MutableLiveData(false)
-    val statusDeleteBtn: LiveData<Boolean> get() = _statusDeleteBtn
-
     private var _bloodValue = MutableLiveData(0f)
     val bloodValue: LiveData<Float> get() = _bloodValue
 
@@ -43,13 +41,13 @@ class MainViewModel(
 
     private var _userResourceImage = MutableLiveData(" ")
     val userResourceImage: LiveData<String> get() = _userResourceImage
-    //
 
     private var _currentActiveControls = MutableLiveData<List<Control>>()
     val currentActiveControls: LiveData<List<Control>> get() = _currentActiveControls
 
     fun deleteLastControlGroup() {
         viewModelScope.launch {
+            Log.i("BTN REBOOT INR","Se procede a borrar el ultimo grupo de control")
             controlRepository.deleteLastControlGroup(userRepository.getIdCurrentUser())
         }
     }
@@ -74,7 +72,7 @@ class MainViewModel(
     fun updateUserData(
         bloodValue: Float,
         doseLevel: Int,
-        planificacion: Array<String>,
+        planning: Array<String>,
         control: Control
     ) {
         viewModelScope.launch {
@@ -85,7 +83,7 @@ class MainViewModel(
             val groupControl = controlRepository.getNewIdGroup()
 
             addControlsToUser(
-                planificacion,
+                planning,
                 control,
                 bloodValue,
                 doseLevel,
@@ -97,34 +95,24 @@ class MainViewModel(
     }
 
     private suspend fun addControlsToUser(
-        resourcePlanification: Array<String>,
+        resourcePlanning: Array<String>,
         control: Control,
         bloodValue: Float,
         doseLevel: Int,
         idUser: Int,
         groupControl: Int
     ) {
-        for (x in 0 until resourcePlanification.size) {
+        for (x in 0 until resourcePlanning.size) {
             control.executionDate = Date().addDays(x).clearTime()
             control.startDate = Date().clearTime()
-            control.endDate = Date().addDays(resourcePlanification.size - 1).clearTime()
+            control.endDate = Date().addDays(resourcePlanning.size - 1).clearTime()
             control.blood = bloodValue
             control.doseLevel = doseLevel
-            control.resource = resourcePlanification[x]
+            control.resource = resourcePlanning[x]
             control.groupControl = groupControl
             control.idUser = idUser
             controlRepository.insert(control)
         }
-    }
-
-    private fun checkDoAlertControlAndReturnResource(): String {
-        viewModelScope.launch {
-            /*    controlRepository.hasPedingControlToday(
-                    userRepository.getCurrentUser()
-                )*/
-            TODO()
-        }
-        return ""
     }
 
     fun updateCurrentControlStatus(isMedicated: Boolean) {
@@ -137,6 +125,10 @@ class MainViewModel(
         }
     }
 
+    /**
+     * Deberia devolver controles con end_date superior a date actual
+     *ISSUE: Devuelve todos los controles aunque sean VIEJOS
+     */
     fun getActiveControlList() {
         viewModelScope.launch {
             val user = userRepository.getCurrentUser()
