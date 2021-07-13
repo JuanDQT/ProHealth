@@ -13,13 +13,13 @@ interface ControlDao {
     suspend fun insert(user: Control)
 
     @Query("SELECT * FROM control WHERE user_id = :idUser AND group_control = (SELECT group_control FROM control WHERE user_id = :idUser order by id limit 1)" )
-    suspend fun getActiveControlList(idUser: Int): List<Control>
+    suspend fun getActiveControlList(idUser: Int): List<Control>//Devuelve controles TODOS group_control ??
 
     @Query("DELETE FROM control WHERE group_control = (SELECT group_control FROM control WHERE user_id = :idUser order by id limit 1)")
-    suspend fun deleteLastControlsByGroup(idUser: Int)
+    suspend fun deleteLastControlsByGroup(idUser: Int)//Borra controles segun el group_control??
 
     @Query("SELECT distinct(blood) FROM control order by id desc limit :limit")
-    suspend fun getLastBloodValues(limit: Int = 10): Array<Float>
+    suspend fun getLastBloodValues(limit: Int = 10): Array<Float>//No probado
 
     @Query("SELECT MAX(group_control) + 1 FROM control")
     suspend fun generateNewIdGroupFromDb(): Int?
