@@ -23,6 +23,7 @@ class MainViewModel(
     ViewModel() {
 
     init {
+        // TODO: este metodo no se actualiza siempre..Deberia estar escuchando los cambios
         getActiveControlList()//"refresh"
     }
 
@@ -55,7 +56,7 @@ class MainViewModel(
     fun checkHasControlToday() {
         viewModelScope.launch {
             val hasPendingControlsQuery =
-                controlRepository.checkIfHasPendingControlToday(isPending = 0)
+                controlRepository.checkIfHasPendingControlToday(isPending = -1)
 
             if (hasPendingControlsQuery) {
                 _userResourceImage.postValue(controlRepository.getPendingControlToday().resource)
@@ -72,8 +73,7 @@ class MainViewModel(
     fun updateUserData(
         bloodValue: Float,
         doseLevel: Int,
-        planning: Array<String>,
-        control: Control
+        planning: Array<String>
     ) {
         viewModelScope.launch {
             val currentUser = userRepository.getCurrentUser()
@@ -84,7 +84,6 @@ class MainViewModel(
 
             addControlsToUser(
                 planning,
-                control,
                 bloodValue,
                 doseLevel,
                 currentUser.id,
@@ -96,13 +95,13 @@ class MainViewModel(
 
     private suspend fun addControlsToUser(
         resourcePlanning: Array<String>,
-        control: Control,
         bloodValue: Float,
         doseLevel: Int,
         idUser: Int,
         groupControl: Int
     ) {
         for (x in 0 until resourcePlanning.size) {
+            val control = Control()
             control.executionDate = Date().addDays(x).clearTime()
             control.startDate = Date().clearTime()
             control.endDate = Date().addDays(resourcePlanning.size - 1).clearTime()
@@ -115,9 +114,9 @@ class MainViewModel(
         }
     }
 
-    fun updateCurrentControlStatus(isMedicated: Boolean) {
+    fun updateCurrentControlStatus(isMedicated: Int) {
         viewModelScope.launch {
-            if (isMedicated) {
+            if (isMedicated == 1) {
                 val controlToday = controlRepository.getPendingControlToday()
                 controlToday.medicated = isMedicated
                 controlRepository.updateControl(controlToday)
@@ -125,14 +124,11 @@ class MainViewModel(
         }
     }
 
-    /**
-     * Deberia devolver controles con end_date superior a date actual
-     *ISSUE: Devuelve todos los controles aunque sean VIEJOS
-     */
+    // Controles para rellenar el carousel
     fun getActiveControlList() {
         viewModelScope.launch {
             val user = userRepository.getCurrentUser()
-            val activeControls = controlRepository.getActiveControlListByGroup(user.id)
+            val activeControls = controlRepository.getActiveControlListByGroup()
             _currentActiveControls.value = activeControls
             updateInfoPanelUi(user)
         }

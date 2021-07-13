@@ -112,13 +112,13 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             .negativeActionTextColorRes(R.color.colorAccent)
             .positiveActionTapListener(object : Flashbar.OnActionTapListener {
                 override fun onActionTapped(bar: Flashbar) {
-                    viewModel.updateCurrentControlStatus(true)
+                    viewModel.updateCurrentControlStatus(1)
                     bar.dismiss()
                 }
             })
             .negativeActionTapListener(object : Flashbar.OnActionTapListener {
                 override fun onActionTapped(bar: Flashbar) {
-                    viewModel.updateCurrentControlStatus(false)
+                    viewModel.updateCurrentControlStatus(0)
                     bar.dismiss()
                 }
             })
@@ -363,8 +363,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 viewModel.updateUserData(
                     sangreString.toFloat(),
                     nivelString.toInt(),
-                    dataNiveles,
-                    Control()
+                    dataNiveles
                 )
                 // TODO: Recoge los valroes para mostrarlo en un ALERT. Implemendado guardado en variable observable y recogido
                 // MyWorkManager.setWorkers(controlListActive)

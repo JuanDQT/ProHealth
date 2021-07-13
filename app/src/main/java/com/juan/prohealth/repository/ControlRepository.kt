@@ -2,12 +2,11 @@ package com.juan.prohealth.repository
 
 import com.juan.prohealth.database.room.Control
 import com.juan.prohealth.source.IControlLocalDataSource
-import java.util.*
 
 class ControlRepository(private val iControlLocalDataSource: IControlLocalDataSource) {
 
-    suspend fun getActiveControlListByGroup(idUser: Int): List<Control> {
-        return iControlLocalDataSource.getActiveControlList(idUser)
+    suspend fun getActiveControlListByGroup(): List<Control> {
+        return iControlLocalDataSource.getActiveControlList()
     }
 
     suspend fun deleteLastControlGroup(idUser: Int) {
