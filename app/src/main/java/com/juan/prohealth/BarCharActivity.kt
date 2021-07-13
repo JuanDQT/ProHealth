@@ -12,6 +12,7 @@ import com.anychart.enums.TooltipPositionMode
 import com.anychart.graphics.vector.Stroke
 import com.juan.prohealth.database.Control
 import com.juan.prohealth.databinding.ActivityBarCharBinding
+import com.juan.prohealth.ui.common.customFormat
 
 class BarCharActivity : AppCompatActivity() {
 

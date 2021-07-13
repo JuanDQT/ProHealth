@@ -1,10 +1,10 @@
 package com.juan.prohealth.data.local
 
 import android.content.SharedPreferences
-import com.juan.prohealth.source.StorageDataSource
+import com.juan.prohealth.source.IStorageDataSource
 
 class StorageValidationDataSource(private val sharedPreferences: SharedPreferences) :
-    StorageDataSource {
+    IStorageDataSource {
 
     companion object{
         // KEYS
@@ -18,9 +18,9 @@ class StorageValidationDataSource(private val sharedPreferences: SharedPreferenc
         if (keys.count() < 1)
             return false
 
-        sharedPreferences?.let {
+        sharedPreferences?.let {sharedPreferences->
             for (key in keys) {
-                if (!it.contains(key))
+                if (!sharedPreferences.contains(key))
                     return false
             }
             return true

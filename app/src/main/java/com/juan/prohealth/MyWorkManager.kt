@@ -8,8 +8,11 @@ import android.graphics.Color
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.work.*
-import com.juan.prohealth.database.Control
+import com.juan.prohealth.database.Control as RealmControl
 import com.juan.prohealth.database.User
+import com.juan.prohealth.database.room.Control
+import com.juan.prohealth.ui.common.clearSeconds
+import com.juan.prohealth.ui.common.fromDate
 import com.juan.prohealth.ui.mainActiviy.MainActivity
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -61,10 +64,10 @@ class MyWorkManager(context: Context, workerParamaters: WorkerParameters): Worke
             val userTime: Array<Int> = User.getCurrentTimeNotification()
 
             for (x in controls) {
-                val tiempoRestante = Calendar.getInstance().fromDate(x.fecha!!, userTime[0], userTime[1]).timeInMillis - System.currentTimeMillis().clearSeconds()
-                val dataParams = Data.Builder().putString("valor", x.recurso).build()
-                val worker = OneTimeWorkRequest.Builder(MyWorkManager::class.java).setInitialDelay(tiempoRestante, TimeUnit.MILLISECONDS).addTag(TAG).setInputData(dataParams).build()
-                workers.add(worker)
+               // val tiempoRestante = Calendar.getInstance().fromDate(x.fecha!!, userTime[0], userTime[1]).timeInMillis - System.currentTimeMillis().clearSeconds()
+               // val dataParams = Data.Builder().putString("valor", x.recurso).build()
+               // val worker = OneTimeWorkRequest.Builder(MyWorkManager::class.java).setInitialDelay(tiempoRestante, TimeUnit.MILLISECONDS).addTag(TAG).setInputData(dataParams).build()
+               // workers.add(worker)
             }
             val instance = WorkManager.getInstance()
             instance.enqueue(workers)

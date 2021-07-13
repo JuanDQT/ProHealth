@@ -50,7 +50,7 @@
             android:theme="@style/SplashTheme"
             />
         <activity
-            android:name=".ui.firstActivity.PreinicioActivity"
+            android:name=".ui.initialActivity.InitialActivity"
             android:theme="@style/SplashTheme" />
         <activity
             android:name=".SplashScreenActivity"

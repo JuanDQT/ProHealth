@@ -1,4 +1,4 @@
-package com.juan.prohealth
+package com.juan.prohealth.ui.common
 
 import android.app.Activity
 import android.app.AlertDialog
@@ -10,8 +10,9 @@ import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.RelativeLayout
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.anychart.AnyChart.line
+import com.juan.prohealth.AppContext
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -36,7 +37,9 @@ fun Date.addDays(days: Int): Date {
 }
 
 fun Date.clearTime(): Date {
+    val timeZone = TimeZone.getTimeZone("UTC")
     val calendar = Calendar.getInstance()
+    calendar.timeZone = timeZone
     calendar.time = this
     calendar[Calendar.HOUR_OF_DAY] = 0
     calendar[Calendar.MINUTE] = 0
@@ -55,24 +58,36 @@ fun Date.customFormat(format: String = "dd/MM/yyyy"): String {
     return formatter.format(this)
 }
 
-fun Date.isTomorrow() : Boolean {
+fun Date.isTomorrow(): Boolean {
     val c1 = Calendar.getInstance() // today
     c1.add(Calendar.DAY_OF_YEAR, 1) // yesterday
     val c2 = Calendar.getInstance()
     c2.time = this // your date
-    return (c1.get(Calendar.YEAR) == c2.get(Calendar.YEAR) && c1.get(Calendar.DAY_OF_YEAR) == c2.get(Calendar.DAY_OF_YEAR))
+    return (c1.get(Calendar.YEAR) == c2.get(Calendar.YEAR) && c1.get(Calendar.DAY_OF_YEAR) == c2.get(
+        Calendar.DAY_OF_YEAR
+    ))
 }
 
-fun Date.isYesterday() : Boolean {
+fun Date.isYesterday(): Boolean {
     val c1 = Calendar.getInstance() // today
     c1.add(Calendar.DAY_OF_YEAR, -1) // yesterday
     val c2 = Calendar.getInstance()
     c2.time = this // your date
-    return (c1.get(Calendar.YEAR) == c2.get(Calendar.YEAR) && c1.get(Calendar.DAY_OF_YEAR) == c2.get(Calendar.DAY_OF_YEAR))
+    return (c1.get(Calendar.YEAR) == c2.get(Calendar.YEAR) && c1.get(Calendar.DAY_OF_YEAR) == c2.get(
+        Calendar.DAY_OF_YEAR
+    ))
 }
 
 
-fun Activity.alert(title: String = "Alerta", message: String, opc: String? = null, listener: DialogInterface.OnClickListener? = null, opc2: String? = null, listener2: DialogInterface.OnClickListener? = null, closable: Boolean = true) {
+fun Activity.alert(
+    title: String = "Alerta",
+    message: String,
+    opc: String? = null,
+    listener: DialogInterface.OnClickListener? = null,
+    opc2: String? = null,
+    listener2: DialogInterface.OnClickListener? = null,
+    closable: Boolean = true
+) {
     val dialogBuilder = AlertDialog.Builder(this)
     dialogBuilder.setTitle(title)
     dialogBuilder.setCancelable(closable)
@@ -113,7 +128,8 @@ fun Long.clearSeconds(): Long {
 
 fun ImageView.setBackgroundResource(resourceName: String) {
     try {
-        val resource = resources.getIdentifier(resourceName,"drawable", AppContext.context.packageName)
+        val resource =
+            resources.getIdentifier(resourceName, "drawable", AppContext.context.packageName)
         this.setBackgroundResource(resource)
     } catch (e: Exception) {
         Log.e("ERROR", "Error cargando el fichero imagen. ${e.message}")
@@ -124,4 +140,8 @@ fun View.alignTo(position: Int) {
     val currentLayoutParams = this.layoutParams as RelativeLayout.LayoutParams
     currentLayoutParams.addRule(position)
     this.layoutParams = currentLayoutParams
+}
+
+fun Context.toast(message:String){
+    Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 }
