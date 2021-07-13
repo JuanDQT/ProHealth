@@ -1,16 +1,15 @@
-package com.juan.prohealth.ui.initialActivity
+package com.juan.prohealth.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.juan.prohealth.repository.UserRepository
-import com.juan.prohealth.repository.ValidationRepository
 
 @Suppress("UNCHECKED_CAST")
-class InitialModelFactory(
-    private val validationRepository: ValidationRepository,
+class LoginViewModelFactory(
     private val userRepository: UserRepository
 ) :
     ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T =
-        InitialMainViewModel(validationRepository, userRepository) as T
+        LoginViewModel(userRepository) as T
 }
+

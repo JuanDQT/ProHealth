@@ -56,7 +56,7 @@ class AjustesActivity : AppCompatActivity() {
                 binding.tvHora.text = getDateFormat(arrayOf(selectedHour, selectedMinute))
 
                 if (Control.hasPendingControls()) {
-                    MyWorkManager.setWorkers(Control.getActiveControlList(onlyPendings = true))
+                    //MyWorkManager.setWorkers(Control.getActiveControlList(onlyPendings = true))
                     Toast.makeText(this, "Alarmas actualizadas", Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(this, "No hay alarma programada", Toast.LENGTH_SHORT).show()

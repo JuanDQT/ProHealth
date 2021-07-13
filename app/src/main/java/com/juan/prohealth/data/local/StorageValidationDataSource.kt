@@ -1,10 +1,10 @@
 package com.juan.prohealth.data.local
 
 import android.content.SharedPreferences
-import com.juan.prohealth.source.StorageDataSource
+import com.juan.prohealth.source.IStorageDataSource
 
 class StorageValidationDataSource(private val sharedPreferences: SharedPreferences) :
-    StorageDataSource {
+    IStorageDataSource {
 
     companion object{
         // KEYS

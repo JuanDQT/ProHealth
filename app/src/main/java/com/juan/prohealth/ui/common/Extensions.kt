@@ -37,7 +37,9 @@ fun Date.addDays(days: Int): Date {
 }
 
 fun Date.clearTime(): Date {
+    val timeZone = TimeZone.getTimeZone("UTC")
     val calendar = Calendar.getInstance()
+    calendar.timeZone = timeZone
     calendar.time = this
     calendar[Calendar.HOUR_OF_DAY] = 0
     calendar[Calendar.MINUTE] = 0
