@@ -22,20 +22,11 @@ class MainViewModel(
 ) :
     ViewModel() {
 
-    init {
-        // TODO: este metodo no se actualiza siempre..Deberia estar escuchando los cambios
-        getActiveControlList()//"refresh"
-    }
-
     private var _bloodValue = MutableLiveData(0f)
     val bloodValue: LiveData<Float> get() = _bloodValue
 
     private var _doseValue = MutableLiveData(0)
     val doseValue: LiveData<Int> get() = _doseValue
-
-    //Valores que controlan Visualizaciones?
-    private var _showAlertControl = MutableLiveData(false)
-    val showAlertControl: LiveData<Boolean> get() = _showAlertControl
 
     private var _checkPendingControls = MutableLiveData(false)
     val checkPendingControls: LiveData<Boolean> get() = _checkPendingControls
@@ -73,7 +64,8 @@ class MainViewModel(
     fun updateUserData(
         bloodValue: Float,
         doseLevel: Int,
-        planning: Array<String>
+        planning: Array<String>,
+        control: Control
     ) {
         viewModelScope.launch {
             val currentUser = userRepository.getCurrentUser()
@@ -84,24 +76,25 @@ class MainViewModel(
 
             addControlsToUser(
                 planning,
+                control,
                 bloodValue,
                 doseLevel,
                 currentUser.id,
                 groupControl
             )
-            getActiveControlList()
+            getControlsToFillCarousel()
         }
     }
 
     private suspend fun addControlsToUser(
         resourcePlanning: Array<String>,
+        control: Control,
         bloodValue: Float,
         doseLevel: Int,
         idUser: Int,
         groupControl: Int
     ) {
         for (x in 0 until resourcePlanning.size) {
-            val control = Control()
             control.executionDate = Date().addDays(x).clearTime()
             control.startDate = Date().clearTime()
             control.endDate = Date().addDays(resourcePlanning.size - 1).clearTime()
@@ -123,9 +116,8 @@ class MainViewModel(
             }
         }
     }
-
-    // Controles para rellenar el carousel
-    fun getActiveControlList() {
+    
+    fun getControlsToFillCarousel() {
         viewModelScope.launch {
             val user = userRepository.getCurrentUser()
             val activeControls = controlRepository.getActiveControlListByGroup()

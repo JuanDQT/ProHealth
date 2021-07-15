@@ -5,6 +5,11 @@ import androidx.room.*
 import kotlinx.android.parcel.Parcelize
 import java.util.*
 
+/*
+-1  No seteado(instancia)
+0   No medicado(expresamente)
+1   Medicado(expresamente)
+ */
 @Entity(foreignKeys = arrayOf(ForeignKey(entity = Control::class,
     parentColumns = arrayOf("id"),
     childColumns = arrayOf("user_id"),
@@ -25,11 +30,6 @@ data class Control(
     @ColumnInfo(name = "end_date")
     var endDate: Date = Calendar.getInstance().time,
     var resource: String = "",
-    /*
-    -1  No seteado(instancia)
-    0   No medicado(expresamente)
-    1   Medicado(expresamente)
-     */
     var medicated: Int = -1,
     @ColumnInfo(name = "group_control")
     var groupControl: Int = 0

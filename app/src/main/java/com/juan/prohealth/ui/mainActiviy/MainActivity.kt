@@ -16,7 +16,6 @@ import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import com.andrognito.flashbar.Flashbar
 import com.google.android.material.chip.Chip
@@ -251,9 +250,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 binding.ivArrowLeft.visibility = View.GONE
                 binding.ivArrowRight.visibility = View.GONE
                 binding.btnBorrar.visibility = View.GONE
-                binding.btnINR.visibility = View.VISIBLE
+                binding.btnINR.isEnabled = true
             } else {
-                binding.btnINR.visibility = View.GONE
+                binding.btnINR.isEnabled = false
                 binding.ivArrowLeft.visibility = View.VISIBLE
                 binding.ivArrowRight.visibility = View.VISIBLE
                 binding.carousel.visibility = View.VISIBLE
@@ -267,6 +266,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onResume() {
         super.onResume()
+        viewModel.getControlsToFillCarousel()
         viewModel.checkHasControlToday()
     }
 
@@ -363,7 +363,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 viewModel.updateUserData(
                     sangreString.toFloat(),
                     nivelString.toInt(),
-                    dataNiveles
+                    dataNiveles,
+                    Control()
                 )
                 // TODO: Recoge los valroes para mostrarlo en un ALERT. Implemendado guardado en variable observable y recogido
                 // MyWorkManager.setWorkers(controlListActive)

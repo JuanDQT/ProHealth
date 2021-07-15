@@ -24,9 +24,8 @@ interface ControlDao {
     @Query("SELECT MAX(group_control) + 1 FROM control")
     suspend fun generateNewIdGroupFromDb(): Int?
 
-    // Añadir resource <> 0?
-    @Query("SELECT * FROM control WHERE medicated = 0")
-    suspend fun getAllPendingControls(): List<Control>//By Group or By end_date
+    @Query("SELECT * FROM control WHERE medicated = 0 AND resource <> '0'")
+    suspend fun getAllPendingControls(): List<Control>
 
     @Query("SELECT * FROM control WHERE execution_date = :date")
     suspend fun getControlByDate(date:Date): Control
