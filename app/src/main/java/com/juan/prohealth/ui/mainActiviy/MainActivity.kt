@@ -16,7 +16,6 @@ import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import com.andrognito.flashbar.Flashbar
 import com.google.android.material.chip.Chip
@@ -112,13 +111,13 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             .negativeActionTextColorRes(R.color.colorAccent)
             .positiveActionTapListener(object : Flashbar.OnActionTapListener {
                 override fun onActionTapped(bar: Flashbar) {
-                    viewModel.updateCurrentControlStatus(true)
+                    viewModel.updateCurrentControlStatus(1)
                     bar.dismiss()
                 }
             })
             .negativeActionTapListener(object : Flashbar.OnActionTapListener {
                 override fun onActionTapped(bar: Flashbar) {
-                    viewModel.updateCurrentControlStatus(false)
+                    viewModel.updateCurrentControlStatus(0)
                     bar.dismiss()
                 }
             })
@@ -251,9 +250,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 binding.ivArrowLeft.visibility = View.GONE
                 binding.ivArrowRight.visibility = View.GONE
                 binding.btnBorrar.visibility = View.GONE
-                binding.btnINR.visibility = View.VISIBLE
+                binding.btnINR.isEnabled = true
             } else {
-                binding.btnINR.visibility = View.GONE
+                binding.btnINR.isEnabled = false
                 binding.ivArrowLeft.visibility = View.VISIBLE
                 binding.ivArrowRight.visibility = View.VISIBLE
                 binding.carousel.visibility = View.VISIBLE
@@ -267,6 +266,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onResume() {
         super.onResume()
+        viewModel.getControlsToFillCarousel()
         viewModel.checkHasControlToday()
     }
 

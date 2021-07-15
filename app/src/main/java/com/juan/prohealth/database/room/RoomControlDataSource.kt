@@ -8,9 +8,9 @@ class RoomControlDataSource(var database: MyDatabase) : IControlLocalDataSource 
 
     private var controlDao: ControlDao = database.controlDao()
 
-    override suspend fun getActiveControlList(idUser: Int): List<Control> {
+    override suspend fun getActiveControlList(): List<Control> {
         return withContext(Dispatchers.IO) {
-            controlDao.getActiveControlList(idUser)
+            controlDao.getActiveControlList()
         }
     }
 
@@ -32,6 +32,7 @@ class RoomControlDataSource(var database: MyDatabase) : IControlLocalDataSource 
         }
     }
 
+    // TODO: Esto no se llama en ningun sitio? DELETE
     override suspend fun getAllPendingControls(): List<Control> {
         return withContext(Dispatchers.IO) {
             controlDao.getAllPendingControls()

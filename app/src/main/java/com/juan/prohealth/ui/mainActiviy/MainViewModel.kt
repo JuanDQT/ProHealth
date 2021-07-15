@@ -22,19 +22,11 @@ class MainViewModel(
 ) :
     ViewModel() {
 
-    init {
-        getActiveControlList()//"refresh"
-    }
-
     private var _bloodValue = MutableLiveData(0f)
     val bloodValue: LiveData<Float> get() = _bloodValue
 
     private var _doseValue = MutableLiveData(0)
     val doseValue: LiveData<Int> get() = _doseValue
-
-    //Valores que controlan Visualizaciones?
-    private var _showAlertControl = MutableLiveData(false)
-    val showAlertControl: LiveData<Boolean> get() = _showAlertControl
 
     private var _checkPendingControls = MutableLiveData(false)
     val checkPendingControls: LiveData<Boolean> get() = _checkPendingControls
@@ -55,7 +47,7 @@ class MainViewModel(
     fun checkHasControlToday() {
         viewModelScope.launch {
             val hasPendingControlsQuery =
-                controlRepository.checkIfHasPendingControlToday(isPending = 0)
+                controlRepository.checkIfHasPendingControlToday(isPending = -1)
 
             if (hasPendingControlsQuery) {
                 _userResourceImage.postValue(controlRepository.getPendingControlToday().resource)
@@ -90,7 +82,7 @@ class MainViewModel(
                 currentUser.id,
                 groupControl
             )
-            getActiveControlList()
+            getControlsToFillCarousel()
         }
     }
 
@@ -115,24 +107,20 @@ class MainViewModel(
         }
     }
 
-    fun updateCurrentControlStatus(isMedicated: Boolean) {
+    fun updateCurrentControlStatus(isMedicated: Int) {
         viewModelScope.launch {
-            if (isMedicated) {
+            if (isMedicated == 1) {
                 val controlToday = controlRepository.getPendingControlToday()
                 controlToday.medicated = isMedicated
                 controlRepository.updateControl(controlToday)
             }
         }
     }
-
-    /**
-     * Deberia devolver controles con end_date superior a date actual
-     *ISSUE: Devuelve todos los controles aunque sean VIEJOS
-     */
-    fun getActiveControlList() {
+    
+    fun getControlsToFillCarousel() {
         viewModelScope.launch {
             val user = userRepository.getCurrentUser()
-            val activeControls = controlRepository.getActiveControlListByGroup(user.id)
+            val activeControls = controlRepository.getActiveControlListByGroup()
             _currentActiveControls.value = activeControls
             updateInfoPanelUi(user)
         }

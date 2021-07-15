@@ -4,7 +4,7 @@ import com.juan.prohealth.database.room.Control
 import java.util.*
 
 interface IControlLocalDataSource {
-    suspend fun getActiveControlList(idUser:Int): List<Control>
+    suspend fun getActiveControlList(): List<Control>
     suspend fun deleteLastControlGroup(idUser: Int)
     suspend fun getLastBloodValues(idUser: Int): Array<Float>
     suspend fun insert(control: Control)
