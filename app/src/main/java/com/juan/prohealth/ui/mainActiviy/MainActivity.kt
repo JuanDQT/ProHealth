@@ -16,12 +16,14 @@ import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import com.andrognito.flashbar.Flashbar
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.gtomato.android.ui.transformer.FlatMerryGoRoundTransformer
 import com.juan.prohealth.*
+import com.juan.prohealth.custom.CustomButton
 import com.juan.prohealth.data.local.SharedPreference
 import com.juan.prohealth.data.local.StorageValidationDataSource
 import com.juan.prohealth.database.room.Control
@@ -29,11 +31,14 @@ import com.juan.prohealth.database.room.MyDatabase
 import com.juan.prohealth.database.room.RoomControlDataSource
 import com.juan.prohealth.database.room.RoomUserDataSource
 import com.juan.prohealth.databinding.ActivityMainBinding
+import com.juan.prohealth.databinding.CustomButtonBinding
 import com.juan.prohealth.repository.ControlRepository
 import com.juan.prohealth.repository.UserRepository
 import com.juan.prohealth.repository.ValidationRepository
 import com.juan.prohealth.ui.adapters.DoseAdapter
 import com.juan.prohealth.ui.common.*
+import kotlinx.android.synthetic.main.ad_planificacion.view.*
+import kotlinx.android.synthetic.main.custom_button.view.*
 import java.util.*
 import kotlin.collections.set
 import kotlin.concurrent.schedule
@@ -106,7 +111,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             .enableSwipeToDismiss()
             .backgroundColorRes(R.color.colorPrimaryDark)
             .positiveActionText("Si")
-            .negativeActionText("Hoy no tomare")
+            .negativeActionText("Hoy no tomaré")
             .positiveActionTextColorRes(R.color.colorAccent)
             .negativeActionTextColorRes(R.color.colorAccent)
             .positiveActionTapListener(object : Flashbar.OnActionTapListener {
@@ -209,6 +214,30 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         return ad
     }
 
+    private fun reorderButtonList() {
+        val allButtons = arrayListOf<CustomButton>()
+
+        for (i in 0 until binding.llOpciones.childCount) {
+            val button = binding.llOpciones.getChildAt(i)
+
+            if(button is CustomButton && button.visibility == View.VISIBLE)
+                allButtons.add(button)
+        }
+
+        for (i in 0 until allButtons.size) {
+            val button = allButtons[i]
+
+            if (i % 2 == 0) {
+                button.containIconRight.visibility = View.GONE
+                button.containIcon.visibility = View.VISIBLE
+            } else {
+                button.containIcon.visibility = View.GONE
+                button.containIconRight.visibility = View.VISIBLE
+            }
+            button.menuText.textAlignment = View.TEXT_ALIGNMENT_CENTER
+        }
+    }
+
     private fun buildViewModel(): MainViewModel {
         val factory = MainViewModelFactory(validationRepository, controlRepository, userRepository)
         return ViewModelProvider(this, factory).get(MainViewModel::class.java)
@@ -250,9 +279,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 binding.ivArrowLeft.visibility = View.GONE
                 binding.ivArrowRight.visibility = View.GONE
                 binding.btnBorrar.visibility = View.GONE
-                binding.btnINR.isEnabled = true
+                binding.btnINR.visibility = View.VISIBLE
+
             } else {
-                binding.btnINR.isEnabled = false
+                binding.btnINR.visibility = View.GONE
                 binding.ivArrowLeft.visibility = View.VISIBLE
                 binding.ivArrowRight.visibility = View.VISIBLE
                 binding.carousel.visibility = View.VISIBLE
@@ -261,6 +291,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 binding.carousel.adapter = adapter
                 Log.i("ActiveControls", "Show Widget")
             }
+            reorderButtonList()
+
         })
     }
 
