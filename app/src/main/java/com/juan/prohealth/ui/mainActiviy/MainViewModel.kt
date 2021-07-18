@@ -109,11 +109,9 @@ class MainViewModel(
 
     fun updateCurrentControlStatus(isMedicated: Int) {
         viewModelScope.launch {
-            if (isMedicated == 1) {
-                val controlToday = controlRepository.getPendingControlToday()
-                controlToday.medicated = isMedicated
-                controlRepository.updateControl(controlToday)
-            }
+            val controlToday = controlRepository.getPendingControlToday()
+            controlToday.medicated = isMedicated
+            controlRepository.updateControl(controlToday)
         }
     }
     
