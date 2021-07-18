@@ -259,6 +259,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 binding.btnBorrar.visibility = View.VISIBLE
                 adapter.setItems(activeControls)
                 binding.carousel.adapter = adapter
+                val position = activeControls.indexOf(activeControls.filter { f -> f.executionDate == Date().clearTime() }.first())
+                binding.carousel.smoothScrollToPosition(position)
                 Log.i("ActiveControls", "Show Widget")
             }
         })
