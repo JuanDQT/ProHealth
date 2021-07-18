@@ -24,21 +24,21 @@
     <string name="entrar">Entrar</string>
     <string name="login_google">Entra con Google</string>
     <string name="continuar_sin_contraseña">Continuar sin registrarse</string>
-    //Menu Ajustes
+<!--Menu Ajustes-->
     <string name="contactos_de_confianza">Contactos de confianza</string>
     <string name="ajustar_notificaciones">Ajustar notificaciones</string>
     <string name="exportar_datos">Exportar datos</string>
-    //Layout ad_introducir_inr
+<!--Layout ad_introducir_inr-->
     <string name="ultimo_valor">Últimos valores: </string>
-    //Layout ad_planificacion
+<!--Layout ad_planificacion-->
     <string name="ultimo_INR">Último INR</string>
     <string name="inr_hoy">INR Hoy</string>
-    <string name="tu_dosis">Tu dosis:</string>
+    <string name="tu_dosis">Tu dosis los próximos 3 dias:</string>
     <string name="alerta">Alerta</string>
     <string name="validando">Validando</string>
     <string name="error_verificacion">Verificación de registro fallido. Es necesario una conexión a internet.</string>
     <string name="enviar_email">Enviar por email</string>
-    //Layout Item_dosis
+<!--Layout Item_dosis-->
     <string name="text_hoy">Hoy</string>
     <string name="guardar">Guardar</string>
     <string name="he_olvidado_mi_contrasena">He olvidado mi contraseña</string>
@@ -47,4 +47,9 @@
     <string name="valores_inr">Valores INR</string>
     <string name="continuar_sin_registrarse">Continuar sin registrarse</string>
     <string name="msg_introducir_nivel_dosis">Por favor, introduce el nivel de dosis inicial</string>
+    <string name="msg_introducir_nivel_inr_1_7">Por favor, introduce un valor INR entre 1 y 7</string>
+    <string name="title_introducir">Introducir</string>
+    <string name="button_aceptar">Aceptar</string>
+    <string name="titulo_informacion">Información</string>
+    <string name="button_planificar">Planificar</string>
 </resources>

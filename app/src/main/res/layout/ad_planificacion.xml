@@ -71,7 +71,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Tu dosis:"
+        android:text="@string/tu_dosis"
         android:layout_marginTop="10dp"
         android:textAlignment="center"
         />
