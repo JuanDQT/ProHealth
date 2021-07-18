@@ -12,6 +12,7 @@ import android.text.Editable
 import android.text.Html
 import android.text.TextWatcher
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
@@ -29,6 +30,7 @@ import com.juan.prohealth.database.room.MyDatabase
 import com.juan.prohealth.database.room.RoomControlDataSource
 import com.juan.prohealth.database.room.RoomUserDataSource
 import com.juan.prohealth.databinding.ActivityMainBinding
+import com.juan.prohealth.databinding.AdPlanificacionBinding
 import com.juan.prohealth.repository.ControlRepository
 import com.juan.prohealth.repository.UserRepository
 import com.juan.prohealth.repository.ValidationRepository
@@ -316,14 +318,14 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private fun instancePlanningAlertDialog(): AlertDialog {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Informacion")
-
+        //val planingBinding = AdPlanificacionBinding.inflate(LayoutInflater.from(this))
         val view = layoutInflater.inflate(R.layout.ad_planificacion, null)
-        val irnActual = view.findViewById<TextView>(R.id.tvIRN)
-        val irnNew = view.findViewById<TextView>(R.id.tvIRNNew)
+        val currentINR = view.findViewById<TextView>(R.id.tvIRN)
+        val newINR = view.findViewById<TextView>(R.id.tvIRNNew)
         val btnMails = view.findViewById<CheckBox>(R.id.cb_mails)
 
-        irnActual.text = "${currentBloodValue}"
-        irnNew.text = sangreString
+        currentINR.text = "${currentBloodValue}"
+        newINR.text = sangreString
 
         if (currentBloodValue == 0f) {
             val irnText = view.findViewById<TextView>(R.id.tvIRN_text)
@@ -358,7 +360,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
         builder.setPositiveButton(
             "Planificar",
-            DialogInterface.OnClickListener { dialogInterface, i ->
+            DialogInterface.OnClickListener { _, _ ->
                 // Actualizamos la sangre y nivel
                 viewModel.updateUserData(
                     sangreString.toFloat(),
@@ -367,7 +369,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                     Control()
                 )
                 // TODO: Recoge los valroes para mostrarlo en un ALERT. Implemendado guardado en variable observable y recogido
-                // MyWorkManager.setWorkers(controlListActive)
+                 MyWorkManager.setWorkers(controlListActive)
                 if (btnMails.isChecked) {
                     sendPlanningEmail()
                 }
