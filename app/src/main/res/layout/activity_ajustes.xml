@@ -17,7 +17,7 @@
         android:layout_height="50dp"
         android:gravity="center_vertical"
         android:textSize="20sp"
-        android:text="@string/contactos_de_confianza"
+        android:text="Contactos de confianza"
         />
 
     <LinearLayout
@@ -31,7 +31,7 @@
             android:layout_height="50dp"
             android:gravity="center_vertical"
             android:textSize="20sp"
-            android:text="@string/ajustar_notificaciones"
+            android:text="Ajustar notificaciones"
             />
         <TextView
             android:id="@+id/tv_hora"
@@ -51,7 +51,7 @@
         android:layout_height="50dp"
         android:gravity="center_vertical"
         android:textSize="20sp"
-        android:text="@string/exportar_datos"
+        android:text="Exportar datos"
         />
 
 

@@ -6,7 +6,6 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.LinearLayout
@@ -15,34 +14,24 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.juan.prohealth.database.Control
 import com.juan.prohealth.database.User
+import com.juan.prohealth.databinding.ActivityAjustesBinding
 import io.github.lucasfsc.html2pdf.Html2Pdf
-import kotlinx.android.synthetic.main.activity_ajustes.*
-import java.io.BufferedWriter
 import java.io.File
-import java.io.FileWriter
-import java.net.URI
 
 
-class AjustesActivity : AppCompatActivity(), View.OnClickListener {
+class AjustesActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityAjustesBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_ajustes)
+        binding = ActivityAjustesBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        binding.tvHora.text = getDateFormat(User.getCurrentTimeNotification())
 
-        tv_hora.text = getDateFormat(User.getCurrentTimeNotification())
-
-        tv_contactos.setOnClickListener(this)
-        frame_notificaciones.setOnClickListener(this)
-        tv_exportar.setOnClickListener(this)
-    }
-
-    override fun onClick(v: View?) {
-        v?.let {
-            when (it.id) {
-                R.id.tv_contactos -> doAskMail()
-                R.id.frame_notificaciones -> doConfigNotification()
-                R.id.tv_exportar -> doExportarMail()
-            }
-        }
+        binding.tvContactos.setOnClickListener { doAskMail() }
+        binding.frameNotificaciones.setOnClickListener { doConfigNotification() }
+        binding.tvExportar.setOnClickListener { doExportarMail() }
     }
 
 
@@ -54,15 +43,20 @@ class AjustesActivity : AppCompatActivity(), View.OnClickListener {
         val hour: Int = User.getCurrentTimeNotification()[0]
         val minute: Int = User.getCurrentTimeNotification()[1]
         val mTimePicker: TimePickerDialog
-        mTimePicker = TimePickerDialog(this, android.R.style.Theme_Holo_Dialog,
+        mTimePicker = TimePickerDialog(
+            this, android.R.style.Theme_Holo_Dialog,
 //            mTimePicker = TimePickerDialog(this, android.R.style.Theme_Holo_Light_Dialog,
             OnTimeSetListener { timePicker, selectedHour, selectedMinute ->
-                Toast.makeText(this, "Seleccionado: $selectedHour:$selectedMinute", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this,
+                    "Seleccionado: $selectedHour:$selectedMinute",
+                    Toast.LENGTH_SHORT
+                ).show()
                 User.settCurrentTimeNotification(selectedHour, selectedMinute)
-                tv_hora.text = getDateFormat(arrayOf(selectedHour, selectedMinute))
+                binding.tvHora.text = getDateFormat(arrayOf(selectedHour, selectedMinute))
 
                 if (Control.hasPendingControls()) {
-                    MyWorkManager.setWorkers(Control.getActiveControlList(onlyPendings = true))
+                    //MyWorkManager.setWorkers(Control.getActiveControlList(onlyPendings = true))
                     Toast.makeText(this, "Alarmas actualizadas", Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(this, "No hay alarma programada", Toast.LENGTH_SHORT).show()
@@ -120,14 +114,21 @@ class AjustesActivity : AppCompatActivity(), View.OnClickListener {
     fun doExportarMail() {
         generateExportFile {
             it?.let {
-                val emailIntent = Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", MySharedPreferences.shared.getString("emails"), null))
+                val emailIntent = Intent(
+                    Intent.ACTION_SENDTO,
+                    Uri.fromParts("mailto", MySharedPreferences.shared.getString("emails"), null)
+                )
                 emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Historico IRN")
-                emailIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse( "file://"+ it))
+                emailIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + it))
                 emailIntent.putExtra(Intent.EXTRA_TEXT, "Hola, te adjunto mi historico de dosis.")
                 startActivity(Intent.createChooser(emailIntent, "Enviar mail..."))
                 return@generateExportFile
             }
-            Toast.makeText(this@AjustesActivity, "Error al generar el adjunto.. Consulte los permisos de la aplicacion", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                this@AjustesActivity,
+                "Error al generar el adjunto.. Consulte los permisos de la aplicacion",
+                Toast.LENGTH_SHORT
+            ).show()
         }
 
     }

@@ -1,33 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="150dp"
+    android:layout_height="match_parent"
     android:orientation="vertical"
     android:layout_gravity="center_horizontal"
     android:layout_centerVertical="true"
     android:gravity="center"
+
     xmlns:tools="http://schemas.android.com/tools">
 
     <TextView
-        android:textColor="#fff"
+        android:textColor="#000"
         android:id="@+id/tv_current"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAlignment="center"
-        android:visibility="gone"
-        android:text="@string/text_hoy"/>
+        android:textSize="22sp"
+        android:text="HOY"
+        />
 
     <TextView
-        android:textColor="#fff"
-        android:id="@+id/tv_text"
+        android:textColor="#000"
+        android:id="@+id/tv_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAlignment="center"
-        android:textSize="23sp"
-        tools:text="kafkqa"/>
+        android:textSize="32sp"
+        android:layout_marginTop="-10dp"
+        tools:text="12/12"/>
 
     <ImageView
-        android:id="@+id/iv_src"
+        android:id="@+id/image_dose"
         android:layout_width="169dp"
         android:layout_height="70dp"
         android:layout_marginTop="10dp"
