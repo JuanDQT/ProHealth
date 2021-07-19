@@ -1,12 +1,20 @@
 package com.juan.prohealth.database
 
 import com.juan.prohealth.MySharedPreferences
-import com.juan.prohealth.ui.common.fromDate
+import com.juan.prohealth.addDays
+import com.juan.prohealth.fromDate
 import io.realm.Realm
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
+import io.realm.kotlin.createObject
+import java.io.File
 import java.lang.Exception
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.ZoneId
 import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.math.min
 
 open class User : RealmObject() {
 

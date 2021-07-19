@@ -6,19 +6,13 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:textViewStyle">@style/HelveticaTextViewStyle</item>
-        <item name="android:editTextStyle">@style/HelveticaTextViewStyle</item>
-        <item name="android:buttonStyle">@style/HelveticaTextViewStyle</item>
     </style>
 
     <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowContentOverlay">@null</item>
-        <item name="android:textViewStyle">@style/HelveticaTextViewStyle</item>
+        <!--<item name="android:windowBackground">@drawable/logo</item>-->
     </style>
 
-    <style name="HelveticaTextViewStyle" parent="android:Widget.TextView">
-        <item name="android:fontFamily">@font/helvetica_bold</item>
-    </style>
 
 </resources>
