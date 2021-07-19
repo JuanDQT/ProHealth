@@ -27,7 +27,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Últimos valores: " />
+            android:text="@string/ultimo_valor" />
 
 
         <com.google.android.material.chip.ChipGroup
