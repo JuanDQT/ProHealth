@@ -230,7 +230,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                     if (btnMails.isChecked) {
                         sendPlanningEmail()
                     }
-                    inrAlertDialog.dismiss()
+                    inrAlertDialog.cancel()
 
 
                 }
