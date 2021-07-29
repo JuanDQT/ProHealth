@@ -9,33 +9,13 @@
         android:layout_width="match_parent"
         android:layout_height="75dp">
 
-        <TextView
-            android:id="@+id/menuText"
-            android:layout_width="200dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="-25dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="0dp"
-            android:layout_marginBottom="17dp"
-            android:layout_toEndOf="@+id/containIcon"
-            android:background="@drawable/rounder_corner"
-            android:drawablePadding="40dp"
-            android:paddingStart="30dp"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-            android:textAlignment="viewStart"
-            android:textColor="#fff"
-            android:textSize="24sp"
-            tools:text="Titulo" />
-
         <androidx.cardview.widget.CardView
             android:id="@+id/containIcon"
             android:layout_width="75dp"
             android:layout_height="75dp"
             app:cardBackgroundColor="@color/colorPrimaryDark"
             app:cardCornerRadius="40dp"
+            android:layout_marginRight="-10dp"
             app:contentPadding="16dp">
 
             <ImageView
@@ -45,6 +25,43 @@
                 android:scaleType="centerInside"
                 tools:srcCompat="@drawable/calendar" />
         </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/menuText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="17dp"
+            android:layout_toEndOf="@+id/containIcon"
+            android:layout_toStartOf="@+id/containIconRight"
+            android:background="@drawable/rounder_corner"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:textAlignment="viewStart"
+            android:textColor="#fff"
+            android:textSize="24sp"
+            tools:text="Titulo" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/containIconRight"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            app:cardBackgroundColor="@color/colorPrimaryDark"
+            app:cardCornerRadius="40dp"
+            android:layout_marginLeft="-10dp"
+            android:layout_alignParentEnd="true"
+            app:contentPadding="16dp">
+
+            <ImageView
+                android:id="@+id/iconMenuRight"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerInside"
+                tools:srcCompat="@drawable/calendar" />
+        </androidx.cardview.widget.CardView>
+
+
     </RelativeLayout>
 
 </merge>
