@@ -369,7 +369,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                     Control()
                 )
                 // TODO: Recoge los valroes para mostrarlo en un ALERT. Implemendado guardado en variable observable y recogido
-                 MyWorkManager.setWorkers(controlListActive)
                 if (btnMails.isChecked) {
                     sendPlanningEmail()
                 }
