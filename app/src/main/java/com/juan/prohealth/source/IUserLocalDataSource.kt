@@ -6,6 +6,7 @@ interface IUserLocalDataSource {
     suspend fun crearUsuarioInvitado(user: User)
     suspend fun getIdCurrentUser(): Int
     suspend fun getCurrentUser(): User
+    suspend fun updateUserSchedule(hour: Int, minute: Int)
 
     // Pending Update?
     suspend fun userAlreadyExists(idServidor: Int, nameUser: String)

@@ -14,9 +14,9 @@ class RoomControlDataSource(var database: MyDatabase) : IControlLocalDataSource 
         }
     }
 
-    override suspend fun deleteLastControlGroup(idUser: Int) {
+    override suspend fun deleteLastControlGroup() {
         return withContext(Dispatchers.IO) {
-            controlDao.deleteLastControlsByGroup(idUser)
+            controlDao.deleteLastControlsByGroup()
         }
     }
 
