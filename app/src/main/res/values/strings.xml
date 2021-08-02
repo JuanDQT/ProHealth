@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">ProHealth</string>
+    <string name="app_name" translatable="false">Coagutest</string>
     <string name="introducir_valor">Introduce un valor</string>
     <string name="introducir_INR">Introduce tu INR</string>
     <string name="calendario">Calendario</string>
