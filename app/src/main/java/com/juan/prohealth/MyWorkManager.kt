@@ -8,8 +8,6 @@ import android.graphics.Color
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.work.*
-import com.juan.prohealth.database.Control as RealmControl
-import com.juan.prohealth.database.User
 import com.juan.prohealth.database.room.Control
 import com.juan.prohealth.ui.common.clearSeconds
 import com.juan.prohealth.ui.common.fromDate
@@ -40,7 +38,7 @@ class MyWorkManager(context: Context, workerParamaters: WorkerParameters): Worke
     }
 
     companion object {
-        val TAG = "ALARMA_NOTIFICATION"
+        private const val TAG = "ALARMA_NOTIFICATION"
 
         fun updateNotification(duracion: Long, data: Data) {
             WorkManager.getInstance().cancelAllWorkByTag(TAG)
@@ -54,19 +52,18 @@ class MyWorkManager(context: Context, workerParamaters: WorkerParameters): Worke
         }
 
         // Creamos los trabajos programados
-        fun setWorkers(controls: List<Control>) {
+        fun setWorkers(controls: List<Control>, hourAlarm: Int, minuteAlarm: Int) {
             clearAllWorks()
 
             if(controls.count() == 0)
                 return
 
             val workers: ArrayList<WorkRequest> = arrayListOf()
-            val userTime: Array<Int> = User.getCurrentTimeNotification()
 
             for (control in controls) {
-                val tiempoRestante = Calendar.getInstance().fromDate(control.executionDate, userTime[0], userTime[1]).timeInMillis - System.currentTimeMillis().clearSeconds()
+                val notificationTime = Calendar.getInstance().fromDate(control.executionDate, hourAlarm, minuteAlarm).timeInMillis - System.currentTimeMillis().clearSeconds()
                 val dataParams = Data.Builder().putString("valor", control.resource).build()
-                val worker = OneTimeWorkRequest.Builder(MyWorkManager::class.java).setInitialDelay(tiempoRestante, TimeUnit.MILLISECONDS).addTag(TAG).setInputData(dataParams).build()
+                val worker = OneTimeWorkRequest.Builder(MyWorkManager::class.java).setInitialDelay(notificationTime, TimeUnit.MILLISECONDS).addTag(TAG).setInputData(dataParams).build()
                 workers.add(worker)
             }
             val instance = WorkManager.getInstance()

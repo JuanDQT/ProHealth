@@ -84,7 +84,6 @@ class MainViewModel(
                 groupControl
             )
             getControlsToFillCarousel()
-            setDefaultNotifications()
         }
     }
 
@@ -125,13 +124,7 @@ class MainViewModel(
             val activeControls = controlRepository.getActiveControlListByGroup()
             _currentActiveControls.value = activeControls
             updateInfoPanelUi(user)
-        }
-    }
-
-    private fun setDefaultNotifications() {
-        viewModelScope.launch {
-            val activeControls = controlRepository.getActiveControlListByGroup()
-            MyWorkManager.setWorkers(activeControls)
+            MyWorkManager.setWorkers(activeControls, user.hourAlarm, user.minuteAlarm)
         }
     }
 }
