@@ -197,11 +197,14 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             irnActual.text = "${currentBloodValue}"
             irnNew.text = "${AppContext.validarInputTextSangre(editText.text.toString())}"
 
+            val irnText = view.findViewById<TextView>(R.id.tvIRN_text)
+            val frameIRN = view.findViewById<FrameLayout>(R.id.frame_IRN)
             if (currentBloodValue == 0f) {
-                val irnText = view.findViewById<TextView>(R.id.tvIRN_text)
-                val frameIRN = view.findViewById<FrameLayout>(R.id.frame_IRN)
                 irnText.visibility = View.GONE
                 frameIRN.visibility = View.GONE
+            } else {
+                irnText.visibility = View.VISIBLE
+                frameIRN.visibility = View.VISIBLE
             }
 
 
