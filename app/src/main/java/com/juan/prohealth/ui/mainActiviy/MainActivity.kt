@@ -12,7 +12,6 @@ import android.text.Editable
 import android.text.Html
 import android.text.TextWatcher
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
@@ -30,7 +29,6 @@ import com.juan.prohealth.database.room.MyDatabase
 import com.juan.prohealth.database.room.RoomControlDataSource
 import com.juan.prohealth.database.room.RoomUserDataSource
 import com.juan.prohealth.databinding.ActivityMainBinding
-import com.juan.prohealth.databinding.AdPlanificacionBinding
 import com.juan.prohealth.repository.ControlRepository
 import com.juan.prohealth.repository.UserRepository
 import com.juan.prohealth.repository.ValidationRepository
@@ -237,13 +235,13 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             binding.tvDosisValor.text = "${value}"
         }
 
-        viewModel.userResourceImage.observe(this) {resourceValue->
+        viewModel.userResourceImage.observe(this) { resourceValue ->
             userResourceImage = resourceValue
         }
 
         viewModel.checkPendingControls.observe(this, { isPendingControls ->
             if (isPendingControls) flashBar.show()
-            else Log.i("IsPendingControls","Doesn't have pending controls")
+            else Log.i("IsPendingControls", "Doesn't have pending controls")
         })
         viewModel.currentActiveControls.observe(this, { activeControls ->
             if (activeControls.isNullOrEmpty()) {
