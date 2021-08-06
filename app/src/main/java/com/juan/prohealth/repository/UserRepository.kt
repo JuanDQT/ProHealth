@@ -25,4 +25,8 @@ class UserRepository(private var iUserLocalDataSource: IUserLocalDataSource) {
         return iUserLocalDataSource.getCurrentUser()
     }
 
+    suspend fun updateUserSchedule(hour: Int, minute: Int) {
+        iUserLocalDataSource.updateUserSchedule(hour, minute)
+    }
+
 }

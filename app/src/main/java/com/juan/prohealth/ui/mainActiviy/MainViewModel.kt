@@ -40,7 +40,7 @@ class MainViewModel(
     fun deleteLastControlGroup() {
         viewModelScope.launch {
             Log.i("BTN REBOOT INR","Se procede a borrar el ultimo grupo de control")
-            controlRepository.deleteLastControlGroup(userRepository.getIdCurrentUser())
+            controlRepository.deleteLastControlGroup()
         }
     }
 

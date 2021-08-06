@@ -9,8 +9,8 @@ class ControlRepository(private val iControlLocalDataSource: IControlLocalDataSo
         return iControlLocalDataSource.getActiveControlList()
     }
 
-    suspend fun deleteLastControlGroup(idUser: Int) {
-        iControlLocalDataSource.deleteLastControlGroup(idUser)
+    suspend fun deleteLastControlGroup() {
+        iControlLocalDataSource.deleteLastControlGroup()
     }
 
     suspend fun insert(control: Control) {

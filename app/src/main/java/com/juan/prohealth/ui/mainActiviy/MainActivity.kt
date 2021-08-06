@@ -36,6 +36,7 @@ import com.juan.prohealth.repository.ControlRepository
 import com.juan.prohealth.repository.UserRepository
 import com.juan.prohealth.repository.ValidationRepository
 import com.juan.prohealth.ui.adapters.DoseAdapter
+import com.juan.prohealth.ui.ajustesActivity.AjustesActivity
 import com.juan.prohealth.ui.common.*
 import kotlinx.android.synthetic.main.ad_planificacion.view.*
 import kotlinx.android.synthetic.main.custom_button.view.*
@@ -81,7 +82,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         adapter = DoseAdapter(emptyList())
-        binding.btnBorrar.setOnClickListener(this)
         binding.btnINR.setOnClickListener(this)
         binding.btnGmap.setOnClickListener(this)
         binding.btnEstadisticas.setOnClickListener(this)
@@ -278,7 +278,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 binding.carousel.visibility = View.GONE
                 binding.ivArrowLeft.visibility = View.GONE
                 binding.ivArrowRight.visibility = View.GONE
-                binding.btnBorrar.visibility = View.GONE
                 binding.btnINR.visibility = View.VISIBLE
 
             } else {
@@ -286,7 +285,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 binding.ivArrowLeft.visibility = View.VISIBLE
                 binding.ivArrowRight.visibility = View.VISIBLE
                 binding.carousel.visibility = View.VISIBLE
-                binding.btnBorrar.visibility = View.VISIBLE
                 adapter.setItems(activeControls)
                 binding.carousel.adapter = adapter
                 val position = activeControls.indexOf(activeControls.filter { f -> f.executionDate == Date().clearTime() }.first())
@@ -307,7 +305,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     override fun onClick(view: View?) {
         view?.let {
             when (it.id) {
-                R.id.btnBorrar -> clickOnDeleteLastINRGroup()
                 R.id.btnINR -> inrAlertDialog.show()
                 R.id.btnGmap -> checkPermissionLocation()
                 R.id.btnEstadisticas -> navigateToStatsGraphic()
@@ -319,7 +316,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun clickOnDeleteLastINRGroup() {
         viewModel.deleteLastControlGroup()
-        viewModel.checkHasControlToday()
     }
 
     private fun navigateToStatsGraphic() {

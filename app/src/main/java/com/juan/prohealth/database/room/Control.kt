@@ -10,9 +10,10 @@ import java.util.*
 0   No medicado(expresamente)
 1   Medicado(expresamente)
  */
-@Entity(foreignKeys = arrayOf(ForeignKey(entity = Control::class,
+@Entity(foreignKeys = arrayOf(ForeignKey(entity = User::class,
     parentColumns = arrayOf("id"),
     childColumns = arrayOf("user_id"),
+    onUpdate = ForeignKey.CASCADE,
     onDelete = ForeignKey.CASCADE)))
 @Parcelize
 data class Control(

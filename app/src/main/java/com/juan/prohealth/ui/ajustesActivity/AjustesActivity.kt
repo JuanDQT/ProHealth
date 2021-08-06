@@ -1,4 +1,4 @@
-package com.juan.prohealth
+package com.juan.prohealth.ui.ajustesActivity
 
 import android.app.TimePickerDialog
 import android.app.TimePickerDialog.OnTimeSetListener
@@ -6,15 +6,26 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
+import com.juan.prohealth.AppContext
+import com.juan.prohealth.MySharedPreferences
+import com.juan.prohealth.R
 import com.juan.prohealth.database.Control
 import com.juan.prohealth.database.User
+import com.juan.prohealth.database.room.MyDatabase
+import com.juan.prohealth.database.room.RoomControlDataSource
+import com.juan.prohealth.database.room.RoomUserDataSource
 import com.juan.prohealth.databinding.ActivityAjustesBinding
+import com.juan.prohealth.repository.ControlRepository
+import com.juan.prohealth.repository.UserRepository
+import com.juan.prohealth.ui.common.alert
 import io.github.lucasfsc.html2pdf.Html2Pdf
 import java.io.File
 
@@ -22,25 +33,66 @@ import java.io.File
 class AjustesActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAjustesBinding
+    private lateinit var viewModel: AjustesViewModel
+    private lateinit var controlRepository: ControlRepository
+    private lateinit var userRepository: UserRepository
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    private fun buildDependencies() {
+        val db = MyDatabase.getDatabase(this)
+        val controlLocal = RoomControlDataSource(db)
+        val userLocal = RoomUserDataSource(db)
+        controlRepository = ControlRepository(controlLocal)
+        userRepository = UserRepository(userLocal)
+    }
+
+    private fun buildViewModel(): AjustesViewModel {
+        val factory = AjustesViewModelFactory(controlRepository, userRepository)
+        return ViewModelProvider(this, factory).get(AjustesViewModel::class.java)
+    }
+
+    private fun setUpUI() {
         binding = ActivityAjustesBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        binding.tvHora.text = getDateFormat(User.getCurrentTimeNotification())
 
         binding.tvContactos.setOnClickListener { doAskMail() }
         binding.frameNotificaciones.setOnClickListener { doConfigNotification() }
         binding.tvExportar.setOnClickListener { doExportarMail() }
+        binding.tvReconfigurarInr.setOnClickListener { doReconfigurarINR() }
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
-    fun getDateFormat(dateArray: Array<Int>): String {
-        return "${dateArray[0]}:${dateArray[1].toString().padStart(2, '0')}"
+        buildDependencies()
+        viewModel = buildViewModel()
+        setUpUI()
+        subscribeUI()
+    }
+
+    private fun subscribeUI() {
+        viewModel.userSchedule.observe(this) { schedule ->
+            if (schedule.size > 1)
+                setViewScheduleTime(schedule)
+        }
+
+        viewModel.currentActiveControls.observe(this) { activeControls ->
+            if (!activeControls.isNullOrEmpty() && activeControls.count() > 0)
+                binding.tvReconfigurarInr.visibility = View.VISIBLE
+            else
+                binding.tvReconfigurarInr.visibility = View.GONE
+        }
+    }
+
+    private fun doUpdateSchedule(hour: Int, minute: Int) {
+        viewModel.updateUserSchedule(hour, minute)
+    }
+
+    private fun setViewScheduleTime(time: Array<Int>) {
+        binding.tvHora.text = AppContext.getDateFormat(time)
     }
 
     fun doConfigNotification() {
-        val hour: Int = User.getCurrentTimeNotification()[0]
+        val hour: Int = User.getCurrentTimeNotification()[0] // viewModel.userHour
         val minute: Int = User.getCurrentTimeNotification()[1]
         val mTimePicker: TimePickerDialog
         mTimePicker = TimePickerDialog(
@@ -52,8 +104,9 @@ class AjustesActivity : AppCompatActivity() {
                     "Seleccionado: $selectedHour:$selectedMinute",
                     Toast.LENGTH_SHORT
                 ).show()
-                User.settCurrentTimeNotification(selectedHour, selectedMinute)
-                binding.tvHora.text = getDateFormat(arrayOf(selectedHour, selectedMinute))
+
+                doUpdateSchedule(selectedHour, selectedMinute)
+                setViewScheduleTime(arrayOf(selectedHour, selectedMinute))
 
                 if (Control.hasPendingControls()) {
                     //MyWorkManager.setWorkers(Control.getActiveControlList(onlyPendings = true))
@@ -65,14 +118,14 @@ class AjustesActivity : AppCompatActivity() {
             }, hour, minute, true
         ) //Yes 24 hour time
 
-        mTimePicker.setTitle("Seleccionar hora")
+        mTimePicker.setTitle(getString(R.string.select_time))
         mTimePicker.show()
     }
 
     fun doAskMail() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Emails")
-        builder.setMessage("Introduce los emails. Puedes separarlos por ;")
+        builder.setMessage(getString(R.string.introduce_emails))
         val editText = EditText(this)
         editText.setText(MySharedPreferences.shared.getString("emails"))
         editText.layoutParams = LinearLayout.LayoutParams(
@@ -82,7 +135,7 @@ class AjustesActivity : AppCompatActivity() {
 
         builder.setView(editText)
 
-        builder.setPositiveButton("Aceptar", DialogInterface.OnClickListener { dialogInterface, i ->
+        builder.setPositiveButton(getString(R.string.accept), DialogInterface.OnClickListener { dialogInterface, i ->
             if (!editText.text.isNullOrEmpty()) {
                 MySharedPreferences.shared.addString("emails", editText.text.toString())
             }
@@ -111,6 +164,16 @@ class AjustesActivity : AppCompatActivity() {
             })
     }
 
+    fun doReconfigurarINR() {
+        alert(getString(R.string.alerta), getString(R.string.alert_message_restart_inr), getString(R.string.yes),
+            { dialogInterface, i ->
+                viewModel.deleteLastGroupControl()
+            }, getString(R.string.no),
+            { dialogInterface, i ->
+                dialogInterface.dismiss()
+            })
+    }
+
     fun doExportarMail() {
         generateExportFile {
             it?.let {
@@ -118,15 +181,15 @@ class AjustesActivity : AppCompatActivity() {
                     Intent.ACTION_SENDTO,
                     Uri.fromParts("mailto", MySharedPreferences.shared.getString("emails"), null)
                 )
-                emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Historico IRN")
+                emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.send_email_subject))
                 emailIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + it))
-                emailIntent.putExtra(Intent.EXTRA_TEXT, "Hola, te adjunto mi historico de dosis.")
-                startActivity(Intent.createChooser(emailIntent, "Enviar mail..."))
+                emailIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.send_email_body))
+                startActivity(Intent.createChooser(emailIntent, getString(R.string.send_email)))
                 return@generateExportFile
             }
             Toast.makeText(
                 this@AjustesActivity,
-                "Error al generar el adjunto.. Consulte los permisos de la aplicacion",
+                getString(R.string.send_email_error),
                 Toast.LENGTH_SHORT
             ).show()
         }
