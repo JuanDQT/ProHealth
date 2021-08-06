@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">ProHealth</string>
+    <string name="app_name" translatable="false">Coagutest</string>
     <string name="introducir_valor">Introduce un valor</string>
     <string name="introducir_INR">Introduce tu INR</string>
     <string name="calendario">Calendario</string>
@@ -47,4 +47,15 @@
     <string name="valores_inr">Valores INR</string>
     <string name="continuar_sin_registrarse">Continuar sin registrarse</string>
     <string name="msg_introducir_nivel_dosis">Por favor, introduce el nivel de dosis inicial</string>
+    <string name="reconfigurar_inr">Reconfigurar INR</string>
+    <string name="select_time">Seleccionar hora</string>
+    <string name="introduce_emails">Introduce los emails. Puedes separarlos por ;</string>
+    <string name="accept">Aceptar</string>
+    <string name="send_email_subject">Histórico IRN</string>
+    <string name="send_email_body">Hola, te adjunto mi historico de dosis.</string>
+    <string name="send_email">Enviar mail…</string>
+    <string name="send_email_error">Error al generar el adjunto.. Consulte los permisos de la aplicación</string>
+    <string name="alert_message_restart_inr">Esta seguro que desea borrar el último control?</string>
+    <string name="yes">Si</string>
+    <string name="no">No</string>
 </resources>

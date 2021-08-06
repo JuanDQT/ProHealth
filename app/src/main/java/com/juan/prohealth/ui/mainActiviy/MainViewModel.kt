@@ -40,8 +40,8 @@ class MainViewModel(
 
     fun deleteLastControlGroup() {
         viewModelScope.launch {
-            Log.i("BTN REBOOT INR", "Se procede a borrar el ultimo grupo de control")
-            controlRepository.deleteLastControlGroup(userRepository.getIdCurrentUser())
+            Log.i("BTN REBOOT INR","Se procede a borrar el ultimo grupo de control")
+            controlRepository.deleteLastControlGroup()
         }
     }
 
@@ -110,11 +110,9 @@ class MainViewModel(
 
     fun updateCurrentControlStatus(isMedicated: Int) {
         viewModelScope.launch {
-            if (isMedicated == 1) {
-                val controlToday = controlRepository.getPendingControlToday()
-                controlToday.medicated = isMedicated
-                controlRepository.updateControl(controlToday)
-            }
+            val controlToday = controlRepository.getPendingControlToday()
+            controlToday.medicated = isMedicated
+            controlRepository.updateControl(controlToday)
         }
     }
 

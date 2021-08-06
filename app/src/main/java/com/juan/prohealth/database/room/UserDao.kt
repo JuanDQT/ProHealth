@@ -26,6 +26,9 @@ interface UserDao {
     @Query("UPDATE user set blood = :bloodValue, level = :level where state_logging = 1")
     suspend fun updateUserData(bloodValue: Float, level: Int)
 
+    @Query("UPDATE user set hour_alarm = :hour, minute_alarm = :minute where state_logging = 1")
+    suspend fun updateUserSchedule(hour: Int, minute: Int)
+
     @Query("SELECT * FROM user WHERE state_logging = 1")
     suspend fun getCurrentUser(): User
 

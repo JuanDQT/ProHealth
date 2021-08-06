@@ -35,23 +35,12 @@ class CustomButton @JvmOverloads constructor(
                     R.string.empty
                 )
             )
-
-            if (typedArray.hasValue(R.styleable.custom_button_attrs_cb_icon_position)) {
-                when (typedArray.getString(R.styleable.custom_button_attrs_cb_icon_position)) {
-                    "0" -> {
-                        return@let
-                    }
-                    "1" -> {
-                        binding.containIcon.alignTo(ALIGN_PARENT_END)
-                        binding.menuText.alignTo(ALIGN_PARENT_START)
-                        binding.menuText.alignTo(ALIGN_PARENT_END)
-                        val lpCIV = binding.menuText.layoutParams as LayoutParams
-                        lpCIV.leftMargin = 0
-                        lpCIV.rightMargin = 40
-                        binding.menuText.layoutParams = lpCIV
-                    }
-                }
-            }
+            binding.iconMenuRight.setBackgroundResource(
+                typedArray.getResourceId(
+                    R.styleable.custom_button_attrs_cb_resource,
+                    R.string.empty
+                )
+            )
             typedArray.recycle()
         }
     }

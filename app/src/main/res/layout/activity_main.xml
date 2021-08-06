@@ -207,15 +207,6 @@
                 app:cb_icon_position="right"
                 app:cb_resource="@drawable/settings"
                 app:cb_title="@string/configuracion" />
-
-            <Button
-                android:id="@+id/btnBorrar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:drawableLeft="@android:drawable/stat_notify_sync"
-                android:text="Reconfigurar INR"
-                android:visibility="gone" />
         </LinearLayout>
 
     </ScrollView>
