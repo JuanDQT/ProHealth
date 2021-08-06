@@ -10,14 +10,13 @@ import kotlinx.android.parcel.Parcelize
 @Entity(tableName = "user", indices = [Index(value = ["id_server"], unique = true)])
 @Parcelize
 data class User(
-    // Probar generacion usuarios
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0,
     var name: String = "",
     var blood: Float = 0f,
     var level: Int = 0,
     @ColumnInfo(name = "hour_alarm")
-    var hourAlarm: Int = 0,
+    var hourAlarm: Int = 7,
     @ColumnInfo(name = "minute_alarm")
     var minuteAlarm: Int = 0,
     @ColumnInfo(name = "id_server")

@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.juan.prohealth.MyWorkManager
 import com.juan.prohealth.database.room.Control
 import com.juan.prohealth.database.room.User
 import com.juan.prohealth.repository.ControlRepository
@@ -114,13 +115,14 @@ class MainViewModel(
             controlRepository.updateControl(controlToday)
         }
     }
-    
+
     fun getControlsToFillCarousel() {
         viewModelScope.launch {
             val user = userRepository.getCurrentUser()
             val activeControls = controlRepository.getActiveControlListByGroup()
             _currentActiveControls.value = activeControls
             updateInfoPanelUi(user)
+            MyWorkManager.setWorkers(activeControls, user.hourAlarm, user.minuteAlarm)
         }
     }
 }
