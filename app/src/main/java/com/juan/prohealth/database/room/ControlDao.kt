@@ -1,6 +1,7 @@
 package com.juan.prohealth.database.room
 
 import androidx.room.*
+import com.anychart.chart.common.dataentry.DataEntry
 import java.util.*
 
 @Dao
@@ -35,4 +36,7 @@ interface ControlDao {
 
     @Query("SELECT * FROM control WHERE medicated = -1 and resource <> '0' and  (execution_date = (CAST(strftime('%s', date())  AS  int) * 1000)) AND user_id = (SELECT id FROM user WHERE state_logging = 1)")
     suspend fun getPendingControlToday(): Control
+
+    @Query("SELECT * FROM control WHERE user_id = (SELECT id FROM user WHERE state_logging = 1) group by group_control")
+    suspend fun getControlListGraph(): List<Control>
 }

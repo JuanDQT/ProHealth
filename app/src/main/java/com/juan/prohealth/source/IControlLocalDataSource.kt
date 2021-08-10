@@ -1,5 +1,6 @@
 package com.juan.prohealth.source
 
+import com.anychart.chart.common.dataentry.DataEntry
 import com.juan.prohealth.database.room.Control
 import java.util.*
 
@@ -13,4 +14,5 @@ interface IControlLocalDataSource {
     suspend fun getNewIdGroup():Int
     suspend fun getPendingControlToday():Control
     suspend fun checkPendingControlToday(isPending: Int):Boolean
+    suspend fun getControlListGraph(): List<Control>
 }

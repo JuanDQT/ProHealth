@@ -1,7 +1,9 @@
 package com.juan.prohealth
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.anychart.AnyChart
 import com.anychart.chart.common.dataentry.DataEntry
 import com.anychart.chart.common.dataentry.ValueDataEntry
@@ -11,18 +13,37 @@ import com.anychart.enums.MarkerType
 import com.anychart.enums.TooltipPositionMode
 import com.anychart.graphics.vector.Stroke
 import com.juan.prohealth.database.Control
+import com.juan.prohealth.database.room.MyDatabase
+import com.juan.prohealth.database.room.RoomControlDataSource
 import com.juan.prohealth.databinding.ActivityBarCharBinding
+import com.juan.prohealth.databinding.ActivityMainBinding
+import com.juan.prohealth.repository.ControlRepository
+import com.juan.prohealth.ui.GraphViewModel
 import com.juan.prohealth.ui.common.customFormat
 
 class BarCharActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityBarCharBinding
+    private lateinit var viewModel: GraphViewModel
+    private lateinit var controlRepository: ControlRepository
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    private fun buildDependencies() {
+        val database = MyDatabase.getDatabase(this)
+        val controlLocal = RoomControlDataSource(database)
+        controlRepository = ControlRepository(controlLocal)
+    }
+
+    private fun buildViewModel(): GraphViewModel {
+        val factory = GraphViewModelFactory(controlRepository)
+        return ViewModelProvider(this, factory).get(GraphViewModel::class.java)
+    }
+
+    private fun setUpUI() {
         binding = ActivityBarCharBinding.inflate(layoutInflater)
         setContentView(binding.root)
+    }
 
+    private fun prepareGraphSettings(seriesData: MutableList<DataEntry>) {
         binding.acvGrafica.setProgressBar(findViewById(R.id.progress_bar))
 
         val cartesian = AnyChart.line()
@@ -52,8 +73,6 @@ class BarCharActivity : AppCompatActivity() {
         cartesian.xAxis(0).title(getString(R.string.fecha))
         cartesian.yGrid(true)
 
-
-        val seriesData: MutableList<DataEntry> = getDemoPoints()
         val color = resources.getString(R.color.colorPrimary).replace("ff", "").toUpperCase()
 
         val set = Set.instantiate()
@@ -80,8 +99,6 @@ class BarCharActivity : AppCompatActivity() {
         series1.hover().labels(false)
 
 
-
-
         cartesian.legend().enabled(false)
         cartesian.legend().fontSize(13.0)
         cartesian.legend().padding(0.0, 0.0, 10.0, 0.0)
@@ -89,16 +106,18 @@ class BarCharActivity : AppCompatActivity() {
         binding.acvGrafica.setChart(cartesian)
     }
 
-    fun getDemoPoints(): MutableList<DataEntry> {
-        val list = arrayListOf<DataEntry>()
-
-        Control.getHistoric().let { controles ->
-            if (controles.count() > 0) {
-                for (item in controles) {
-                    list.add(ValueDataEntry(item.fechaInicio?.customFormat("dd/MM"), item.sangre))
-                }
-            }
+    private fun subscribeUI() {
+        viewModel.controlList.observe(this) { list ->
+            prepareGraphSettings(list)
+            Log.e("","")
         }
-        return list
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        buildDependencies()
+        viewModel = buildViewModel()
+        setUpUI()
+        subscribeUI()
     }
 }

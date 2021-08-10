@@ -1,5 +1,6 @@
 package com.juan.prohealth.repository
 
+import com.anychart.chart.common.dataentry.DataEntry
 import com.juan.prohealth.database.room.Control
 import com.juan.prohealth.source.IControlLocalDataSource
 
@@ -31,5 +32,9 @@ class ControlRepository(private val iControlLocalDataSource: IControlLocalDataSo
 
     suspend fun checkIfHasPendingControlToday(isPending: Int): Boolean {
         return iControlLocalDataSource.checkPendingControlToday(isPending)
+    }
+
+    suspend fun getControlListGraph(): List<Control> {
+        return iControlLocalDataSource.getControlListGraph()
     }
 }
