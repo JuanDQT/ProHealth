@@ -4,14 +4,15 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:paddingLeft="25dp"
-    android:paddingRight="25dp"
+
     android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/frame_initial"
         android:layout_width="match_parent"
         android:orientation="vertical"
+        android:paddingLeft="25dp"
+        android:paddingRight="25dp"
         android:layout_height="wrap_content">
         <TextView
             android:layout_width="match_parent"
@@ -149,7 +150,7 @@
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:layout_marginTop="10dp"
-            android:weightSum="100"
+            android:weightSum="80"
             android:orientation="horizontal"
             android:layout_gravity="center"
             android:gravity="center"
@@ -157,8 +158,9 @@
 
             <LinearLayout
                 android:tag="l0"
+                android:visibility="gone"
                 android:layout_width="0dp"
-                android:layout_weight="25"
+                android:layout_weight="10"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
@@ -170,21 +172,21 @@
                     android:layout_height="wrap_content" />
                 <ImageView
                     android:tag="i0"
-                    android:layout_height="match_parent"
-                    android:layout_width="match_parent"
-                    android:scaleType="fitXY"
+                    android:scaleType="centerCrop"
+                    android:layout_height="40dp"
+                    android:layout_width="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:layout_gravity="center_horizontal"/>
+                    android:layout_gravity="center_horizontal"
+                    />
 
             </LinearLayout>
 
             <LinearLayout
                 android:tag="l1"
+                android:visibility="gone"
                 android:layout_width="0dp"
-                android:layout_weight="25"
+                android:layout_weight="10"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
                 android:orientation="vertical">
 
                 <TextView
@@ -195,9 +197,8 @@
                     android:layout_height="wrap_content" />
                 <ImageView
                     android:tag="i1"
-                    android:layout_height="match_parent"
-                    android:layout_width="match_parent"
-                    android:scaleType="fitXY"
+                    android:layout_height="40dp"
+                    android:layout_width="wrap_content"
                     android:layout_marginTop="5dp"
                     android:layout_gravity="center_horizontal"/>
 
@@ -205,8 +206,9 @@
 
             <LinearLayout
                 android:tag="l2"
+                android:visibility="gone"
                 android:layout_width="0dp"
-                android:layout_weight="25"
+                android:layout_weight="10"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
@@ -218,30 +220,125 @@
                     android:layout_height="wrap_content" />
                 <ImageView
                     android:tag="i2"
-                    android:layout_height="match_parent"
-                    android:layout_width="match_parent"
-                    android:scaleType="fitXY"
+                    android:layout_height="40dp"
+                    android:layout_width="wrap_content"
                     android:layout_marginTop="5dp"
                     android:layout_gravity="center_horizontal" />
 
             </LinearLayout>
+            <LinearLayout
+                android:tag="l3"
+                android:visibility="gone"
+                android:layout_width="0dp"
+                android:layout_weight="10"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:text="33"
+                    android:tag="t3"
+                    android:textAlignment="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+                <ImageView
+                    android:tag="i3"
+                    android:layout_height="40dp"
+                    android:layout_width="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_gravity="center_horizontal"/>
+
+            </LinearLayout>
+            <LinearLayout
+                android:tag="l4"
+                android:visibility="gone"
+                android:layout_width="0dp"
+                android:layout_weight="10"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:text="33"
+                    android:tag="t4"
+                    android:textAlignment="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+                <ImageView
+                    android:tag="i4"
+                    android:layout_height="40dp"
+                    android:layout_width="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_gravity="center_horizontal" />
+
+            </LinearLayout>
+            <LinearLayout
+                android:tag="l5"
+                android:visibility="gone"
+                android:layout_width="0dp"
+                android:layout_weight="10"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:text="33"
+                    android:tag="t5"
+                    android:textAlignment="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+                <ImageView
+                    android:tag="i5"
+                    android:layout_height="40dp"
+                    android:layout_width="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_gravity="center_horizontal" />
+
+            </LinearLayout>
+            <LinearLayout
+                android:tag="l6"
+                android:visibility="gone"
+                android:layout_width="0dp"
+                android:layout_weight="10"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:text="33"
+                    android:tag="t6"
+                    android:textAlignment="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <ImageView
+                    android:layout_height="40dp"
+                    android:layout_width="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_gravity="center_horizontal"
+                    android:tag="i6" />
+
+            </LinearLayout>
+
+
         </LinearLayout>
 
-        <androidx.appcompat.widget.AppCompatCheckBox
-            android:id="@+id/cb_mails"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="@string/enviar_email" />
-
-        <Button
-            android:layout_gravity="end"
-            android:id="@+id/btn_finish"
-            android:layout_width="wrap_content"
-            android:background="@android:color/transparent"
-            android:text="@string/button_planificar"
-            android:paddingBottom="5dp"
-            android:layout_height="wrap_content"/>
-
+            android:paddingLeft="25dp"
+            android:orientation="vertical"
+            android:paddingRight="25dp">
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/cb_mails"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/enviar_email" />
+            <Button
+                android:layout_gravity="end"
+                android:id="@+id/btn_finish"
+                android:layout_width="wrap_content"
+                android:background="@android:color/transparent"
+                android:text="@string/button_planificar"
+                android:paddingBottom="5dp"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

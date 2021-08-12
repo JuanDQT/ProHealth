@@ -33,7 +33,7 @@
 <!--Layout ad_planificacion-->
     <string name="ultimo_INR">Último INR</string>
     <string name="inr_hoy">INR Hoy</string>
-    <string name="tu_dosis">Tu dosis los próximos 3 dias:</string>
+    <string name="tu_dosis">Tu dosis:</string>
     <string name="alerta">Alerta</string>
     <string name="validando">Validando</string>
     <string name="error_verificacion">Verificación de registro fallido. Es necesario una conexión a internet.</string>

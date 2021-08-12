@@ -208,7 +208,16 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             }
 
 
-            for (x in 0 until 3) {
+            for (x in 0 until 7) {
+                val layout = view.findViewWithTag<LinearLayout>("l${x}")
+
+                if (x >= dataNiveles.size) {
+                    layout.visibility = View.GONE
+                    continue
+                }
+
+                layout.visibility = View.VISIBLE
+
                 // sobrescribimos valor
                 val textView = view.findViewWithTag<TextView>("t${x}")
                 textView.text = if (dataNiveles[x].isNullOrEmpty()) "No toca" else dataNiveles[x]
@@ -218,25 +227,22 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                     val imageView = view.findViewWithTag<ImageView>("i${x}")
                     imageView.setBackgroundResource(AppContext.getImageNameByJSON(dataNiveles[x]))
                 }
+            }
+            val btnFinish = view.findViewById<Button>(R.id.btn_finish)
 
-                val btnFinish = view.findViewById<Button>(R.id.btn_finish)
-
-                btnFinish.setOnClickListener {
-                    viewModel.updateUserData(
-                        irnNew.text.toString().toFloat(),
-                        nivelyDias["nivel"].toString().toInt(),
-                        dataNiveles.toTypedArray(),
-                        Control()
-                    )
-                    // TODO: Recoge los valroes para mostrarlo en un ALERT. Implemendado guardado en variable observable y recogido
-                    // MyWorkManager.setWorkers(controlListActive)
-                    if (btnMails.isChecked) {
-                        sendPlanningEmail()
-                    }
-                    inrAlertDialog.cancel()
-
-
+            btnFinish.setOnClickListener {
+                viewModel.updateUserData(
+                    irnNew.text.toString().toFloat(),
+                    nivelyDias["nivel"].toString().toInt(),
+                    dataNiveles.toTypedArray(),
+                    Control()
+                )
+                // TODO: Recoge los valroes para mostrarlo en un ALERT. Implemendado guardado en variable observable y recogido
+                // MyWorkManager.setWorkers(controlListActive)
+                if (btnMails.isChecked) {
+                    sendPlanningEmail()
                 }
+                inrAlertDialog.cancel()
             }
         }
 
