@@ -1,5 +1,6 @@
 package com.juan.prohealth.database.room
 
+import com.anychart.chart.common.dataentry.DataEntry
 import com.juan.prohealth.source.IControlLocalDataSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -60,6 +61,12 @@ class RoomControlDataSource(var database: MyDatabase) : IControlLocalDataSource 
     override suspend fun checkPendingControlToday(isPending: Int): Boolean {
         return withContext(Dispatchers.IO) {
             controlDao.getNumberControlTodayWithSQuery(isPending) > 0
+        }
+    }
+
+    override suspend fun getControlListGraph(): List<Control> {
+        return withContext(Dispatchers.IO) {
+            controlDao.getControlListGraph()
         }
     }
 }

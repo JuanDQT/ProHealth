@@ -2,27 +2,57 @@ package com.juan.prohealth
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.anychart.AnyChart
 import com.anychart.chart.common.dataentry.DataEntry
-import com.anychart.chart.common.dataentry.ValueDataEntry
 import com.anychart.data.Set
 import com.anychart.enums.Anchor
 import com.anychart.enums.MarkerType
 import com.anychart.enums.TooltipPositionMode
 import com.anychart.graphics.vector.Stroke
-import com.juan.prohealth.database.Control
-import com.juan.prohealth.databinding.ActivityBarCharBinding
-import com.juan.prohealth.ui.common.customFormat
+import com.juan.prohealth.database.room.MyDatabase
+import com.juan.prohealth.database.room.RoomControlDataSource
+import com.juan.prohealth.databinding.ActivityGraphBinding
+import com.juan.prohealth.repository.ControlRepository
+import com.juan.prohealth.ui.GraphViewModel
 
-class BarCharActivity : AppCompatActivity() {
+class GraphActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityBarCharBinding
+    private lateinit var binding: ActivityGraphBinding
+    private lateinit var viewModel: GraphViewModel
+    private lateinit var controlRepository: ControlRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityBarCharBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        buildDependencies()
+        viewModel = buildViewModel()
+        setUpUI()
+        subscribeUI()
+    }
 
+    private fun buildDependencies() {
+        val database = MyDatabase.getDatabase(this)
+        val controlLocal = RoomControlDataSource(database)
+        controlRepository = ControlRepository(controlLocal)
+    }
+
+    private fun buildViewModel(): GraphViewModel {
+        val factory = GraphViewModelFactory(controlRepository)
+        return ViewModelProvider(this, factory).get(GraphViewModel::class.java)
+    }
+
+    private fun setUpUI() {
+        binding = ActivityGraphBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+    }
+
+    private fun subscribeUI() {
+        viewModel.controlList.observe(this) { list ->
+            prepareGraphSettings(list)
+        }
+    }
+
+    private fun prepareGraphSettings(seriesData: MutableList<DataEntry>) {
         binding.acvGrafica.setProgressBar(findViewById(R.id.progress_bar))
 
         val cartesian = AnyChart.line()
@@ -33,7 +63,7 @@ class BarCharActivity : AppCompatActivity() {
 
         cartesian.crosshair().enabled(true)
         cartesian.crosshair()
-            .yLabel(true) // TODO ystroke
+            .yLabel(true)
             .yStroke(
                 null as Stroke?,
                 null,
@@ -52,8 +82,6 @@ class BarCharActivity : AppCompatActivity() {
         cartesian.xAxis(0).title(getString(R.string.fecha))
         cartesian.yGrid(true)
 
-
-        val seriesData: MutableList<DataEntry> = getDemoPoints()
         val color = resources.getString(R.color.colorPrimary).replace("ff", "").toUpperCase()
 
         val set = Set.instantiate()
@@ -72,14 +100,12 @@ class BarCharActivity : AppCompatActivity() {
             .offsetX(5.0)
             .offsetY(5.0).enabled(false)
         series1.color(color)
-        // TODO; hacer la linea mas gruesa...
+        //hacer la linea mas gruesa...
         series1.stroke("7 $color").enabled(true)
         series1.color(color).markers().enabled(true)
             .type(MarkerType.CIRCLE)
             .size(9)
         series1.hover().labels(false)
-
-
 
 
         cartesian.legend().enabled(false)
@@ -89,16 +115,4 @@ class BarCharActivity : AppCompatActivity() {
         binding.acvGrafica.setChart(cartesian)
     }
 
-    fun getDemoPoints(): MutableList<DataEntry> {
-        val list = arrayListOf<DataEntry>()
-
-        Control.getHistoric().let { controles ->
-            if (controles.count() > 0) {
-                for (item in controles) {
-                    list.add(ValueDataEntry(item.fechaInicio?.customFormat("dd/MM"), item.sangre))
-                }
-            }
-        }
-        return list
-    }
 }

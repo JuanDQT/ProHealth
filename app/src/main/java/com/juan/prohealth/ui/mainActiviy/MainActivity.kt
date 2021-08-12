@@ -16,7 +16,6 @@ import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import com.andrognito.flashbar.Flashbar
 import com.google.android.material.chip.Chip
@@ -31,7 +30,6 @@ import com.juan.prohealth.database.room.MyDatabase
 import com.juan.prohealth.database.room.RoomControlDataSource
 import com.juan.prohealth.database.room.RoomUserDataSource
 import com.juan.prohealth.databinding.ActivityMainBinding
-import com.juan.prohealth.databinding.CustomButtonBinding
 import com.juan.prohealth.repository.ControlRepository
 import com.juan.prohealth.repository.UserRepository
 import com.juan.prohealth.repository.ValidationRepository
@@ -319,7 +317,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun navigateToStatsGraphic() {
-        startActivity(Intent(this, BarCharActivity::class.java))
+        startActivity(Intent(this, GraphActivity::class.java))
     }
 
     private fun showNearPharmaciesWithGmapsApp() {

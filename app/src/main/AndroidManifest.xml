@@ -47,7 +47,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/SplashTheme" />
         <activity
-            android:name=".BarCharActivity"
+            android:name=".GraphActivity"
             android:screenOrientation="portrait"
             android:theme="@style/SplashTheme" />
         <activity
