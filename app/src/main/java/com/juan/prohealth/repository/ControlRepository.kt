@@ -1,5 +1,6 @@
 package com.juan.prohealth.repository
 
+import com.anychart.chart.common.dataentry.DataEntry
 import com.juan.prohealth.database.room.Control
 import com.juan.prohealth.source.IControlLocalDataSource
 
@@ -9,8 +10,8 @@ class ControlRepository(private val iControlLocalDataSource: IControlLocalDataSo
         return iControlLocalDataSource.getActiveControlList()
     }
 
-    suspend fun deleteLastControlGroup(idUser: Int) {
-        iControlLocalDataSource.deleteLastControlGroup(idUser)
+    suspend fun deleteLastControlGroup() {
+        iControlLocalDataSource.deleteLastControlGroup()
     }
 
     suspend fun insert(control: Control) {
@@ -37,4 +38,7 @@ class ControlRepository(private val iControlLocalDataSource: IControlLocalDataSo
         return iControlLocalDataSource.getLastBloodValues(max)
     }
 
+    suspend fun getControlListGraph(): List<Control> {
+        return iControlLocalDataSource.getControlListGraph()
+    }
 }

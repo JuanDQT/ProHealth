@@ -22,6 +22,7 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.gtomato.android.ui.transformer.FlatMerryGoRoundTransformer
 import com.juan.prohealth.*
+import com.juan.prohealth.custom.CustomButton
 import com.juan.prohealth.data.local.SharedPreference
 import com.juan.prohealth.data.local.StorageValidationDataSource
 import com.juan.prohealth.database.room.Control
@@ -33,7 +34,10 @@ import com.juan.prohealth.repository.ControlRepository
 import com.juan.prohealth.repository.UserRepository
 import com.juan.prohealth.repository.ValidationRepository
 import com.juan.prohealth.ui.adapters.DoseAdapter
+import com.juan.prohealth.ui.ajustesActivity.AjustesActivity
 import com.juan.prohealth.ui.common.*
+import kotlinx.android.synthetic.main.ad_planificacion.view.*
+import kotlinx.android.synthetic.main.custom_button.view.*
 import java.util.*
 import kotlin.collections.set
 import kotlin.concurrent.schedule
@@ -72,7 +76,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         adapter = DoseAdapter(emptyList())
-        binding.btnBorrar.setOnClickListener(this)
         binding.btnINR.setOnClickListener(this)
         binding.btnGmap.setOnClickListener(this)
         binding.btnEstadisticas.setOnClickListener(this)
@@ -102,7 +105,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             .enableSwipeToDismiss()
             .backgroundColorRes(R.color.colorPrimaryDark)
             .positiveActionText("Si")
-            .negativeActionText("Hoy no tomare")
+            .negativeActionText("Hoy no tomaré")
             .positiveActionTextColorRes(R.color.colorAccent)
             .negativeActionTextColorRes(R.color.colorAccent)
             .positiveActionTapListener(object : Flashbar.OnActionTapListener {
@@ -258,6 +261,30 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         return ad
     }
 
+    private fun reorderButtonList() {
+        val allButtons = arrayListOf<CustomButton>()
+
+        for (i in 0 until binding.llOpciones.childCount) {
+            val button = binding.llOpciones.getChildAt(i)
+
+            if(button is CustomButton && button.visibility == View.VISIBLE)
+                allButtons.add(button)
+        }
+
+        for (i in 0 until allButtons.size) {
+            val button = allButtons[i]
+
+            if (i % 2 == 0) {
+                button.containIconRight.visibility = View.GONE
+                button.containIcon.visibility = View.VISIBLE
+            } else {
+                button.containIcon.visibility = View.GONE
+                button.containIconRight.visibility = View.VISIBLE
+            }
+            button.menuText.textAlignment = View.TEXT_ALIGNMENT_CENTER
+        }
+    }
+
     private fun buildViewModel(): MainViewModel {
         val factory = MainViewModelFactory(validationRepository, controlRepository, userRepository)
         return ViewModelProvider(this, factory).get(MainViewModel::class.java)
@@ -284,7 +311,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             binding.tvDosisValor.text = "${value}"
         }
 
-        viewModel.userResourceImage.observe(this) {resourceValue->
+        viewModel.userResourceImage.observe(this) { resourceValue ->
             userResourceImage = resourceValue
         }
 
@@ -295,7 +322,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
         viewModel.checkPendingControls.observe(this, { isPendingControls ->
             if (isPendingControls) flashBar.show()
-            else Log.i("IsPendingControls","Doesn't have pending controls")
+            else Log.i("IsPendingControls", "Doesn't have pending controls")
         })
         viewModel.currentActiveControls.observe(this, { activeControls ->
             if (activeControls.isNullOrEmpty()) {
@@ -303,18 +330,21 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 binding.carousel.visibility = View.GONE
                 binding.ivArrowLeft.visibility = View.GONE
                 binding.ivArrowRight.visibility = View.GONE
-                binding.btnBorrar.visibility = View.GONE
-                binding.btnINR.isEnabled = true
+                binding.btnINR.visibility = View.VISIBLE
+
             } else {
-                binding.btnINR.isEnabled = false
+                binding.btnINR.visibility = View.GONE
                 binding.ivArrowLeft.visibility = View.VISIBLE
                 binding.ivArrowRight.visibility = View.VISIBLE
                 binding.carousel.visibility = View.VISIBLE
-                binding.btnBorrar.visibility = View.VISIBLE
                 adapter.setItems(activeControls)
                 binding.carousel.adapter = adapter
+                val position = activeControls.indexOf(activeControls.filter { f -> f.executionDate == Date().clearTime() }.first())
+                binding.carousel.smoothScrollToPosition(position)
                 Log.i("ActiveControls", "Show Widget")
             }
+            reorderButtonList()
+
         })
     }
 
@@ -327,7 +357,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     override fun onClick(view: View?) {
         view?.let {
             when (it.id) {
-                R.id.btnBorrar -> clickOnDeleteLastINRGroup()
                 R.id.btnINR -> inrAlertDialog.show()
                 R.id.btnGmap -> checkPermissionLocation()
                 R.id.btnEstadisticas -> navigateToStatsGraphic()
@@ -339,11 +368,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun clickOnDeleteLastINRGroup() {
         viewModel.deleteLastControlGroup()
-        viewModel.checkHasControlToday()
     }
 
     private fun navigateToStatsGraphic() {
-        startActivity(Intent(this, BarCharActivity::class.java))
+        startActivity(Intent(this, GraphActivity::class.java))
     }
 
     private fun showNearPharmaciesWithGmapsApp() {

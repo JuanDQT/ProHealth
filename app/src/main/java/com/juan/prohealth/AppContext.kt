@@ -33,6 +33,10 @@ class AppContext : Application() {
             return json
         }
 
+        fun getDateFormat(dateArray: Array<Int>): String {
+            return "${dateArray[0].toString().padStart(2, '0')}:${dateArray[1].toString().padStart(2, '0')}"
+        }
+
         /**
          * En esta funcion abarcamos las 3 posibles opciones para iterar correctamente
          * en caso de planificar dosis para 3, 4, y 7 dias. En caso de que haya algun

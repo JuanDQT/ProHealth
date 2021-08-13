@@ -1,6 +1,7 @@
 package com.juan.prohealth.database.room
 
 import androidx.room.*
+import com.anychart.chart.common.dataentry.DataEntry
 import java.util.*
 
 @Dao
@@ -15,8 +16,8 @@ interface ControlDao {
     @Query("SELECT * FROM control WHERE group_control = (SELECT group_control FROM control WHERE user_id = (SELECT id FROM user WHERE state_logging = 1) and (execution_date = (CAST(strftime('%s', date())  AS  int) * 1000)) order by id limit 1)" )
     suspend fun getActiveControlList(): List<Control>//Devuelve los controles PENDIENTES del ultimo grupo
 
-    @Query("DELETE FROM control WHERE group_control = (SELECT group_control FROM control WHERE user_id = :idUser order by id limit 1)")
-    suspend fun deleteLastControlsByGroup(idUser: Int)//Borra controles segun el group_control??
+    @Query("DELETE FROM control WHERE group_control = (SELECT max(group_control) FROM control WHERE user_id = (SELECT user_id FROM user WHERE state_logging = 1))")
+    suspend fun deleteLastControlsByGroup()
 
     @Query("SELECT distinct(blood) FROM control order by id desc limit :limit")
     suspend fun getLastBloodValues(limit: Int = 10): Array<Float>//No probado
@@ -35,4 +36,7 @@ interface ControlDao {
 
     @Query("SELECT * FROM control WHERE medicated = -1 and resource <> '0' and  (execution_date = (CAST(strftime('%s', date())  AS  int) * 1000)) AND user_id = (SELECT id FROM user WHERE state_logging = 1)")
     suspend fun getPendingControlToday(): Control
+
+    @Query("SELECT * FROM control WHERE user_id = (SELECT id FROM user WHERE state_logging = 1) group by group_control")
+    suspend fun getControlListGraph(): List<Control>
 }

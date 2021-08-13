@@ -39,6 +39,12 @@ class RoomUserDataSource(var database: MyDatabase) : IUserLocalDataSource {
         }
     }
 
+    override suspend fun updateUserSchedule(hour: Int, minute: Int) {
+        withContext(Dispatchers.IO) {
+            userDao.updateUserSchedule(hour, minute)
+        }
+    }
+
     override suspend fun getAll(): List<User> {
         return withContext(Dispatchers.IO) {
             userDao.getAll()

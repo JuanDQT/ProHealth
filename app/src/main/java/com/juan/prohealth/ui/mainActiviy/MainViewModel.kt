@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.juan.prohealth.MyWorkManager
 import com.juan.prohealth.database.room.Control
 import com.juan.prohealth.database.room.User
 import com.juan.prohealth.repository.ControlRepository
@@ -47,7 +48,7 @@ class MainViewModel(
     fun deleteLastControlGroup() {
         viewModelScope.launch {
             Log.i("BTN REBOOT INR","Se procede a borrar el ultimo grupo de control")
-            controlRepository.deleteLastControlGroup(userRepository.getIdCurrentUser())
+            controlRepository.deleteLastControlGroup()
         }
     }
 
@@ -124,20 +125,19 @@ class MainViewModel(
 
     fun updateCurrentControlStatus(isMedicated: Int) {
         viewModelScope.launch {
-            if (isMedicated == 1) {
-                val controlToday = controlRepository.getPendingControlToday()
-                controlToday.medicated = isMedicated
-                controlRepository.updateControl(controlToday)
-            }
+            val controlToday = controlRepository.getPendingControlToday()
+            controlToday.medicated = isMedicated
+            controlRepository.updateControl(controlToday)
         }
     }
-    
+
     fun getControlsToFillCarousel() {
         viewModelScope.launch {
             val user = userRepository.getCurrentUser()
             val activeControls = controlRepository.getActiveControlListByGroup()
             _currentActiveControls.value = activeControls
             updateInfoPanelUi(user)
+            MyWorkManager.setWorkers(activeControls, user.hourAlarm, user.minuteAlarm)
         }
     }
 }
