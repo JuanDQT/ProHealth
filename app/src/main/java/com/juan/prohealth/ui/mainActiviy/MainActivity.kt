@@ -2,7 +2,6 @@ package com.juan.prohealth.ui.mainActiviy
 
 import android.Manifest.permission.ACCESS_COARSE_LOCATION
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -36,11 +35,9 @@ import com.juan.prohealth.repository.ValidationRepository
 import com.juan.prohealth.ui.adapters.DoseAdapter
 import com.juan.prohealth.ui.ajustesActivity.AjustesActivity
 import com.juan.prohealth.ui.common.*
-import kotlinx.android.synthetic.main.ad_planificacion.view.*
 import kotlinx.android.synthetic.main.custom_button.view.*
 import java.util.*
 import kotlin.collections.set
-import kotlin.concurrent.schedule
 import com.juan.prohealth.database.Control as RealmControl
 
 
@@ -126,7 +123,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private fun instanceINRAlertDialog(): AlertDialog {
         val builder = AlertDialog.Builder(this)
         builder.setTitle(R.string.title_introducir)
-        val view: LinearLayout = layoutInflater.inflate(R.layout.ad_introducir_inr, null) as LinearLayout
+        val view: LinearLayout =
+            layoutInflater.inflate(R.layout.ad_introducir_inr, null) as LinearLayout
 
         val initialLayout = view.findViewById<LinearLayout>(R.id.frame_initial)
         val secondLayout = view.findViewById<LinearLayout>(R.id.frame_final)
@@ -240,8 +238,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                     dataNiveles.toTypedArray(),
                     Control()
                 )
-                // TODO: Recoge los valroes para mostrarlo en un ALERT. Implemendado guardado en variable observable y recogido
-                // MyWorkManager.setWorkers(controlListActive)
                 if (btnMails.isChecked) {
                     sendPlanningEmail()
                 }
@@ -267,7 +263,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         for (i in 0 until binding.llOpciones.childCount) {
             val button = binding.llOpciones.getChildAt(i)
 
-            if(button is CustomButton && button.visibility == View.VISIBLE)
+            if (button is CustomButton && button.visibility == View.VISIBLE)
                 allButtons.add(button)
         }
 
@@ -339,7 +335,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 binding.carousel.visibility = View.VISIBLE
                 adapter.setItems(activeControls)
                 binding.carousel.adapter = adapter
-                val position = activeControls.indexOf(activeControls.filter { f -> f.executionDate == Date().clearTime() }.first())
+                val position =
+                    activeControls.indexOf(activeControls.filter { f -> f.executionDate == Date().clearTime() }
+                        .first())
                 binding.carousel.smoothScrollToPosition(position)
                 Log.i("ActiveControls", "Show Widget")
             }
@@ -364,10 +362,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 R.id.btnAjustes -> startActivity(Intent(this, AjustesActivity::class.java))
             }
         }
-    }
-
-    private fun clickOnDeleteLastINRGroup() {
-        viewModel.deleteLastControlGroup()
     }
 
     private fun navigateToStatsGraphic() {

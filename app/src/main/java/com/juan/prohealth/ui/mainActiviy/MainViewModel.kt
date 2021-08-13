@@ -1,6 +1,5 @@
 package com.juan.prohealth.ui.mainActiviy
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -43,13 +42,6 @@ class MainViewModel(
 
     init {
         getLastBloodValues()
-    }
-
-    fun deleteLastControlGroup() {
-        viewModelScope.launch {
-            Log.i("BTN REBOOT INR","Se procede a borrar el ultimo grupo de control")
-            controlRepository.deleteLastControlGroup()
-        }
     }
 
     fun checkHasControlToday() {

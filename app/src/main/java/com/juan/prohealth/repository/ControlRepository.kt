@@ -1,6 +1,5 @@
 package com.juan.prohealth.repository
 
-import com.anychart.chart.common.dataentry.DataEntry
 import com.juan.prohealth.database.room.Control
 import com.juan.prohealth.source.IControlLocalDataSource
 
