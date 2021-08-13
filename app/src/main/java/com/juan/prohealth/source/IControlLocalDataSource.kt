@@ -7,7 +7,7 @@ import java.util.*
 interface IControlLocalDataSource {
     suspend fun getActiveControlList(): List<Control>
     suspend fun deleteLastControlGroup()
-    suspend fun getLastBloodValues(idUser: Int): Array<Float>
+    suspend fun getLastBloodValues(max: Int): Array<Float>
     suspend fun insert(control: Control)
     suspend fun getAllPendingControls(): List<Control>
     suspend fun updateControl(control: Control)

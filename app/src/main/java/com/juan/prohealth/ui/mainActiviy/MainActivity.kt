@@ -58,13 +58,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private val flashBar: Flashbar by lazy { instanceFlashBar() }
     private lateinit var userResourceImage: String
     private val inrAlertDialog: AlertDialog by lazy { instanceINRAlertDialog() }
-    private val planificationAlertDialog: AlertDialog by lazy { instancePlanningAlertDialog() }
 
-    private var bloodLastValues = emptyArray<Float>()
+    private var lastBloodValues = emptyArray<Float>()
     private var currentBloodValue = 0f
-    private var sangreString = ""
-    private var nivelString = ""
-    private var dataNiveles = emptyArray<String>()
 
     private val locationPermission = PermissionRequester(this, ACCESS_COARSE_LOCATION)
 
@@ -129,29 +125,29 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun instanceINRAlertDialog(): AlertDialog {
         val builder = AlertDialog.Builder(this)
-        builder.setTitle("Introducir")
-        builder.setMessage("Por favor, introduce un valor INR entre 1 y 7")
+        builder.setTitle(R.string.title_introducir)
+        val view: LinearLayout = layoutInflater.inflate(R.layout.ad_introducir_inr, null) as LinearLayout
 
-        var positiveButton: Button? = null
+        val initialLayout = view.findViewById<LinearLayout>(R.id.frame_initial)
+        val secondLayout = view.findViewById<LinearLayout>(R.id.frame_final)
 
-        val view: LinearLayout =
-            layoutInflater.inflate(R.layout.ad_introducir_inr, null) as LinearLayout
         val editText = view.findViewById<EditText>(R.id.etValor)
+        val btnAccept = view.findViewById<Button>(R.id.btn_accept)
 
         // Buscamos si hay historial..
 
-        if (bloodLastValues.count() > 0) {
+        if (lastBloodValues.count() > 0) {
             val layoutHistorico = view.findViewById<LinearLayout>(R.id.ll_historico)
             layoutHistorico.visibility = View.VISIBLE
             val chipGroup = view.findViewById<ChipGroup>(R.id.chipGroup)
 
-            for (x in 0 until bloodLastValues.count()) {
+            for (x in 0 until lastBloodValues.count()) {
                 val chip = getLayoutInflater().inflate(
                     R.layout.layout_chip_choice,
                     chipGroup,
                     false
                 ) as Chip
-                chip.text = "${bloodLastValues[x]}"
+                chip.text = "${lastBloodValues[x]}"
                 chipGroup.addView(chip)
 
                 chip.setOnClickListener {
@@ -162,13 +158,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
         editText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
-                positiveButton?.let { button ->
-                    AppContext.validarInputTextSangre(editText.text.toString())?.let {
-                        button.isEnabled = true
-                        return
-                    }
-                    button.isEnabled = false
+                AppContext.validarInputTextSangre(editText.text.toString())?.let {
+                    btnAccept.isEnabled = true
+                    return
                 }
+                btnAccept.isEnabled = false
             }
 
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -177,10 +171,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
         })
-        builder.setView(view)
 
-        builder.setPositiveButton("Aceptar", DialogInterface.OnClickListener { dialogInterface, i ->
-            this.hideKeyboard()
+        btnAccept.setOnClickListener {
             val valorSangreNumerico = editText.text.toString().replace(",", ".").toFloat()
             val nomFichero = getFicheroCorrespondiente(valorSangreNumerico)
 
@@ -188,7 +180,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
             if (nivelyDias["nivel"]!! < 1) {
                 alert(message = "Consulte los datos con su MÉDICO")
-                return@OnClickListener
             }
             val dataNiveles = AppContext.getNivelFromFichero(
                 nomFichero,
@@ -196,19 +187,77 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 nivelyDias["dias"].toString()
             )
 
-            Timer("SettingUp", false).schedule(500) {
-                runOnUiThread {
-                    sangreString = "${AppContext.validarInputTextSangre(editText.text.toString())}"
-                    nivelString = nivelyDias["nivel"].toString()
-                    this@MainActivity.dataNiveles = dataNiveles.toTypedArray()
-                    planificationAlertDialog.show()
+            // levantamos segunda vista
+            btnAccept.text = getString(R.string.button_planificar)
+            initialLayout.visibility = View.GONE
+            secondLayout.visibility = View.VISIBLE
+            this.hideKeyboard()
+
+            val irnActual = view.findViewById<TextView>(R.id.tvIRN)
+            val irnNew = view.findViewById<TextView>(R.id.tvIRNNew)
+            val btnMails = view.findViewById<CheckBox>(R.id.cb_mails)
+
+            irnActual.text = "${currentBloodValue}"
+            irnNew.text = "${AppContext.validarInputTextSangre(editText.text.toString())}"
+
+            val irnText = view.findViewById<TextView>(R.id.tvIRN_text)
+            val frameIRN = view.findViewById<FrameLayout>(R.id.frame_IRN)
+            if (currentBloodValue == 0f) {
+                irnText.visibility = View.GONE
+                frameIRN.visibility = View.GONE
+            } else {
+                irnText.visibility = View.VISIBLE
+                frameIRN.visibility = View.VISIBLE
+            }
+
+
+            for (x in 0 until 7) {
+                val layout = view.findViewWithTag<LinearLayout>("l${x}")
+
+                if (x >= dataNiveles.size) {
+                    layout.visibility = View.GONE
+                    continue
+                }
+
+                layout.visibility = View.VISIBLE
+
+                // sobrescribimos valor
+                val textView = view.findViewWithTag<TextView>("t${x}")
+                textView.text = if (dataNiveles[x].isNullOrEmpty()) "No toca" else dataNiveles[x]
+
+                // sobreescribimos imagen
+                if (!dataNiveles[x].isNullOrEmpty()) {
+                    val imageView = view.findViewWithTag<ImageView>("i${x}")
+                    imageView.setBackgroundResource(AppContext.getImageNameByJSON(dataNiveles[x]))
                 }
             }
-        })
+            val btnFinish = view.findViewById<Button>(R.id.btn_finish)
+
+            btnFinish.setOnClickListener {
+                viewModel.updateUserData(
+                    irnNew.text.toString().toFloat(),
+                    nivelyDias["nivel"].toString().toInt(),
+                    dataNiveles.toTypedArray(),
+                    Control()
+                )
+                // TODO: Recoge los valroes para mostrarlo en un ALERT. Implemendado guardado en variable observable y recogido
+                // MyWorkManager.setWorkers(controlListActive)
+                if (btnMails.isChecked) {
+                    sendPlanningEmail()
+                }
+                inrAlertDialog.cancel()
+            }
+        }
+
+        builder.setView(view)
 
         val ad = builder.create()
-        positiveButton = ad.getButton(AlertDialog.BUTTON_POSITIVE)
-        positiveButton?.isEnabled = false
+
+        ad.setOnCancelListener {
+            initialLayout.visibility = View.VISIBLE
+            secondLayout.visibility = View.GONE
+            editText.text = null
+        }
         return ad
     }
 
@@ -264,6 +313,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
         viewModel.userResourceImage.observe(this) { resourceValue ->
             userResourceImage = resourceValue
+        }
+
+        // todos
+        viewModel.lastBloodValues.observe(this) { values ->
+            lastBloodValues = values
         }
 
         viewModel.checkPendingControls.observe(this, { isPendingControls ->
@@ -332,75 +386,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         } else {
             toast("Do not have install Google Maps application")
         }
-    }
-
-    /**
-     * Cuando introducimos una NUEVA lectura de Sangre aqui recalculamos los dias de control ( 4 o 7 )
-     * validamos el campo nivel de sangre que recibimos y aplicamos los calculos
-     * para seleccionar los valores de salida e imprimirlos
-     */
-
-    // antes: doAskPlanificacion
-    private fun instancePlanningAlertDialog(): AlertDialog {
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("Informacion")
-        //val planingBinding = AdPlanificacionBinding.inflate(LayoutInflater.from(this))
-        val view = layoutInflater.inflate(R.layout.ad_planificacion, null)
-        val currentINR = view.findViewById<TextView>(R.id.tvIRN)
-        val newINR = view.findViewById<TextView>(R.id.tvIRNNew)
-        val btnMails = view.findViewById<CheckBox>(R.id.cb_mails)
-
-        currentINR.text = "${currentBloodValue}"
-        newINR.text = sangreString
-
-        if (currentBloodValue == 0f) {
-            val irnText = view.findViewById<TextView>(R.id.tvIRN_text)
-            val frameIRN = view.findViewById<FrameLayout>(R.id.frame_IRN)
-            irnText.visibility = View.GONE
-            frameIRN.visibility = View.GONE
-        }
-
-
-        for (x in 0 until 7) {
-            val layout = view.findViewWithTag<LinearLayout>("l${x}")
-
-            if (x >= dataNiveles.size) {
-                layout.visibility = View.GONE
-                continue
-            }
-
-            layout.visibility = View.VISIBLE
-
-            // sobrescribimos valor
-            val textView = view.findViewWithTag<TextView>("t${x}")
-            textView.text = if (dataNiveles[x].isNullOrEmpty()) "No toca" else dataNiveles[x]
-
-            // sobreescribimos imagen
-            if (!dataNiveles[x].isNullOrEmpty()) {
-                val imageView = view.findViewWithTag<ImageView>("i${x}")
-                imageView.setBackgroundResource(AppContext.getImageNameByJSON(dataNiveles[x]))
-            }
-
-        }
-        builder.setView(view)
-
-        builder.setPositiveButton(
-            "Planificar",
-            DialogInterface.OnClickListener { _, _ ->
-                // Actualizamos la sangre y nivel
-                viewModel.updateUserData(
-                    sangreString.toFloat(),
-                    nivelString.toInt(),
-                    dataNiveles,
-                    Control()
-                )
-                // TODO: Recoge los valroes para mostrarlo en un ALERT. Implemendado guardado en variable observable y recogido
-                if (btnMails.isChecked) {
-                    sendPlanningEmail()
-                }
-            })
-
-        return builder.create()
     }
 
     // TODO: Recoge los valores para mostrarlo en un ALERT
