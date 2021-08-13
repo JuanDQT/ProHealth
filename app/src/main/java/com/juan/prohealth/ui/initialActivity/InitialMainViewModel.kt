@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.juan.prohealth.database.room.User
 import com.juan.prohealth.repository.UserRepository
 import com.juan.prohealth.repository.ValidationRepository
 import kotlinx.coroutines.launch
@@ -16,21 +17,18 @@ class InitialMainViewModel(
     private var _isStored = MutableLiveData<Boolean>()
     val isStored: LiveData<Boolean> get() = _isStored
 
-    fun isInSharedPreferences(doseLevelName: Array<String>): Boolean {
-        return if (validationRepository.checkIfExist(doseLevelName)) true
-        else return false
+    private var _currentUser = MutableLiveData<User?>()
+    val currentUser: LiveData<User?> get() = _currentUser
+
+    init {
+        viewModelScope.launch {
+            val data = userRepository.getUserSuccesfulCreated()
+            _currentUser.postValue(data)
+        }
     }
 
     fun setFinalDate(epochDate: Long) {
         validationRepository.setFinalTestDate(epochDate)
-    }
-
-    fun addString(key: String, value: String) {
-        validationRepository.addString(key, value)
-    }
-
-    fun isInSharedPreferencesNew() {
-        _isStored.value = validationRepository.checkIfExist(arrayOf("nivel"))
     }
 
     fun saveFirstDoseLevel(doseLevel: Int) {

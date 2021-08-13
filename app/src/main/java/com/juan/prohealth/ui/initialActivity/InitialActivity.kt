@@ -23,7 +23,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class InitialActivity : AppCompatActivity() {
-
     private lateinit var validationRepository: ValidationRepository
     private lateinit var userRepository: UserRepository
     private lateinit var viewModel: InitialMainViewModel
@@ -35,29 +34,29 @@ class InitialActivity : AppCompatActivity() {
         viewModel = buildViewModel()
         binding = ActivityInitialBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        // Comprobamos que ya esta guardado
-        if (viewModel.isInSharedPreferences(arrayOf(DOSE_LEVEL_TEXT))) {
-            val intent = Intent(this, MainActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NO_HISTORY
-            startActivity(intent)
-            return
-        }
+        subscribeUI()
 
         binding.btnSaveDose.setOnClickListener { setFirstDoseLevel() }
+    }
+
+    private fun subscribeUI() {
+        // Verificamos si hay un usuario logeado...
+        viewModel.currentUser.observe(this) { user ->
+            user?.let {
+                val intent = Intent(this, MainActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NO_HISTORY
+                startActivity(intent)
+            }
+        }
+
     }
 
     private fun setFirstDoseLevel() {
         val doseLevel = binding.etNivel.text
 
-        viewModel.addString(
-            DOSE_LEVEL_TEXT,
-            doseLevel.toString()
-        )
-
         viewModel.saveFirstDoseLevel(doseLevel.toString().toInt())
 
-        val intent =
-            Intent(this@InitialActivity, MainActivity::class.java)
+        val intent = Intent(this@InitialActivity, MainActivity::class.java)
         startActivity(intent)
     }
 
@@ -86,16 +85,6 @@ class InitialActivity : AppCompatActivity() {
                             val value = finalDate.clearTime().time
 
                             viewModel.setFinalDate(value)
-                            //MySharedPreferences.shared.setFechaFinPrueba(value)
-
-                            viewModel.addString(
-                                DOSE_LEVEL_TEXT,
-                                binding.etNivel.text.toString()
-                            )
-                            /*       MySharedPreferences.shared.addString(
-                                            "nivel",
-                                            binding.etNivel.text.toString()
-                                        )*/
                             val intent =
                                 Intent(this@InitialActivity, MainActivity::class.java)
                             startActivity(intent)
@@ -129,14 +118,5 @@ class InitialActivity : AppCompatActivity() {
         val database = MyDatabase.getDatabase(this)
         val userLocal = RoomUserDataSource(database)
         userRepository = UserRepository(userLocal)
-    }
-
-    private fun isExistInSharedPreferencesOld(): Boolean {
-        // Comprobamos que los valores existan en el sharedPreferences.
-        return MySharedPreferences.shared.exists(arrayOf(DOSE_LEVEL_TEXT))
-    }
-
-    companion object {
-        private const val DOSE_LEVEL_TEXT: String = "nivel"
     }
 }

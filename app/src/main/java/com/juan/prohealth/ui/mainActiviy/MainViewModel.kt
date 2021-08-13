@@ -42,6 +42,13 @@ class MainViewModel(
 
     init {
         getLastBloodValues()
+        getDoseValue()
+    }
+
+    fun getDoseValue() {
+        viewModelScope.launch {
+            _doseValue.postValue(userRepository.getDoseValue())
+        }
     }
 
     fun checkHasControlToday() {
