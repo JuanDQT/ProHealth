@@ -40,4 +40,8 @@ class ControlRepository(private val iControlLocalDataSource: IControlLocalDataSo
     suspend fun getControlListGraph(): List<Control> {
         return iControlLocalDataSource.getControlListGraph()
     }
+
+    suspend fun getLastControl(): Control? {
+        return iControlLocalDataSource.getLastControl()
+    }
 }

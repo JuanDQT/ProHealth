@@ -13,9 +13,6 @@ class InitialMainViewModel(
     private val userRepository: UserRepository
 ) : ViewModel() {
 
-    private var _isStored = MutableLiveData<Boolean>()
-    val isStored: LiveData<Boolean> get() = _isStored
-
     fun isInSharedPreferences(doseLevelName: Array<String>): Boolean {
         return if (validationRepository.checkIfExist(doseLevelName)) true
         else return false
@@ -29,14 +26,11 @@ class InitialMainViewModel(
         validationRepository.addString(key, value)
     }
 
-    fun isInSharedPreferencesNew() {
-        _isStored.value = validationRepository.checkIfExist(arrayOf("nivel"))
-    }
-
     fun saveFirstDoseLevel(doseLevel: Int) {
         viewModelScope.launch {
             val currentUser = userRepository.getCurrentUser()
             currentUser.level = doseLevel
+            currentUser.initialLevel = doseLevel
             userRepository.updateUser(currentUser)
         }
     }

@@ -36,6 +36,24 @@ class AjustesViewModel(
             Log.i("BTN REBOOT INR","Se procede a borrar el ultimo grupo de control")
             _currentActiveControls.value = emptyList()
             controlRepository.deleteLastControlGroup()
+            updateUser()
+        }
+    }
+
+    private fun updateUser() {
+        viewModelScope.launch {
+            val currentUser = userRepository.getCurrentUser()
+
+            val lastControlUser = controlRepository.getLastControl()
+            lastControlUser?.let {
+                currentUser.blood = it.blood
+                currentUser.level = it.doseLevel
+            }?: run {
+                currentUser.level = currentUser.initialLevel
+                currentUser.blood = 0f
+            }
+
+            userRepository.updateUser(currentUser)
         }
     }
 
@@ -60,5 +78,4 @@ class AjustesViewModel(
             _currentActiveControls.value = activeControls
         }
     }
-
 }

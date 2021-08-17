@@ -15,6 +15,8 @@ data class User(
     var name: String = "",
     var blood: Float = 0f,
     var level: Int = 0,
+    @ColumnInfo(name="initial_level")
+    var initialLevel: Int = 0,
     @ColumnInfo(name = "hour_alarm")
     var hourAlarm: Int = 7,
     @ColumnInfo(name = "minute_alarm")

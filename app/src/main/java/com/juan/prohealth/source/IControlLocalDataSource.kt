@@ -15,4 +15,5 @@ interface IControlLocalDataSource {
     suspend fun getPendingControlToday():Control
     suspend fun checkPendingControlToday(isPending: Int):Boolean
     suspend fun getControlListGraph(): List<Control>
+    suspend fun getLastControl(): Control?
 }
