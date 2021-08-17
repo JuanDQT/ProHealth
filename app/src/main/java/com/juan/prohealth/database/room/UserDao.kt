@@ -35,8 +35,8 @@ interface UserDao {
     @Query("SELECT * FROM user WHERE state_logging = 1")
     suspend fun getCurrentUser(): User
 
-    @Query("SELECT * FROM user WHERE state_logging = 1 and level <> 0")
-    suspend fun getUserSuccesfulCreated(): User?
+    @Query("SELECT count(*) FROM user WHERE state_logging = 1 and level <> 0")
+    suspend fun getUserSuccesfulCreated(): Int
 
     @Update
     suspend fun update(user: User)

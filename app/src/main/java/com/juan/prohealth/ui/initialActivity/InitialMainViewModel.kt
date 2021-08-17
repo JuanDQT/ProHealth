@@ -14,16 +14,13 @@ class InitialMainViewModel(
     private val userRepository: UserRepository
 ) : ViewModel() {
 
-    private var _isStored = MutableLiveData<Boolean>()
-    val isStored: LiveData<Boolean> get() = _isStored
-
-    private var _currentUser = MutableLiveData<User?>()
-    val currentUser: LiveData<User?> get() = _currentUser
+    private var _existsCurrentUser = MutableLiveData<Boolean>()
+    val existsCurrentUser: LiveData<Boolean> get() = _existsCurrentUser
 
     init {
         viewModelScope.launch {
-            val data = userRepository.getUserSuccesfulCreated()
-            _currentUser.postValue(data)
+            val mExists = if (userRepository.getUserSuccesfulCreated() == 1) true else false
+            _existsCurrentUser.postValue(mExists)
         }
     }
 

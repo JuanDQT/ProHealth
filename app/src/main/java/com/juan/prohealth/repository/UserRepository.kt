@@ -29,7 +29,7 @@ class UserRepository(private var iUserLocalDataSource: IUserLocalDataSource) {
         return iUserLocalDataSource.getCurrentUser()
     }
 
-    suspend fun getUserSuccesfulCreated(): User? {
+    suspend fun getUserSuccesfulCreated(): Int {
         return iUserLocalDataSource.getUserSuccesfulCreated()
     }
 

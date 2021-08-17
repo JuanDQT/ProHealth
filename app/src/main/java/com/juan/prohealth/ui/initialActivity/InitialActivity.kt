@@ -41,8 +41,8 @@ class InitialActivity : AppCompatActivity() {
 
     private fun subscribeUI() {
         // Verificamos si hay un usuario logeado...
-        viewModel.currentUser.observe(this) { user ->
-            user?.let {
+        viewModel.existsCurrentUser.observe(this) { existsCurrentUser ->
+            if (existsCurrentUser) {
                 val intent = Intent(this, MainActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NO_HISTORY
                 startActivity(intent)
