@@ -39,6 +39,12 @@ class RoomUserDataSource(var database: MyDatabase) : IUserLocalDataSource {
         }
     }
 
+    override suspend fun getUserSuccessfulCreated(): Int {
+        return withContext(Dispatchers.IO) {
+            userDao.getUserSuccessfulCreated()
+        }
+    }
+
     override suspend fun updateUserSchedule(hour: Int, minute: Int) {
         withContext(Dispatchers.IO) {
             userDao.updateUserSchedule(hour, minute)
@@ -54,6 +60,12 @@ class RoomUserDataSource(var database: MyDatabase) : IUserLocalDataSource {
     override suspend fun getBloodValue(): Float {
         return withContext(Dispatchers.IO) {
             userDao.getBloodValue()
+        }
+    }
+
+    override suspend fun getDoseValue(): Int {
+        return withContext(Dispatchers.IO) {
+            userDao.getDoseValue()
         }
     }
 

@@ -28,8 +28,8 @@ class MainViewModel(
     private var _doseValue = MutableLiveData(0)
     val doseValue: LiveData<Int> get() = _doseValue
 
-    private var _lastBloodValues = MutableLiveData(emptyArray<Float>())
-    val lastBloodValues: LiveData<Array<Float>> get() = _lastBloodValues
+    private var _chipsBloodValues = MutableLiveData(emptyArray<Float>())
+    val chipsBloodValues: LiveData<Array<Float>> get() = _chipsBloodValues
 
     private var _checkPendingControls = MutableLiveData(false)
     val checkPendingControls: LiveData<Boolean> get() = _checkPendingControls
@@ -42,6 +42,13 @@ class MainViewModel(
 
     init {
         getLastBloodValues()
+        getDoseValue()
+    }
+
+    fun getDoseValue() {
+        viewModelScope.launch {
+            _doseValue.postValue(userRepository.getDoseValue())
+        }
     }
 
     fun checkHasControlToday() {
@@ -60,7 +67,7 @@ class MainViewModel(
         viewModelScope.launch {
             val lastBloodValues = controlRepository.getLastBloodValues()
 
-            _lastBloodValues.postValue(lastBloodValues)
+            _chipsBloodValues.postValue(lastBloodValues)
         }
     }
 

@@ -1,6 +1,5 @@
 package com.juan.prohealth.database.room
 
-import com.anychart.chart.common.dataentry.DataEntry
 import com.juan.prohealth.source.IControlLocalDataSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -21,9 +20,9 @@ class RoomControlDataSource(var database: MyDatabase) : IControlLocalDataSource 
         }
     }
 
-    override suspend fun getLastBloodValues(idUser: Int): Array<Float> {
+    override suspend fun getLastBloodValues(maxDose: Int): Array<Float> {
         return withContext(Dispatchers.IO) {
-            controlDao.getLastBloodValues(idUser)
+            controlDao.getLastBloodValues(maxDose)
         }
     }
 

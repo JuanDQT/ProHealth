@@ -17,12 +17,20 @@ class UserRepository(private var iUserLocalDataSource: IUserLocalDataSource) {
         return iUserLocalDataSource.getBloodValue()
     }
 
+    suspend fun getDoseValue(): Int {
+        return iUserLocalDataSource.getDoseValue()
+    }
+
     suspend fun updateUser(user: User) {
         return iUserLocalDataSource.updateUser(user)
     }
 
     suspend fun getCurrentUser(): User {
         return iUserLocalDataSource.getCurrentUser()
+    }
+
+    suspend fun getUserSuccessfulCreated(): Int {
+        return iUserLocalDataSource.getUserSuccessfulCreated()
     }
 
     suspend fun updateUserSchedule(hour: Int, minute: Int) {

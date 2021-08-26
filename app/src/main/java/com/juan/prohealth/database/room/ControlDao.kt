@@ -20,17 +20,17 @@ interface ControlDao {
     suspend fun deleteLastControlsByGroup()
 
     @Query("SELECT distinct(blood) FROM control order by id desc limit :limit")
-    suspend fun getLastBloodValues(limit: Int = 10): Array<Float>//No probado
+    suspend fun getLastBloodValues(limit: Int): Array<Float>
 
     @Query("SELECT MAX(group_control) + 1 FROM control")
     suspend fun generateNewIdGroupFromDb(): Int?
 
     @Query("SELECT * FROM control WHERE medicated = 0 AND resource <> '0'")
-    suspend fun getAllPendingControls(): List<Control>
+    suspend fun getAllPendingControls(): List<Control>//Nadie usa esta funcion pero creo que podria ser util
 
     @Query("SELECT * FROM control WHERE execution_date = :date")
     suspend fun getControlByDate(date:Date): Control
-    // TODO: si el mismo dia se generan mas controles con fecha de hoy, se tendria que diferenciar por grupo, entonces cogeria bien: group_control = (SELECT group_control FROM control WHERE user_id = (SELECT id FROM user WHERE state_logging = 1))
+    // TODO: Revisar -> si el mismo dia se generan mas controles con fecha de hoy, se tendria que diferenciar por grupo, entonces cogeria bien: group_control = (SELECT group_control FROM control WHERE user_id = (SELECT id FROM user WHERE state_logging = 1))
     @Query("SELECT COUNT(*) FROM control WHERE medicated = :isPending and resource <> '0' and  (execution_date = (CAST(strftime('%s', date())  AS  int) * 1000)) AND user_id = (SELECT id FROM user WHERE state_logging = 1)")
     suspend fun getNumberControlTodayWithSQuery(isPending: Int): Int
 
