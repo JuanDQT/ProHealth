@@ -35,6 +35,7 @@ class InitialMainViewModel(
         viewModelScope.launch {
             val currentUser = userRepository.getCurrentUser()
             currentUser.level = doseLevel
+            currentUser.initialLevel = doseLevel
             userRepository.updateUser(currentUser)
         }
     }
