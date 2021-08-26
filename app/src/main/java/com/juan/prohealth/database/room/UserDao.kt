@@ -23,6 +23,9 @@ interface UserDao {
     @Query("SELECT blood FROM user WHERE state_logging = 1")
     suspend fun getBloodValue(): Float
 
+    @Query("SELECT level FROM user WHERE state_logging = 1")
+    suspend fun getDoseValue(): Int
+
     @Query("UPDATE user set blood = :bloodValue, level = :level where state_logging = 1")
     suspend fun updateUserData(bloodValue: Float, level: Int)
 
@@ -31,6 +34,9 @@ interface UserDao {
 
     @Query("SELECT * FROM user WHERE state_logging = 1")
     suspend fun getCurrentUser(): User
+
+    @Query("SELECT count(*) FROM user WHERE state_logging = 1 and level <> 0")
+    suspend fun getUserSuccessfulCreated(): Int
 
     @Update
     suspend fun update(user: User)

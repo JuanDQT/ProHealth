@@ -13,24 +13,22 @@ class InitialMainViewModel(
     private val userRepository: UserRepository
 ) : ViewModel() {
 
-    private var _isStored = MutableLiveData<Boolean>()
-    val isStored: LiveData<Boolean> get() = _isStored
+    private var _existsCurrentUser = MutableLiveData<Boolean>()
+    val existsCurrentUser: LiveData<Boolean> get() = _existsCurrentUser
 
-    fun isInSharedPreferences(doseLevelName: Array<String>): Boolean {
-        return if (validationRepository.checkIfExist(doseLevelName)) true
-        else return false
+    init {
+        isLoggedCurrentUser()//logica encapsulada
+    }
+
+    private fun isLoggedCurrentUser() {
+        viewModelScope.launch {
+            val mExists = userRepository.getUserSuccessfulCreated() == 1
+            _existsCurrentUser.postValue(mExists)
+        }
     }
 
     fun setFinalDate(epochDate: Long) {
         validationRepository.setFinalTestDate(epochDate)
-    }
-
-    fun addString(key: String, value: String) {
-        validationRepository.addString(key, value)
-    }
-
-    fun isInSharedPreferencesNew() {
-        _isStored.value = validationRepository.checkIfExist(arrayOf("nivel"))
     }
 
     fun saveFirstDoseLevel(doseLevel: Int) {
