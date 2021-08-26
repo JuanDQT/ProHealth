@@ -6,7 +6,7 @@ interface IUserLocalDataSource {
     suspend fun crearUsuarioInvitado(user: User)
     suspend fun getIdCurrentUser(): Int
     suspend fun getCurrentUser(): User
-    suspend fun getUserSuccesfulCreated(): Int
+    suspend fun getUserSuccessfulCreated(): Int
     suspend fun updateUserSchedule(hour: Int, minute: Int)
     suspend fun getDoseValue(): Int
 

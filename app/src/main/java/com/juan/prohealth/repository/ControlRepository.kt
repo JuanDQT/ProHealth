@@ -33,8 +33,8 @@ class ControlRepository(private val iControlLocalDataSource: IControlLocalDataSo
         return iControlLocalDataSource.checkPendingControlToday(isPending)
     }
 
-    suspend fun getLastBloodValues(max: Int = 7): Array<Float> {
-        return iControlLocalDataSource.getLastBloodValues(max)
+    suspend fun getLastBloodValues(maxDose: Int = 7): Array<Float> {
+        return iControlLocalDataSource.getLastBloodValues(maxDose)
     }
 
     suspend fun getControlListGraph(): List<Control> {

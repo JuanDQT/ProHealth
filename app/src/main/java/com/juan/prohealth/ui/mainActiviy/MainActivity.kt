@@ -37,7 +37,6 @@ import com.juan.prohealth.ui.ajustesActivity.AjustesActivity
 import com.juan.prohealth.ui.common.*
 import kotlinx.android.synthetic.main.custom_button.view.*
 import java.util.*
-import kotlin.collections.set
 import com.juan.prohealth.database.Control as RealmControl
 
 
@@ -309,8 +308,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             userResourceImage = resourceValue
         }
 
-        // todos
-        viewModel.lastBloodValues.observe(this) { values ->
+        viewModel.chipsBloodValues.observe(this) { values ->
             lastBloodValues = values
         }
 

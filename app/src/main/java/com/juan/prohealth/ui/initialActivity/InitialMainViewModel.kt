@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.juan.prohealth.database.room.User
 import com.juan.prohealth.repository.UserRepository
 import com.juan.prohealth.repository.ValidationRepository
 import kotlinx.coroutines.launch
@@ -18,8 +17,12 @@ class InitialMainViewModel(
     val existsCurrentUser: LiveData<Boolean> get() = _existsCurrentUser
 
     init {
+        isLoggedCurrentUser()//logica encapsulada
+    }
+
+    private fun isLoggedCurrentUser() {
         viewModelScope.launch {
-            val mExists = if (userRepository.getUserSuccesfulCreated() == 1) true else false
+            val mExists = userRepository.getUserSuccessfulCreated() == 1
             _existsCurrentUser.postValue(mExists)
         }
     }

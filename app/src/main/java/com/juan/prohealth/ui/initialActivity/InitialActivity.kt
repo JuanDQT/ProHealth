@@ -11,7 +11,6 @@ import com.juan.prohealth.*
 import com.juan.prohealth.data.local.SharedPreference
 import com.juan.prohealth.data.local.StorageValidationDataSource
 import com.juan.prohealth.database.room.MyDatabase
-import com.juan.prohealth.database.room.RoomControlDataSource
 import com.juan.prohealth.database.room.RoomUserDataSource
 import com.juan.prohealth.databinding.ActivityInitialBinding
 import com.juan.prohealth.repository.UserRepository
@@ -36,7 +35,15 @@ class InitialActivity : AppCompatActivity() {
         setContentView(binding.root)
         subscribeUI()
 
-        binding.btnSaveDose.setOnClickListener { setFirstDoseLevel() }
+        binding.btnSaveDose.setOnClickListener {
+            setFirstDoseLevel()
+            navToMainMenu()//Separamos mejor que se hace cuando le damos a guardar.
+        }
+    }
+
+    private fun navToMainMenu() {
+        val intent = Intent(this@InitialActivity, MainActivity::class.java)
+        startActivity(intent)//metodo añadido
     }
 
     private fun subscribeUI() {
@@ -44,7 +51,7 @@ class InitialActivity : AppCompatActivity() {
         viewModel.existsCurrentUser.observe(this) { existsCurrentUser ->
             if (existsCurrentUser) {
                 val intent = Intent(this, MainActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NO_HISTORY
+                intent.flags = Intent.FLAG_ACTIVITY_NO_HISTORY//Es necesario este FLAG en MainAc nadie lo usa
                 startActivity(intent)
             }
         }
@@ -53,11 +60,7 @@ class InitialActivity : AppCompatActivity() {
 
     private fun setFirstDoseLevel() {
         val doseLevel = binding.etNivel.text
-
         viewModel.saveFirstDoseLevel(doseLevel.toString().toInt())
-
-        val intent = Intent(this@InitialActivity, MainActivity::class.java)
-        startActivity(intent)
     }
 
     private fun setFirstDoseWithVerificationFromServerOld() {
@@ -85,9 +88,7 @@ class InitialActivity : AppCompatActivity() {
                             val value = finalDate.clearTime().time
 
                             viewModel.setFinalDate(value)
-                            val intent =
-                                Intent(this@InitialActivity, MainActivity::class.java)
-                            startActivity(intent)
+                            navToMainMenu()
                         } else
                             alert(getString(R.string.alerta), "Vuelvelo a intentar mas tarde")
                     }
@@ -108,7 +109,7 @@ class InitialActivity : AppCompatActivity() {
     }
 
     private fun buildViewModel(): InitialMainViewModel {
-        val factory = InitialModelFactory(validationRepository,userRepository)
+        val factory = InitialModelFactory(validationRepository, userRepository)
         return ViewModelProvider(this, factory).get(InitialMainViewModel::class.java)
     }
 

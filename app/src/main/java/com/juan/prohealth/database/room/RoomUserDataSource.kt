@@ -39,9 +39,9 @@ class RoomUserDataSource(var database: MyDatabase) : IUserLocalDataSource {
         }
     }
 
-    override suspend fun getUserSuccesfulCreated(): Int {
+    override suspend fun getUserSuccessfulCreated(): Int {
         return withContext(Dispatchers.IO) {
-            userDao.getUserSuccesfulCreated()
+            userDao.getUserSuccessfulCreated()
         }
     }
 
