@@ -390,22 +390,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         startActivity(Intent.createChooser(emailIntent, "Enviar mail..."))
     }
 
-    /**
-     * Manejamos el boton ATRAS para devolverlo a Login/User en caso de no haber ningun
-     * registro en SharedPreferences
-     * //TODO Crashea al volver para atras ya teniendo datos en SharedPreference y
-     * Hipotetico usuario invitado
-     */
-/*
-    override fun onBackPressed() {
-        return
-        if(!MySharedPreferences.shared.exists(arrayOf("nivel", "sangre"))){
-            var intent = Intent(this, PreinicioActivity::class.java)
-            startActivity(intent)
-        }
-    }
-*/
-
     private fun checkIfExistGmapsApp(namePackage: String, context: Context): Boolean {
         val pm = context.packageManager
         return try {
