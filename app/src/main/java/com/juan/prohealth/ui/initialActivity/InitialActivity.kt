@@ -55,7 +55,6 @@ class InitialActivity : AppCompatActivity() {
                 startActivity(intent)
             }
         }
-
     }
 
     private fun setFirstDoseLevel() {

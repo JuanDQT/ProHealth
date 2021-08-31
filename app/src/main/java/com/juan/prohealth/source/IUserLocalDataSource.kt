@@ -3,7 +3,7 @@ package com.juan.prohealth.source
 import com.juan.prohealth.database.room.User
 
 interface IUserLocalDataSource {
-    suspend fun crearUsuarioInvitado(user: User)
+    suspend fun create(user: User)
     suspend fun getIdCurrentUser(): Int
     suspend fun getCurrentUser(): User
     suspend fun getUserSuccessfulCreated(): Int

@@ -22,9 +22,9 @@ class LoginViewModel(
     val controls: LiveData<List<Control>> get() = _controls
 
 
-    fun createInvitedUser(user: User) {
+    fun createUser(user: User) {
         viewModelScope.launch {
-            userRepository.createUser(user)
+            userRepository.create(user)
         }
     }
 }

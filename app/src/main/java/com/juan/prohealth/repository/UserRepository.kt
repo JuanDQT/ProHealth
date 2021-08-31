@@ -5,8 +5,8 @@ import com.juan.prohealth.source.IUserLocalDataSource
 
 class UserRepository(private var iUserLocalDataSource: IUserLocalDataSource) {
 
-    suspend fun createUser(user: User) {
-        iUserLocalDataSource.crearUsuarioInvitado(user)
+    suspend fun create(user: User) {
+        iUserLocalDataSource.create(user)
     }
 
     suspend fun getIdCurrentUser(): Int {
@@ -29,8 +29,8 @@ class UserRepository(private var iUserLocalDataSource: IUserLocalDataSource) {
         return iUserLocalDataSource.getCurrentUser()
     }
 
-    suspend fun getUserSuccessfulCreated(): Int {
-        return iUserLocalDataSource.getUserSuccessfulCreated()
+    suspend fun isUserSuccessfulCreated(): Boolean {
+        return iUserLocalDataSource.getUserSuccessfulCreated() > 0
     }
 
     suspend fun updateUserSchedule(hour: Int, minute: Int) {
