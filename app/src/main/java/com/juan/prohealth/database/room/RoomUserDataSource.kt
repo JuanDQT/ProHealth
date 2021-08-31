@@ -9,7 +9,7 @@ class RoomUserDataSource(var database: MyDatabase) : IUserLocalDataSource {
     var userDao = database.userDao()
 
 
-    override suspend fun crearUsuarioInvitado(user: User) {
+    override suspend fun create(user: User) {
         withContext(Dispatchers.IO) {
             userDao.insert(user)
         }

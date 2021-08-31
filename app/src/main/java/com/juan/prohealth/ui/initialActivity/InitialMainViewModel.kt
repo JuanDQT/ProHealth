@@ -22,7 +22,7 @@ class InitialMainViewModel(
 
     private fun isLoggedCurrentUser() {
         viewModelScope.launch {
-            val mExists = userRepository.getUserSuccessfulCreated() == 1
+            val mExists = userRepository.isUserSuccessfulCreated()
             _existsCurrentUser.postValue(mExists)
         }
     }

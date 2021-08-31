@@ -12,7 +12,6 @@ import com.juan.prohealth.repository.UserRepository
 import com.juan.prohealth.ui.LoginViewModel
 import com.juan.prohealth.ui.LoginViewModelFactory
 import com.juan.prohealth.ui.initialActivity.InitialActivity
-import com.juan.prohealth.database.User as RealmUser
 
 class LoginActivity : AppCompatActivity() {
 
@@ -27,20 +26,23 @@ class LoginActivity : AppCompatActivity() {
         viewModel = buildViewModel()
 
         binding.tvModoInvitado.setOnClickListener {
-            // La primera vez, tendra id -1 en modo invitado
-            RealmUser.crearUsuarioInvitado()
-            RealmUser.setLogged("-1")
-            val userRandom = User()
-            viewModel.createInvitedUser(userRandom)
-            startActivity(Intent(this, InitialActivity::class.java))
+            val guestUser = User()
+            instanteUser(guestUser)
+            goToInitialActivity()
         }
 
+        // TODO: conexion API, respuesta..
         binding.btnLogin.setOnClickListener {
-            // TODO: conexion API, respuesta.. registramos en user y actualizamos User.setLogged() con el id del servidor
-            // Algo parecido con el boton de Google, pero lo dejamos para el final
-            // Ya que tiraremos del User.Id -1, que es lo mismo
         }
+    }
 
+    // Instance user from Local or FireBase
+    private fun instanteUser(user: User) {
+        viewModel.createUser(user)
+    }
+
+    private fun goToInitialActivity() {
+        startActivity(Intent(this, InitialActivity::class.java))
     }
 
     private fun buildViewModel(): LoginViewModel {
@@ -53,13 +55,5 @@ class LoginActivity : AppCompatActivity() {
         val userLocal = RoomUserDataSource(database)
 
         userRepository = UserRepository(userLocal)
-    }
-
-    /**
-     * Boton de ATRAS cerramos la app
-     */
-    override fun onBackPressed() {
-        super.onBackPressed()
-        finishAffinity()
     }
 }
