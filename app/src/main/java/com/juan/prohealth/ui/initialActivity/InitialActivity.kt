@@ -51,7 +51,6 @@ class InitialActivity : AppCompatActivity() {
         viewModel.existsCurrentUser.observe(this) { existsCurrentUser ->
             if (existsCurrentUser) {
                 val intent = Intent(this, MainActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NO_HISTORY//Es necesario este FLAG en MainAc nadie lo usa
                 startActivity(intent)
             }
         }
