@@ -1,28 +1,19 @@
 package com.juan.prohealth.ui.initialActivity
 
-import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import com.androidnetworking.error.ANError
-import com.androidnetworking.interfaces.JSONObjectRequestListener
-import com.juan.prohealth.*
-import com.juan.prohealth.data.local.SharedPreference
-import com.juan.prohealth.data.local.StorageValidationDataSource
 import com.juan.prohealth.database.room.MyDatabase
 import com.juan.prohealth.database.room.RoomUserDataSource
+import com.juan.prohealth.database.room.User
 import com.juan.prohealth.databinding.ActivityInitialBinding
 import com.juan.prohealth.repository.UserRepository
-import com.juan.prohealth.repository.ValidationRepository
-import com.juan.prohealth.ui.common.*
 import com.juan.prohealth.ui.mainActiviy.MainActivity
-import org.json.JSONObject
-import java.text.SimpleDateFormat
-import java.util.*
 
-class InitialActivity : AppCompatActivity() {
-    private lateinit var validationRepository: ValidationRepository
+class InitialActivity : AppCompatActivity(), View.OnClickListener {
+
     private lateinit var userRepository: UserRepository
     private lateinit var viewModel: InitialMainViewModel
     private lateinit var binding: ActivityInitialBinding
@@ -33,89 +24,43 @@ class InitialActivity : AppCompatActivity() {
         viewModel = buildViewModel()
         binding = ActivityInitialBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        subscribeUI()
 
-        binding.btnSaveDose.setOnClickListener {
-            setFirstDoseLevel()
-            navToMainMenu()//Separamos mejor que se hace cuando le damos a guardar.
+        binding.btnSaveDose.setOnClickListener(this)
+    }
+
+    private fun instanceUser(): Boolean {
+        val doseInput = binding.etNivel.text.toString().toIntOrNull()
+        if (doseInput != null) {
+            val guestUser = User(level = doseInput)
+            viewModel.createUser(guestUser)
+            return true
         }
+        return false
     }
 
-    private fun navToMainMenu() {
-        val intent = Intent(this@InitialActivity, MainActivity::class.java)
-        startActivity(intent)//metodo añadido
-    }
-
-    private fun subscribeUI() {
-        // Verificamos si hay un usuario logeado...
-        viewModel.existsCurrentUser.observe(this) { existsCurrentUser ->
-            if (existsCurrentUser) {
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
-            }
-        }
-    }
-
-    private fun setFirstDoseLevel() {
-        val doseLevel = binding.etNivel.text
-        viewModel.saveFirstDoseLevel(doseLevel.toString().toInt())
-    }
-
-    private fun setFirstDoseWithVerificationFromServerOld() {
-        val inputBloodLevel = binding.etNivel.text.toString()
-
-        if (AppContext.validarInputNivel(inputBloodLevel)) {
-            // Guardamos los valores en sharedPrederences
-
-            val pdLoading = ProgressDialog(this)
-            pdLoading.setMessage(getString(R.string.validando))
-            pdLoading.show()
-            //
-            SyncData.validateDevice(object : JSONObjectRequestListener {
-                override fun onResponse(response: JSONObject?) {
-
-                    response?.let {
-                        val status = it.getInt("status")
-                        pdLoading.dismiss()
-
-                        if (status == 1) {
-
-                            val finalDate =
-                                SimpleDateFormat("yyyy-MM-dd").parse(it.getString("fechaFin"))
-
-                            val value = finalDate.clearTime().time
-
-                            viewModel.setFinalDate(value)
-                            navToMainMenu()
-                        } else
-                            alert(getString(R.string.alerta), "Vuelvelo a intentar mas tarde")
-                    }
-                }
-
-                override fun onError(anError: ANError?) {
-                    pdLoading.dismiss()
-                    alert(getString(R.string.alerta), getString(R.string.error_verificacion))
-                }
-            })
-        }
-        //
-
-        // respuesta, guardar en fecha fin..
-
-        // continue
-
+    private fun goToMainActivity() {
+        val intent = Intent(this, MainActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        startActivity(intent)
     }
 
     private fun buildViewModel(): InitialMainViewModel {
-        val factory = InitialModelFactory(validationRepository, userRepository)
+        val factory = InitialModelFactory(userRepository)
         return ViewModelProvider(this, factory).get(InitialMainViewModel::class.java)
     }
 
     private fun buildDependencies() {
-        val sharedPreference = SharedPreference.getInstance(this.applicationContext)
-        validationRepository = ValidationRepository(StorageValidationDataSource(sharedPreference))
         val database = MyDatabase.getDatabase(this)
         val userLocal = RoomUserDataSource(database)
         userRepository = UserRepository(userLocal)
+    }
+
+    override fun onClick(v: View?) {
+        when (v?.id) {
+            binding.btnSaveDose.id -> {
+                if (instanceUser())
+                    goToMainActivity()
+            }
+        }
     }
 }
