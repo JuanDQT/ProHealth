@@ -2,47 +2,34 @@ package com.juan.prohealth
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.juan.prohealth.database.room.MyDatabase
 import com.juan.prohealth.database.room.RoomUserDataSource
 import com.juan.prohealth.database.room.User
+import com.juan.prohealth.databinding.ActivityInitialBinding
 import com.juan.prohealth.databinding.ActivityLoginBinding
 import com.juan.prohealth.repository.UserRepository
 import com.juan.prohealth.ui.LoginViewModel
 import com.juan.prohealth.ui.LoginViewModelFactory
 import com.juan.prohealth.ui.initialActivity.InitialActivity
 
-class LoginActivity : AppCompatActivity() {
+class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var viewModel: LoginViewModel
     private lateinit var userRepository: UserRepository
+    private lateinit var binding: ActivityLoginBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding = ActivityLoginBinding.inflate(layoutInflater)
+        binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
         buildDependencies()
         viewModel = buildViewModel()
 
-        binding.tvModoInvitado.setOnClickListener {
-            val guestUser = User()
-            instanteUser(guestUser)
-            goToInitialActivity()
-        }
-
-        // TODO: conexion API, respuesta..
-        binding.btnLogin.setOnClickListener {
-        }
-    }
-
-    // Instance user from Local or FireBase
-    private fun instanteUser(user: User) {
-        viewModel.createUser(user)
-    }
-
-    private fun goToInitialActivity() {
-        startActivity(Intent(this, InitialActivity::class.java))
+        binding.tvModoInvitado.setOnClickListener(this)
+        binding.btnLogin.setOnClickListener(this)
     }
 
     private fun buildViewModel(): LoginViewModel {
@@ -55,5 +42,13 @@ class LoginActivity : AppCompatActivity() {
         val userLocal = RoomUserDataSource(database)
 
         userRepository = UserRepository(userLocal)
+    }
+
+    override fun onClick(v: View?) {
+        when (v?.id) {
+            binding.tvModoInvitado.id -> startActivity(Intent(this, InitialActivity::class.java))
+            // TODO: conexion API, respuesta..
+            binding.btnLogin.id -> return
+        }
     }
 }
