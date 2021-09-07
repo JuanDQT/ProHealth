@@ -7,8 +7,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.juan.prohealth.database.room.MyDatabase
 import com.juan.prohealth.database.room.RoomUserDataSource
-import com.juan.prohealth.database.room.User
-import com.juan.prohealth.databinding.ActivityInitialBinding
 import com.juan.prohealth.databinding.ActivityLoginBinding
 import com.juan.prohealth.repository.UserRepository
 import com.juan.prohealth.ui.LoginViewModel
