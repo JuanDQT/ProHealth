@@ -2,7 +2,6 @@ package com.juan.prohealth.ui.initialActivity
 
 import androidx.lifecycle.*
 import com.juan.prohealth.repository.UserRepository
-import com.juan.prohealth.repository.ValidationRepository
 import kotlinx.coroutines.launch
 
 class SplashScreenViewModel(
