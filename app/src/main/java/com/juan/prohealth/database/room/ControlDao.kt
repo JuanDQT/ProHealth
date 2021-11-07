@@ -40,6 +40,9 @@ interface ControlDao {
     @Query("SELECT * FROM control WHERE user_id = (SELECT id FROM user WHERE state_logging = 1) group by group_control")
     suspend fun getControlListGraph(): List<Control>
 
+    @Query("SELECT * FROM control WHERE user_id = (SELECT id FROM user WHERE state_logging = 1)")
+    suspend fun getAllControls(): List<Control>
+
     @Query("SELECT * FROM control WHERE user_id = (SELECT id FROM user WHERE state_logging = 1) ORDER BY group_control desc limit 1")
     suspend fun getLastControl(): Control?
 }

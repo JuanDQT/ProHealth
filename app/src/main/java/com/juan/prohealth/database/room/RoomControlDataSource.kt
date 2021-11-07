@@ -69,6 +69,12 @@ class RoomControlDataSource(var database: MyDatabase) : IControlLocalDataSource 
         }
     }
 
+    override suspend fun getAllControls(): List<Control> {
+        return withContext(Dispatchers.IO) {
+            controlDao.getAllControls()
+        }
+    }
+
     override suspend fun getLastControl(): Control? {
         return withContext(Dispatchers.IO) {
             controlDao.getLastControl()
