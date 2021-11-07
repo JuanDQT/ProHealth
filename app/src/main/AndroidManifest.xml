@@ -21,8 +21,7 @@
 
         <activity
             android:name=".ui.ajustesActivity.AjustesActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/SplashTheme" />
+            android:screenOrientation="portrait"/>
 
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -44,20 +43,18 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".LoginActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/SplashTheme" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".GraphActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/SplashTheme" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.initialActivity.InitialActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/SplashTheme" />
+            />
         <activity
             android:name=".SplashScreenActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/SplashTheme">
+            android:theme="@style/SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -68,8 +65,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.mainActiviy.MainActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/SplashTheme" />
+            android:screenOrientation="portrait" />
 
         <uses-library
             android:name="org.apache.http.legacy"
