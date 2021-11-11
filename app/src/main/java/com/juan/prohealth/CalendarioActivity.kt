@@ -125,7 +125,7 @@ class CalendarioActivity : AppCompatActivity(), EventsCalendar.Callback {
             .setDatesTypeface(Typeface.DEFAULT) //set font for dates
             .setDateTextFontSize(16f) //set font size for dates
             .setMonthTitleTypeface(Typeface.DEFAULT_BOLD) //set font for title of the calendar
-            .setMonthTitleFontSize(16f) //set font size for title of the calendar
+            .setMonthTitleFontSize(25f) //set font size for title of the calendar
             .setWeekHeaderTypeface(Typeface.DEFAULT) //set font for week names
             .setWeekHeaderFontSize(16f) //set font size for week names
             .setCallback(this) //set the callback for EventsCalendar
