@@ -2,4 +2,5 @@
 <resources>
     <color name="text_black_disabled">#54000000</color>
     <color name="colorPrimary">#2962ff</color>
+    <color name="month_header">#DBDBDB</color>
 </resources>

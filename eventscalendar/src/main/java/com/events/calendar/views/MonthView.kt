@@ -89,7 +89,8 @@ class MonthView : ViewGroup, DatesGridLayout.CallBack {
         mMonthTitleTextView = mLayoutInflater.inflate(R.layout.zmail_layout_month_title, null) as TextView
         val calendar = Calendar.getInstance()
         calendar.set(mYear, mMonth, 1)
-        mMonthTitleTextView.text = EventsCalendarUtil.getMonthString(calendar, EventsCalendarUtil.DISPLAY_STRING)
+        mMonthTitleTextView.text = EventsCalendarUtil.getMonthString(calendar, EventsCalendarUtil.DISPLAY_STRING)?.toUpperCase()
+        mMonthTitleTextView.textAlignment = TEXT_ALIGNMENT_CENTER
         mMonthTitleTextView.setTextColor(EventsCalendarUtil.primaryTextColor)
         if (EventsCalendarUtil.monthTitleTypeface != null) mMonthTitleTextView.typeface = EventsCalendarUtil.monthTitleTypeface
         mMonthTitleTextView.setTextColor(EventsCalendarUtil.monthTitleColor)
@@ -125,14 +126,15 @@ class MonthView : ViewGroup, DatesGridLayout.CallBack {
         if (EventsCalendarUtil.weekHeaderTypeface != null) header.typeface = EventsCalendarUtil.weekHeaderTypeface
         val namesOfDays = DateFormatSymbols.getInstance().shortWeekdays
         when (calendarConstant) {
-            Calendar.SUNDAY -> header.text = namesOfDays[Calendar.SUNDAY].toUpperCase()
-            Calendar.MONDAY -> header.text = namesOfDays[Calendar.MONDAY].toUpperCase()
-            Calendar.TUESDAY -> header.text = namesOfDays[Calendar.TUESDAY].toUpperCase()
-            Calendar.WEDNESDAY -> header.text = namesOfDays[Calendar.WEDNESDAY].toUpperCase()
-            Calendar.THURSDAY -> header.text = namesOfDays[Calendar.THURSDAY].toUpperCase()
-            Calendar.FRIDAY -> header.text = namesOfDays[Calendar.FRIDAY].toUpperCase()
-            Calendar.SATURDAY -> header.text = namesOfDays[Calendar.SATURDAY].toUpperCase()
+            Calendar.SUNDAY -> header.text = namesOfDays[Calendar.SUNDAY]
+            Calendar.MONDAY -> header.text = namesOfDays[Calendar.MONDAY]
+            Calendar.TUESDAY -> header.text = namesOfDays[Calendar.TUESDAY]
+            Calendar.WEDNESDAY -> header.text = namesOfDays[Calendar.WEDNESDAY]
+            Calendar.THURSDAY -> header.text = namesOfDays[Calendar.THURSDAY]
+            Calendar.FRIDAY -> header.text = namesOfDays[Calendar.FRIDAY]
+            Calendar.SATURDAY -> header.text = namesOfDays[Calendar.SATURDAY]
         }
+        header.text = header.text.toString().capitalize().replace(".", "")
     }
 
     private fun setMonthGridLayout() {
