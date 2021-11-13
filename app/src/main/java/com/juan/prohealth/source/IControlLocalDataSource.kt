@@ -1,6 +1,7 @@
 package com.juan.prohealth.source
 
 import com.juan.prohealth.database.room.Control
+import java.util.*
 
 interface IControlLocalDataSource {
     suspend fun getActiveControlList(): List<Control>
@@ -10,9 +11,10 @@ interface IControlLocalDataSource {
     suspend fun getAllPendingControls(): List<Control>
     suspend fun updateControl(control: Control)
     suspend fun getNewIdGroup(): Int
-    suspend fun getPendingControlToday(): Control
+    suspend fun getPendingControlToday(): Control?
     suspend fun checkPendingControlToday(isPending: Int): Boolean
     suspend fun getControlListGraph(): List<Control>
     suspend fun getAllControls(): List<Control>
     suspend fun getLastControl(): Control?
+    suspend fun getControlByDate(date: Date): Control?
 }

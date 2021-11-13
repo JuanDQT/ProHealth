@@ -14,7 +14,7 @@
         android:overScrollMode="never"
         android:background="#EFEFEF"
         app:datesTextSize="16sp"
-        app:eventDotColor="#FFEB3B"
+        app:eventDotColor="#A83030"
         app:isBoldTextOnSelectionEnabled="true"
         app:monthTitleColor="#000"
         app:monthTitleTextSize="24sp"
@@ -23,7 +23,7 @@
         app:selectedTextColor="#c4c4c4"
         app:selectionColor="@android:color/transparent"
         app:weekHeaderColor="#A83030"
-        app:weekHeaderTextSize="14sp" />
+        app:weekHeaderTextSize="16sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -36,7 +36,8 @@
         <ImageView
             android:id="@+id/viewDosis"
             android:layout_width="100dp"
-            android:layout_height="50dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="15dp"
             android:layout_gravity="center"/>
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -44,6 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
+            android:layout_marginTop="20dp"
             android:layout_weight="0.5"
             android:textAlignment="center"
             android:textSize="18dp" />
@@ -51,6 +53,7 @@
             android:id="@+id/tv_Sangre"
             android:layout_width="match_parent"
             android:textSize="18dp"
+            android:layout_marginTop="5dp"
             android:textAlignment="center"
             android:layout_gravity="center"
             android:layout_height="match_parent"
@@ -60,12 +63,11 @@
             android:layout_width="match_parent"
             android:textSize="18dp"
             android:textAlignment="center"
+            android:layout_marginTop="5dp"
             android:layout_gravity="center"
             android:layout_height="match_parent"
             android:layout_weight="0.5"
            />
 
     </LinearLayout>
-
-
 </LinearLayout>

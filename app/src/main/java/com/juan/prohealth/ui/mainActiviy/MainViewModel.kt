@@ -53,11 +53,10 @@ class MainViewModel(
 
     fun checkHasControlToday() {
         viewModelScope.launch {
-            val hasPendingControlsQuery =
-                controlRepository.checkIfHasPendingControlToday(isPending = -1)
-
-            if (hasPendingControlsQuery) {
-                _userResourceImage.postValue(controlRepository.getPendingControlToday().resource)
+            val hasPendingControlsQuery = controlRepository.checkIfHasPendingControlToday(isPending = -1)
+            val pendingControl = controlRepository.getPendingControlToday()
+            if (hasPendingControlsQuery && pendingControl != null) {
+                _userResourceImage.postValue(controlRepository.getPendingControlToday()?.resource)
             }
             _checkPendingControls.postValue(hasPendingControlsQuery)
         }
@@ -125,8 +124,10 @@ class MainViewModel(
     fun updateCurrentControlStatus(isMedicated: Int) {
         viewModelScope.launch {
             val controlToday = controlRepository.getPendingControlToday()
-            controlToday.medicated = isMedicated
-            controlRepository.updateControl(controlToday)
+            controlToday?.let { mControlToday ->
+                mControlToday.medicated = isMedicated
+                controlRepository.updateControl(mControlToday)
+            }
         }
     }
 
