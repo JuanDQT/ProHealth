@@ -3,6 +3,7 @@ package com.juan.prohealth.database.room
 import com.juan.prohealth.source.IControlLocalDataSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.util.*
 
 class RoomControlDataSource(var database: MyDatabase) : IControlLocalDataSource {
 
@@ -51,7 +52,7 @@ class RoomControlDataSource(var database: MyDatabase) : IControlLocalDataSource 
         }
     }
 
-    override suspend fun getPendingControlToday(): Control {
+    override suspend fun getPendingControlToday(): Control? {
         return withContext(Dispatchers.IO) {
             controlDao.getPendingControlToday()
         }
@@ -78,6 +79,12 @@ class RoomControlDataSource(var database: MyDatabase) : IControlLocalDataSource 
     override suspend fun getLastControl(): Control? {
         return withContext(Dispatchers.IO) {
             controlDao.getLastControl()
+        }
+    }
+
+    override suspend fun getControlByDate(date: Date): Control? {
+        return withContext(Dispatchers.IO) {
+            controlDao.getControlByDate(date)
         }
     }
 }
