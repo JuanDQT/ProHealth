@@ -51,7 +51,7 @@ object EventsCalendarUtil {
     var monthPos = 0
     var datesTypeface: Typeface? = null
     var monthTitleTypeface: Typeface? = null
-    var weekHeaderTypeface: Typeface? = null
+    var weekHeaderTypeface: Typeface? = Typeface.DEFAULT
     var isBoldTextOnSelectionEnabled: Boolean = false
 
     val datesInSelectedRange: LinkedHashMap<String, Calendar> = LinkedHashMap()

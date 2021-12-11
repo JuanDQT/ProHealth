@@ -1,7 +1,6 @@
 package com.juan.prohealth.database.room
 
 import androidx.room.*
-import com.anychart.chart.common.dataentry.DataEntry
 import java.util.*
 
 @Dao
@@ -28,14 +27,15 @@ interface ControlDao {
     @Query("SELECT * FROM control WHERE medicated = 0 AND resource <> '0'")
     suspend fun getAllPendingControls(): List<Control>//Nadie usa esta funcion pero creo que podria ser util
 
-    @Query("SELECT * FROM control WHERE execution_date = :date")
-    suspend fun getControlByDate(date:Date): Control
+    @Query("SELECT * FROM control WHERE execution_date = :date AND user_id = (SELECT id FROM user WHERE state_logging = 1)")
+    suspend fun getControlByDate(date: Date): Control
+
     // TODO: Revisar -> si el mismo dia se generan mas controles con fecha de hoy, se tendria que diferenciar por grupo, entonces cogeria bien: group_control = (SELECT group_control FROM control WHERE user_id = (SELECT id FROM user WHERE state_logging = 1))
     @Query("SELECT COUNT(*) FROM control WHERE medicated = :isPending and resource <> '0' and  (execution_date = (CAST(strftime('%s', date())  AS  int) * 1000)) AND user_id = (SELECT id FROM user WHERE state_logging = 1)")
     suspend fun getNumberControlTodayWithSQuery(isPending: Int): Int
 
     @Query("SELECT * FROM control WHERE medicated = -1 and resource <> '0' and  (execution_date = (CAST(strftime('%s', date())  AS  int) * 1000)) AND user_id = (SELECT id FROM user WHERE state_logging = 1)")
-    suspend fun getPendingControlToday(): Control
+    suspend fun getPendingControlToday(): Control?
 
     @Query("SELECT * FROM control WHERE user_id = (SELECT id FROM user WHERE state_logging = 1) group by group_control")
     suspend fun getControlListGraph(): List<Control>

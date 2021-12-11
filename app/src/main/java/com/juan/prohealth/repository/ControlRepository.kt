@@ -2,6 +2,7 @@ package com.juan.prohealth.repository
 
 import com.juan.prohealth.database.room.Control
 import com.juan.prohealth.source.IControlLocalDataSource
+import java.util.*
 
 class ControlRepository(private val iControlLocalDataSource: IControlLocalDataSource) {
 
@@ -25,7 +26,7 @@ class ControlRepository(private val iControlLocalDataSource: IControlLocalDataSo
         return iControlLocalDataSource.getNewIdGroup()
     }
 
-    suspend fun getPendingControlToday(): Control {
+    suspend fun getPendingControlToday(): Control? {
         return iControlLocalDataSource.getPendingControlToday()
     }
 
@@ -48,4 +49,9 @@ class ControlRepository(private val iControlLocalDataSource: IControlLocalDataSo
     suspend fun getAllControls(): List<Control> {
         return iControlLocalDataSource.getAllControls()
     }
+
+    suspend fun getControlByDate(date: Date): Control? {
+        return iControlLocalDataSource.getControlByDate(date)
+    }
+
 }

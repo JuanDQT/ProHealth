@@ -60,6 +60,11 @@ class EventsCalendar : ViewPager, MonthView.Callback {
         init(context, attrs)
     }
 
+    constructor(context: Context, callback: Callback) : super(context) {
+        init(context, null)
+        mCallback = callback
+    }
+
     private fun init(context: Context, attrs: AttributeSet?) {
         mContext = context
         mAttrs = attrs

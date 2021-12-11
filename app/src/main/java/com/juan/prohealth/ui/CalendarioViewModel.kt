@@ -4,21 +4,22 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.anychart.chart.common.dataentry.DataEntry
-import com.anychart.chart.common.dataentry.ValueDataEntry
+import com.events.calendar.views.EventsCalendar
 import com.juan.prohealth.database.room.Control
 import com.juan.prohealth.repository.ControlRepository
-import com.juan.prohealth.ui.common.customFormat
+import com.juan.prohealth.ui.common.clearTime
 import com.juan.prohealth.ui.common.fromDate
 import kotlinx.coroutines.launch
 import java.util.*
 
 class CalendarioViewModel(
     private val controlRepository: ControlRepository
-) : ViewModel() {
+) : ViewModel(), EventsCalendar.Callback {
 
     private var _controlList = MutableLiveData<Array<Calendar>>()
+    private var _controlSelected = MutableLiveData<Control?>()
     val controlList: LiveData<Array<Calendar>> get() = _controlList
+    val controlSelected: LiveData<Control?> get() = _controlSelected
 
     init {
         getAllControlList()
@@ -32,14 +33,17 @@ class CalendarioViewModel(
         }
     }
 
-    private fun getDataEntryFromlist(list: List<Control>): MutableList<DataEntry> {
-        val listEntry = arrayListOf<DataEntry>()
-
-        for (item in list) {
-            listEntry.add(ValueDataEntry(item.startDate.customFormat("dd/MM"), item.blood))
+    override fun onDaySelected(selectedDate: Calendar?) {
+        selectedDate?.let { calendar ->
+            viewModelScope.launch {
+                val controlAtDate = controlRepository.getControlByDate(calendar.time.clearTime())
+                _controlSelected.postValue(controlAtDate)
+            }
         }
-
-        return listEntry
     }
+
+    override fun onDayLongPressed(selectedDate: Calendar?) {}
+
+    override fun onMonthChanged(monthStartDate: Calendar?) {}
 
 }
