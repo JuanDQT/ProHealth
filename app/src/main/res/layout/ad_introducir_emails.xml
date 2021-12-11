@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="25dp"
+    android:paddingRight="25dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:paddingTop="10dp"
+        android:text="@string/introduce_emails"
+        />
+
+    <EditText
+        android:id="@+id/emails"
+        android:inputType="textEmailAddress"
+        android:paddingTop="10dp"
+        android:textAlignment="viewEnd"
+        android:layout_width="match_parent"
+        android:maxLength="4"
+        android:layout_height="wrap_content" />
+</LinearLayout>

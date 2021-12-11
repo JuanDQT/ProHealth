@@ -168,6 +168,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         })
 
         btnAccept.setOnClickListener {
+            hideKeyboard()
             val valorSangreNumerico = editText.text.toString().replace(",", ".").toFloat()
             val nomFichero = Control.getFicheroCorrespondiente(valorSangreNumerico)
 
@@ -186,8 +187,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             btnAccept.text = getString(R.string.button_planificar)
             initialLayout.visibility = View.GONE
             secondLayout.visibility = View.VISIBLE
-            this.hideKeyboard()
-
             val irnActual = view.findViewById<TextView>(R.id.tvIRN)
             val irnNew = view.findViewById<TextView>(R.id.tvIRNNew)
             val btnMails = view.findViewById<CheckBox>(R.id.cb_mails)

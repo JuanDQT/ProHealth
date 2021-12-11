@@ -54,4 +54,7 @@ class ControlRepository(private val iControlLocalDataSource: IControlLocalDataSo
         return iControlLocalDataSource.getControlByDate(date)
     }
 
+    suspend fun getAllPendingControls(): List<Control> {
+        return iControlLocalDataSource.getAllPendingControls()
+    }
 }

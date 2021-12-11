@@ -2,12 +2,10 @@ package com.juan.prohealth.ui.ajustesActivity
 
 import android.app.TimePickerDialog
 import android.app.TimePickerDialog.OnTimeSetListener
-import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
-import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Toast
@@ -16,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.juan.prohealth.AppContext
 import com.juan.prohealth.MySharedPreferences
+import com.juan.prohealth.MyWorkManager
 import com.juan.prohealth.R
 import com.juan.prohealth.database.Control
 import com.juan.prohealth.database.User
@@ -54,8 +53,8 @@ class AjustesActivity : AppCompatActivity() {
         binding = ActivityAjustesBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.tvContactos.setOnClickListener { doAskMail() }
-        binding.frameNotificaciones.setOnClickListener { doConfigNotification() }
+        binding.tvContactos.setOnClickListener { viewModel.loadUserEmailInfo() }
+        binding.frameNotificaciones.setOnClickListener { viewModel.loadUserAlarmForAlert() }
         binding.tvExportar.setOnClickListener { doExportarMail() }
         binding.tvReconfigurarInr.setOnClickListener { doReconfigurarINR() }
     }
@@ -67,12 +66,16 @@ class AjustesActivity : AppCompatActivity() {
         viewModel = buildViewModel()
         setUpUI()
         subscribeUI()
+        viewModel.loadUserAlarm()
     }
 
     private fun subscribeUI() {
-        viewModel.userSchedule.observe(this) { schedule ->
-            if (schedule.size > 1)
-                setViewScheduleTime(schedule)
+        viewModel.getUserAlarm().observe(this) { time ->
+            drawTime(time)
+        }
+
+        viewModel.getUserAlarmForAlert().observe(this) { time ->
+            showConfigAlarmAlert(time)
         }
 
         viewModel.currentActiveControls.observe(this) { activeControls ->
@@ -81,40 +84,28 @@ class AjustesActivity : AppCompatActivity() {
             else
                 binding.tvReconfigurarInr.visibility = View.GONE
         }
+        viewModel.getUserEmailInfo().observe(this) {
+            doAskMail(it)
+        }
     }
 
     private fun doUpdateSchedule(hour: Int, minute: Int) {
         viewModel.updateUserSchedule(hour, minute)
     }
 
-    private fun setViewScheduleTime(time: Array<Int>) {
+    private fun drawTime(time: Pair<Int, Int>) {
         binding.tvHora.text = AppContext.getDateFormat(time)
     }
 
-    fun doConfigNotification() {
-        val hour: Int = User.getCurrentTimeNotification()[0] // viewModel.userHour
-        val minute: Int = User.getCurrentTimeNotification()[1]
-        val mTimePicker: TimePickerDialog
-        mTimePicker = TimePickerDialog(
+    fun showConfigAlarmAlert(time: Pair<Int, Int>) {
+        val hour: Int = time.first
+        val minute: Int = time.second
+        val mTimePicker = TimePickerDialog(
             this, android.R.style.Theme_Holo_Dialog,
-//            mTimePicker = TimePickerDialog(this, android.R.style.Theme_Holo_Light_Dialog,
-            OnTimeSetListener { timePicker, selectedHour, selectedMinute ->
-                Toast.makeText(
-                    this,
-                    "Seleccionado: $selectedHour:$selectedMinute",
-                    Toast.LENGTH_SHORT
-                ).show()
-
+            { timePicker, selectedHour, selectedMinute ->
                 doUpdateSchedule(selectedHour, selectedMinute)
-                setViewScheduleTime(arrayOf(selectedHour, selectedMinute))
-
-                if (Control.hasPendingControls()) {
-                    //MyWorkManager.setWorkers(Control.getActiveControlList(onlyPendings = true))
-                    Toast.makeText(this, "Alarmas actualizadas", Toast.LENGTH_SHORT).show()
-                } else {
-                    Toast.makeText(this, "No hay alarma programada", Toast.LENGTH_SHORT).show()
-                }
-
+                drawTime(Pair(selectedHour, selectedMinute))
+                Toast.makeText(this, "Alarmas actualizadas", Toast.LENGTH_SHORT).show()
             }, hour, minute, true
         ) //Yes 24 hour time
 
@@ -122,22 +113,16 @@ class AjustesActivity : AppCompatActivity() {
         mTimePicker.show()
     }
 
-    fun doAskMail() {
+    fun doAskMail(emails: String?) {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Emails")
-        builder.setMessage(getString(R.string.introduce_emails))
-        val editText = EditText(this)
-        editText.setText(MySharedPreferences.shared.getString("emails"))
-        editText.layoutParams = LinearLayout.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT
-        )
-
-        builder.setView(editText)
-
-        builder.setPositiveButton(getString(R.string.accept), DialogInterface.OnClickListener { dialogInterface, i ->
+        val view: LinearLayout = layoutInflater.inflate(R.layout.ad_introducir_emails, null) as LinearLayout
+        val editText = view.findViewById<EditText>(R.id.emails)
+        editText.setText(emails ?: "")
+        builder.setView(view)
+        builder.setPositiveButton(getString(R.string.accept), { dialogInterface, i ->
             if (!editText.text.isNullOrEmpty()) {
-                MySharedPreferences.shared.addString("emails", editText.text.toString())
+                viewModel.updateUserEmails(editText.text.toString())
             }
         })
 

@@ -24,5 +24,7 @@ data class User(
     @ColumnInfo(name = "id_server")
     var idServer: Int = 0,
     @ColumnInfo(name = "state_logging")
-    var stateLogging: Boolean = true
+    var stateLogging: Boolean = true,
+    @ColumnInfo(name = "trust_emails")
+    var trustEmails: String = ""
 ): Parcelable

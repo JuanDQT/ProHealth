@@ -9,10 +9,10 @@
     <string name="tu_nivel_inr">Tu nivel INR</string>
     <string name="calcula_tu_inr">Calcula tu INR</string>
     <string name="historial">Historial</string>
-    <string name="tu_historial">Tu historial</string>
+    <string name="tu_historial">Mi historial</string>
     <string name="tu_nivel_de_dosis">Tu nivel de dosis</string>
-    <string name="farmacias_cercanas">Farmacias Cercanas</string>
-    <string name="consejos_y_dudas">Consejos y Dudas</string>
+    <string name="farmacias_cercanas">Farmacias</string>
+    <string name="consejos_y_dudas">Consejos</string>
     <string name="configuracion">Configuración</string>
     <string name="manana">MAÑANA</string>
     <string name="ayer">AYER</string>
@@ -63,4 +63,9 @@
     <string name="alert_message_restart_inr">Esta segur que vol eliminar l\'utim control?</string>
     <string name="yes">Si</string>
     <string name="no">No</string>
+    <string name="nivel_de_dosis_actual">Nivel de dosis actual: %s</string>
+    <string name="nivel_de_sangre_actual">Nivel de sangre actual: %s</string>
+    <string name="dosis_sintrom_este_dia">Dosis de Sintrom para este dia: %s</string>
+    <string name="nada_planificado_fecha">No hay nada planificado para esta fecha</string>
+    <string name="btn_compartir">Compartir</string>
 </resources>

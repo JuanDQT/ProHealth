@@ -24,7 +24,7 @@ interface ControlDao {
     @Query("SELECT MAX(group_control) + 1 FROM control")
     suspend fun generateNewIdGroupFromDb(): Int?
 
-    @Query("SELECT * FROM control WHERE medicated = 0 AND resource <> '0'")
+    @Query("SELECT * FROM control WHERE medicated = -1 and resource <> '0' and  (execution_date = (CAST(strftime('%s', date())  AS  int) * 1000)) AND user_id = (SELECT id FROM user WHERE state_logging = 1)")
     suspend fun getAllPendingControls(): List<Control>//Nadie usa esta funcion pero creo que podria ser util
 
     @Query("SELECT * FROM control WHERE execution_date = :date AND user_id = (SELECT id FROM user WHERE state_logging = 1)")
@@ -45,4 +45,5 @@ interface ControlDao {
 
     @Query("SELECT * FROM control WHERE user_id = (SELECT id FROM user WHERE state_logging = 1) ORDER BY group_control desc limit 1")
     suspend fun getLastControl(): Control?
+
 }
