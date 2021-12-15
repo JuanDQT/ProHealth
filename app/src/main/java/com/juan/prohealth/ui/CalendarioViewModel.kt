@@ -30,6 +30,7 @@ class CalendarioViewModel(
             val controls: List<Control> = controlRepository.getAllControls()
             val calendarItems: Array<Calendar> = controls.map { i -> Calendar.getInstance().fromDate(i.executionDate) }.toTypedArray()
             _controlList.postValue(calendarItems)
+            onDaySelected(Calendar.getInstance())
         }
     }
 
