@@ -16,4 +16,11 @@
     <dimen name="dimen_date_text_view">48dp</dimen>
     <dimen name="radius_event_dot">2dp</dimen>
     <dimen name="padding_top_month_title">8dp</dimen>
+
+    <!-- Buttons   -->
+    <dimen name="button_height">54dp</dimen>
+    <dimen name="padding_button_size_laterals">110dp</dimen>
+    <dimen name="padding_button_size_top_bottom">17dp</dimen>
+    <dimen name="day_event_width">56dp</dimen>
+    <dimen name="day_event_decoration_padding">10dp</dimen>
 </resources>

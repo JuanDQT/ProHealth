@@ -33,6 +33,22 @@
         android:layout_marginTop="15dp"
         >
 
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_fecha"
+            android:layout_width="match_parent"
+            android:textSize="25dp"
+            android:paddingLeft="25dp"
+            android:paddingRight="25dp"
+            android:textAlignment="center"
+            android:layout_marginTop="15dp"
+            android:layout_gravity="center"
+            android:layout_height="match_parent"
+            android:textColor="@color/colorPrimary"
+            tools:text="@string/nada_planificado_fecha"
+            android:layout_weight="0.5"
+            />
+
+
         <ImageView
             android:id="@+id/viewDosis"
             android:layout_width="100dp"
@@ -41,33 +57,37 @@
             android:layout_gravity="center"/>
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tv_Dosis"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_marginTop="20dp"
-            android:layout_weight="0.5"
-            android:textAlignment="center"
-            android:textSize="18dp" />
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tv_Sangre"
-            android:layout_width="match_parent"
-            android:textSize="18dp"
-            android:layout_marginTop="5dp"
-            android:textAlignment="center"
-            android:layout_gravity="center"
-            android:layout_height="match_parent"
-            android:layout_weight="0.5" />
-        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_infoDosis"
             android:layout_width="match_parent"
             android:textSize="18dp"
             android:textAlignment="center"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="15dp"
             android:layout_gravity="center"
             android:layout_height="match_parent"
+            tools:text="Dosis de Sintrom para este dia: "
             android:layout_weight="0.5"
-           />
+            />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_Dosis"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginTop="30dp"
+            android:layout_weight="0.5"
+            android:textAlignment="center"
+            tools:text="El nivel de dosis actual es: "
+            android:textSize="15dp" />
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_Sangre"
+            android:layout_width="match_parent"
+            android:textSize="15dp"
+            android:layout_marginTop="5dp"
+            tools:text="Tu nivel de sangre actual es: "
+            android:textAlignment="center"
+            android:layout_gravity="center"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5" />
 
     </LinearLayout>
 </LinearLayout>

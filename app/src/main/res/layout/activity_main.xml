@@ -96,6 +96,7 @@
                 app:layout_constraintStart_toStartOf="parent" />
 
             <ImageButton
+                android:visibility="gone"
                 android:id="@+id/ib_profile"
                 android:layout_width="20dp"
                 android:layout_height="20dp"

@@ -50,6 +50,7 @@
         <activity
             android:name=".ui.initialActivity.InitialActivity"
             android:screenOrientation="portrait"
+            android:theme="@style/SplashScreen"
             />
         <activity
             android:name=".SplashScreenActivity"

@@ -18,14 +18,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="16sp"
-            android:paddingTop="5dp"
+            android:paddingTop="10dp"
             android:text="@string/msg_introducir_nivel_inr_1_7"
             />
 
         <EditText
             android:id="@+id/etValor"
             android:inputType="numberDecimal"
-
+            android:paddingTop="10dp"
+            android:textAlignment="viewEnd"
             android:layout_width="match_parent"
             android:maxLength="4"
             android:layout_height="wrap_content" />
@@ -63,7 +64,9 @@
             android:layout_width="wrap_content"
             android:background="@android:color/transparent"
             android:text="@string/button_aceptar"
-            android:paddingBottom="5dp"
+            android:textAllCaps="true"
+            android:paddingTop="10dp"
+            android:paddingBottom="15dp"
             android:layout_height="wrap_content"/>
 
     </LinearLayout>
@@ -351,6 +354,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
+                android:buttonTint="@color/colorPrimary"
                 android:text="@string/enviar_email" />
             <Button
                 android:layout_gravity="end"
@@ -358,7 +362,10 @@
                 android:layout_width="wrap_content"
                 android:background="@android:color/transparent"
                 android:text="@string/button_planificar"
-                android:paddingBottom="5dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="15dp"
+                android:textColor="@color/colorPrimary"
+                android:textAllCaps="true"
                 android:layout_height="wrap_content"/>
         </LinearLayout>
     </LinearLayout>

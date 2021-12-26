@@ -35,24 +35,27 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvInit"
-        android:backgroundTint="#000"
-        android:textColor="#000"
         android:layout_marginTop="15dp"
+        android:backgroundTint="#000"
         android:ems="10"
         android:inputType="number|textPersonName"
+        android:textColor="#000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvInit" />
 
     <Button
         android:id="@+id/btnSaveDose"
+        style="@style/MainButtonLarger"
         android:layout_width="match_parent"
-        android:layout_height="47dp"
         android:layout_below="@+id/et_nivel"
-        android:text="@string/guardar"
-        android:backgroundTint="@color/colorPrimary"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="0dp"
         android:layout_marginTop="10dp"
-         />
+        android:layout_marginEnd="0dp"
+        android:textAllCaps="true"
+        android:text="@string/guardar" />
 
 
 </RelativeLayout>

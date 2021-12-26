@@ -10,6 +10,7 @@ import com.juan.prohealth.database.room.RoomControlDataSource
 import com.juan.prohealth.databinding.ActivityCalendarioBinding
 import com.juan.prohealth.repository.ControlRepository
 import com.juan.prohealth.ui.CalendarioViewModel
+import com.juan.prohealth.ui.common.customFormat
 import com.juan.prohealth.ui.common.setBackgroundResource
 import java.util.*
 
@@ -57,11 +58,13 @@ class CalendarioActivity : AppCompatActivity() {
 
     private fun drawControlSelectedDate(control: Control?) {
         control?.let {
-            binding.tvDosis.text = "El nivel de dosis actual es: ${it.doseLevel}"
-            binding.tvSangre.text = "Tu nivel de sangre actual es: ${it.blood}"
-            binding.tvInfoDosis.text = "Dosis de Sintrom para este dia: ${it.resource}"
+            binding.tvFecha.text = it.executionDate.customFormat("dd/MM/yyyyy")
+            binding.tvDosis.text = String.format(getString(R.string.nivel_de_dosis_actual), it.doseLevel)
+            binding.tvSangre.text = String.format(getString(R.string.nivel_de_sangre_actual), it.blood)
+            binding.tvInfoDosis.text = String.format(getString(R.string.dosis_sintrom_este_dia), it.resource)
             binding.viewDosis.setBackgroundResource(AppContext.getImageNameByJSON(it.resource))
         } ?: run {
+            binding.tvFecha.text = getString(R.string.nada_planificado_fecha)
             binding.tvDosis.text = ""
             binding.tvSangre.text = ""
             binding.tvInfoDosis.text = ""

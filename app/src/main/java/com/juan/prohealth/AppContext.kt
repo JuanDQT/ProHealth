@@ -33,8 +33,8 @@ class AppContext : Application() {
             return json
         }
 
-        fun getDateFormat(dateArray: Array<Int>): String {
-            return "${dateArray[0].toString().padStart(2, '0')}:${dateArray[1].toString().padStart(2, '0')}"
+        fun getDateFormat(date: Pair<Int, Int>): String {
+            return "${date.first.toString().padStart(2, '0')}:${date.second.toString().padStart(2, '0')}"
         }
 
         /**
