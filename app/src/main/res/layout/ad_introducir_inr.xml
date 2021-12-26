@@ -74,6 +74,7 @@
     <LinearLayout
         android:id="@+id/frame_final"
         android:visibility="gone"
+        tools:visibility="visible"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -165,6 +166,8 @@
                 android:layout_width="0dp"
                 android:layout_weight="10"
                 android:layout_height="match_parent"
+                tools:visibility="visible"
+                tools:background="#000"
                 android:orientation="vertical">
 
                 <TextView
@@ -175,10 +178,10 @@
                     android:layout_height="wrap_content" />
                 <ImageView
                     android:tag="i0"
-                    android:scaleType="centerCrop"
-                    android:layout_height="40dp"
-                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:layout_width="fill_parent"
                     android:layout_marginTop="5dp"
+                    tools:srcCompat="@drawable/un_cuarto"
                     android:layout_gravity="center_horizontal"
                     />
 
@@ -190,6 +193,8 @@
                 android:layout_width="0dp"
                 android:layout_weight="10"
                 android:layout_height="match_parent"
+                tools:visibility="visible"
+                tools:background="#000"
                 android:orientation="vertical">
 
                 <TextView
@@ -200,9 +205,10 @@
                     android:layout_height="wrap_content" />
                 <ImageView
                     android:tag="i1"
-                    android:layout_height="40dp"
-                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:layout_width="fill_parent"
                     android:layout_marginTop="5dp"
+                    tools:srcCompat="@drawable/medio"
                     android:layout_gravity="center_horizontal"/>
 
             </LinearLayout>
@@ -210,6 +216,8 @@
             <LinearLayout
                 android:tag="l2"
                 android:visibility="gone"
+                tools:visibility="visible"
+                tools:background="#000"
                 android:layout_width="0dp"
                 android:layout_weight="10"
                 android:layout_height="match_parent"
@@ -223,15 +231,18 @@
                     android:layout_height="wrap_content" />
                 <ImageView
                     android:tag="i2"
-                    android:layout_height="40dp"
-                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:layout_width="fill_parent"
                     android:layout_marginTop="5dp"
+                    tools:srcCompat="@drawable/no_toca"
                     android:layout_gravity="center_horizontal" />
 
             </LinearLayout>
             <LinearLayout
                 android:tag="l3"
                 android:visibility="gone"
+                tools:visibility="visible"
+                tools:background="#000"
                 android:layout_width="0dp"
                 android:layout_weight="10"
                 android:layout_height="match_parent"
@@ -245,9 +256,10 @@
                     android:layout_height="wrap_content" />
                 <ImageView
                     android:tag="i3"
-                    android:layout_height="40dp"
-                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:layout_width="fill_parent"
                     android:layout_marginTop="5dp"
+                    tools:srcCompat="@drawable/tres_cuartos"
                     android:layout_gravity="center_horizontal"/>
 
             </LinearLayout>
@@ -256,6 +268,8 @@
                 android:visibility="gone"
                 android:layout_width="0dp"
                 android:layout_weight="10"
+                tools:visibility="visible"
+                tools:background="#000"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
@@ -267,9 +281,10 @@
                     android:layout_height="wrap_content" />
                 <ImageView
                     android:tag="i4"
-                    android:layout_height="40dp"
-                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:layout_width="fill_parent"
                     android:layout_marginTop="5dp"
+                    tools:srcCompat="@drawable/entero"
                     android:layout_gravity="center_horizontal" />
 
             </LinearLayout>
@@ -278,6 +293,8 @@
                 android:visibility="gone"
                 android:layout_width="0dp"
                 android:layout_weight="10"
+                tools:visibility="visible"
+                tools:background="#000"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
@@ -289,9 +306,10 @@
                     android:layout_height="wrap_content" />
                 <ImageView
                     android:tag="i5"
-                    android:layout_height="40dp"
-                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:layout_width="fill_parent"
                     android:layout_marginTop="5dp"
+                    tools:srcCompat="@drawable/entero_un_cuarto"
                     android:layout_gravity="center_horizontal" />
 
             </LinearLayout>
@@ -299,6 +317,8 @@
                 android:tag="l6"
                 android:visibility="gone"
                 android:layout_width="0dp"
+                tools:visibility="visible"
+                tools:background="#000"
                 android:layout_weight="10"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
@@ -311,11 +331,12 @@
                     android:layout_height="wrap_content" />
 
                 <ImageView
-                    android:layout_height="40dp"
-                    android:layout_width="wrap_content"
+                    android:tag="i6"
+                    android:layout_height="fill_parent"
+                    android:layout_width="fill_parent"
                     android:layout_marginTop="5dp"
-                    android:layout_gravity="center_horizontal"
-                    android:tag="i6" />
+                    tools:srcCompat="@drawable/entero_un_medio"
+                    android:layout_gravity="center_horizontal" />
 
             </LinearLayout>
 
