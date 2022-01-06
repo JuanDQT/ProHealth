@@ -78,10 +78,15 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         configureWidget()
     }
 
+    // TODO: Para solucionar el error visual de las imagenes en el carousel que se van ocultando, podemos hacer 2 cosas:
+    // 1. Añadir mas decimales al transformer.viewPerspective. Cuanto mas pequeño el valor, mas retrasaremos el error. con 0.01 es una buena partida, pero añadimos mas para asegurar
+    // 2. Solucion definitiva: no utilizar el transformer en el carousel. Esto implicaria que se perderia el efecto visual
+    // El error ocurre, por que parece que al añadirle una perspectiva(obligatoria) esta se queda guardada en memoria, y cada vez va aumentando
+    // La perspectiva consiste en añadirle una especie de margen superior, a mas grande, mas va desplazando el widget hacia abajo.
     private fun configureWidget() {
         binding.carousel.visibility = View.VISIBLE
         val transformer = FlatMerryGoRoundTransformer()
-        transformer.viewPerspective = 0.2
+        transformer.viewPerspective = 1.0E-45
         transformer.farAlpha = 0.0
         binding.ivArrowLeft.visibility = View.VISIBLE
         binding.ivArrowRight.visibility = View.VISIBLE

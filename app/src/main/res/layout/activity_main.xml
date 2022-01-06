@@ -124,7 +124,7 @@
     <com.gtomato.android.ui.widget.CarouselView
         android:id="@+id/carousel"
         android:layout_width="0dp"
-        android:layout_height="200dp"
+        android:layout_height="wrap_content"
         android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@id/scrollView2"
         app:layout_constraintEnd_toStartOf="@+id/iv_arrow_right"
