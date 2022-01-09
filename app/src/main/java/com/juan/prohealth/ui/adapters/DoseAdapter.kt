@@ -50,7 +50,7 @@ class DoseAdapter(var controls: List<Control>) :
                                 context.getString(R.string.manana)
                             dateControl.isYesterday() -> tvCurrent.text =
                                 context.getString(R.string.ayer)
-                            else -> tvCurrent.visibility = View.GONE
+                            else -> tvCurrent.visibility = View.INVISIBLE
                         }
                     }
 
