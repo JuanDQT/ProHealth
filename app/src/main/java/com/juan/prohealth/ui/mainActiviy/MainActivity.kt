@@ -173,7 +173,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         })
 
         btnAccept.setOnClickListener {
-            hideKeyboard()
+            editText.hideKeyboard()
             val valorSangreNumerico = editText.text.toString().replace(",", ".").toFloat()
             val nomFichero = Control.getFicheroCorrespondiente(valorSangreNumerico)
 
