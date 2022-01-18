@@ -30,14 +30,14 @@ class StorageValidationDataSource(private val sharedPreferences: SharedPreferenc
 
     override fun getDoseLevel(): String {
         sharedPreferences?.let {
-            return it.getString("nivel", "0")
+            return it.getString("nivel", "0") ?: ""
         }
         return "0"
     }
 
     override fun getBloodLevel(): String {
         sharedPreferences?.let {
-            return it.getString("sangre", "0")
+            return it.getString("sangre", "0") ?: ""
         }
         return "0"
     }
@@ -53,7 +53,7 @@ class StorageValidationDataSource(private val sharedPreferences: SharedPreferenc
     override fun getString(key: String): String {
         val defaultValue = ""
         sharedPreferences?.let {
-            return it.getString(key, defaultValue)
+            return it.getString(key, defaultValue) ?: ""
         }
         return defaultValue
     }

@@ -1,15 +1,28 @@
-*.iml
+# Gradle
 .gradle
+gradle/
+gradlew
+gradlew.bat
+
+# IntelliJ IDEA / AndroidStudio
+.idea/
+*/.idea/
+*.iml
 /local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
-.DS_Store
 /build
+
+# Apple
+.DS_Store
+
+# Build application files
+*.apk
+*.ap_
+*.abb
+
+# Files for the ART/Dalvik VM
+*.dex
+
+# Others
 /captures
 .externalNativeBuild
 .cxx
-/.idea
