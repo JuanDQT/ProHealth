@@ -11,19 +11,41 @@ apply plugin: 'com.google.firebase.crashlytics'
 // https://stackoverflow.com/questions/48399052/could-not-find-method-include-product
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 30
     defaultConfig {
         applicationId "com.juan.prohealth"
+        versionCode 100
+        versionName "1.0.0"
         minSdkVersion 22
-        targetSdkVersion 28
-        versionCode 1
-        versionName "1.0"
+        targetSdkVersion 30
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
+
+        debug {
+            minifyEnabled false
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    // More info: https://www.youtube.com/watch?v=mBoNVTjMAtA
+    flavorDimensions "default"
+    productFlavors {
+
+        production {
+            applicationId 'com.juan.prohealth'
+            resValue 'string', 'app_name', 'Coagutest'
+            buildConfigField 'String', 'URL_SERVER', '"http://www.production.server.com"'
+            dimension 'default'
+        }
+        staging {
+            applicationId 'com.juan.prohealth.staging'
+            resValue 'string', 'app_name', 'Staging-Coagutest'
+            buildConfigField 'String', 'URL_SERVER', '"http://www.staging.server.com"'
+            dimension "default"
         }
     }
 

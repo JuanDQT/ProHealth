@@ -32,14 +32,14 @@ class MySharedPreferences {
 
         fun getNivel(): String {
            sharedPreferences?.let {
-               return it.getString("nivel", "0")
+               return it.getString("nivel", "0") ?: ""
            }
             return "0"
         }
 
         fun getSangre(): String {
             sharedPreferences?.let {
-                return it.getString("sangre", "0")
+                return it.getString("sangre", "0") ?: ""
             }
             return "0"
         }
@@ -57,7 +57,7 @@ class MySharedPreferences {
         // genericos
         fun getString(key: String): String {
             sharedPreferences?.let {
-                return it.getString(key, "")
+                return it.getString(key, "") ?: ""
             }
             return ""
         }
