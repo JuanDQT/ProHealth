@@ -14,7 +14,7 @@ android {
     compileSdkVersion 30
     defaultConfig {
         applicationId "com.juan.prohealth"
-        versionCode 100
+        versionCode 1901222005
         versionName "1.0.0"
         minSdkVersion 22
         targetSdkVersion 30
