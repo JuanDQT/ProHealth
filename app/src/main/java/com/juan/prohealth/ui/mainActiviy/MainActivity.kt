@@ -94,8 +94,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
         binding.carousel.transformer = transformer
         binding.carousel.isInfinite = true
-
-        throw RuntimeException("STAGING")
     }
 
     private fun instanceFlashBar(): Flashbar {

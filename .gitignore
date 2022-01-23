@@ -18,6 +18,8 @@ gradlew.bat
 *.apk
 *.ap_
 *.abb
+output-metadata.json
+coagutest_ks
 
 # Files for the ART/Dalvik VM
 *.dex
