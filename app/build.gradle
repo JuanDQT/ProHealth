@@ -19,6 +19,8 @@ android {
         minSdkVersion 22
         targetSdkVersion 30
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        // More info about rename app result: https://medium.com/@giorgos.neokleous93/name-your-apk-aab-files-3cf3d123a48c
+        setProperty("archivesBaseName", "Coagutest")
     }
     buildTypes {
 
@@ -34,18 +36,26 @@ android {
     // More info: https://www.youtube.com/watch?v=mBoNVTjMAtA
     flavorDimensions "default"
     productFlavors {
+        staging {
+            applicationId 'com.juan.prohealth.staging'
+            resValue 'string', 'app_name', 'Staging-Coagutest'
+            buildConfigField 'String', 'URL_SERVER', '"http://www.staging.server.com"'
+            manifestPlaceholders = [
+                    appIcon: "@mipmap/ic_launcher_staging",
+                    appIconRound: "@mipmap/ic_launcher_round_staging"
+            ]
+            dimension "default"
+        }
 
         production {
             applicationId 'com.juan.prohealth'
             resValue 'string', 'app_name', 'Coagutest'
             buildConfigField 'String', 'URL_SERVER', '"http://www.production.server.com"'
+            manifestPlaceholders = [
+                    appIcon: "@mipmap/ic_launcher",
+                    appIconRound: "@mipmap/ic_launcher_round"
+            ]
             dimension 'default'
-        }
-        staging {
-            applicationId 'com.juan.prohealth.staging'
-            resValue 'string', 'app_name', 'Staging-Coagutest'
-            buildConfigField 'String', 'URL_SERVER', '"http://www.staging.server.com"'
-            dimension "default"
         }
     }
 
