@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "902460599914",
+    "project_id": "coagutest---staging",
+    "storage_bucket": "coagutest---staging.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:902460599914:android:ea48bbd0755bcebb88a413",
+        "android_client_info": {
+          "package_name": "com.quispe.coagutest.staging"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "902460599914-q6ecliu2j2dlfqdlqnd3nnfhbpfv997t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCxwIlytFbOhGhM9XtAUnAg7Jkf7AgmU-Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "902460599914-q6ecliu2j2dlfqdlqnd3nnfhbpfv997t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

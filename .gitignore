@@ -1,3 +1,6 @@
+# Signing credentials
+signing.properties
+
 # Gradle
 .gradle
 gradle/
@@ -19,7 +22,7 @@ gradlew.bat
 *.ap_
 *.abb
 output-metadata.json
-coagutest_ks
+quispe.jks
 
 # Files for the ART/Dalvik VM
 *.dex
