@@ -14,7 +14,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.quispe.coagutest.AppContext
 import com.quispe.coagutest.MySharedPreferences
 import com.quispe.coagutest.R
-import com.quispe.coagutest.database.Control
 import com.quispe.coagutest.database.room.MyDatabase
 import com.quispe.coagutest.database.room.RoomControlDataSource
 import com.quispe.coagutest.database.room.RoomUserDataSource
@@ -126,10 +125,11 @@ class AjustesActivity : AppCompatActivity() {
         builder.create().show()
     }
 
+    // TODO: continuar
     fun generateExportFile(callback: (String?) -> Unit) {
 
         val tempFile = File(externalCacheDir, "resultado.pdf")
-
+        /*
         // Lets to transorm to PDF
         Html2Pdf.Companion.Builder()
             .context(this)
@@ -144,6 +144,7 @@ class AjustesActivity : AppCompatActivity() {
                     return callback(tempFile.absolutePath)
                 }
             })
+         */
     }
 
     fun doReconfigurarINR() {

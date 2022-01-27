@@ -4,9 +4,6 @@ import android.app.Application
 import android.content.Context
 import android.provider.Settings
 import android.widget.Toast
-import com.quispe.coagutest.database.CustomMigration
-import io.realm.Realm
-import io.realm.RealmConfiguration
 import org.json.JSONObject
 import java.nio.charset.StandardCharsets
 
@@ -196,9 +193,6 @@ class AppContext : Application() {
     override fun onCreate() {
         super.onCreate()
         context = applicationContext
-        Realm.init(context)
-        val realmConfiguration: RealmConfiguration = RealmConfiguration.Builder().name("control").migration(CustomMigration()).build()
-        Realm.setDefaultConfiguration(realmConfiguration)
     }
 
 }

@@ -37,7 +37,6 @@ import com.quispe.coagutest.ui.ajustesActivity.AjustesActivity
 import com.quispe.coagutest.ui.common.*
 import kotlinx.android.synthetic.main.custom_button.view.*
 import java.util.*
-import com.quispe.coagutest.database.Control as RealmControl
 
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
@@ -382,8 +381,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-    // TODO: Recoge los valores para mostrarlo en un ALERT
+    // TODO: continuar
     private fun sendPlanningEmail() {
+        /*
         val data = Html.fromHtml(RealmControl.getActiveControlListToEmail())
         val emailIntent = Intent(
             Intent.ACTION_SENDTO,
@@ -392,6 +392,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Planificacion IRN")
         emailIntent.putExtra(Intent.EXTRA_TEXT, data)
         startActivity(Intent.createChooser(emailIntent, "Enviar mail..."))
+         */
     }
 
     private fun checkIfExistGmapsApp(namePackage: String, context: Context): Boolean {
