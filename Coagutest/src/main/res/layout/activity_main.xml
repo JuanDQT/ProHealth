@@ -13,7 +13,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout3"
         android:layout_width="match_parent"
-        android:layout_height="120dp"
+        android:layout_height="100dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -126,6 +126,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:visibility="visible"
+        android:layout_marginTop="10dp"
         app:layout_constraintBottom_toTopOf="@id/scrollView2"
         app:layout_constraintEnd_toStartOf="@+id/iv_arrow_right"
         app:layout_constraintStart_toEndOf="@+id/iv_arrow_left"
@@ -159,6 +160,7 @@
             android:background="#fff"
             android:orientation="vertical"
             android:paddingLeft="50dp"
+            android:paddingBottom="50dp"
             android:paddingRight="50dp">
 
             <com.quispe.coagutest.custom.CustomButton

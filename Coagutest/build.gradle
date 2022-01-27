@@ -12,7 +12,7 @@ apply plugin: 'com.google.firebase.crashlytics'
 android {
     def versionMajor = 1
     def versionMinor = 0
-    def versionPatch = 0
+    def versionPatch = 1
 
     compileSdkVersion 30
     defaultConfig {
