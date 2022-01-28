@@ -1,2 +1,2 @@
-include ':app', ':anychart', ':eventscalendar'
+include ':Coagutest', ':anychart', ':eventscalendar'
 rootProject.name='ProHealth'

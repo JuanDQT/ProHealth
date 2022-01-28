@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#fff"
+    tools:context=".ui.mainActiviy.MainActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout3"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@color/colorPrimary"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/constraintLayout2"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/tv_sangre_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/tu_nivel_inr"
+                android:textAlignment="center"
+                android:textColor="#fff"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toTopOf="@+id/tv_sangre_valor"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_sangre_valor"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="TextView"
+                android:textAlignment="center"
+                android:textColor="#fff"
+                android:textSize="42sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:text="4,6" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@color/colorPrimaryDark"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/constraintLayout"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/tv_dosis_valor"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="TextView"
+                android:textAlignment="center"
+                android:textColor="#fff"
+                android:textSize="42sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:text="5" />
+
+            <TextView
+                android:id="@+id/tv_dosis_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/tu_nivel_de_dosis"
+                android:textAlignment="center"
+                android:textColor="#fff"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toTopOf="@+id/tv_dosis_valor"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <ImageButton
+                android:visibility="gone"
+                android:id="@+id/ib_profile"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="5dp"
+                android:background="@null"
+                android:scaleType="fitXY"
+                app:layout_constraintBottom_toTopOf="@+id/tv_dosis_text"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:srcCompat="@drawable/user" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ImageView
+        android:id="@+id/iv_arrow_left"
+        android:layout_width="20dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="10dp"
+        android:rotation="180"
+        android:src="@drawable/shape_triangle"
+        app:layout_constraintBottom_toBottomOf="@+id/carousel"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout3" />
+
+    <com.gtomato.android.ui.widget.CarouselView
+        android:id="@+id/carousel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        android:layout_marginTop="10dp"
+        app:layout_constraintBottom_toTopOf="@id/scrollView2"
+        app:layout_constraintEnd_toStartOf="@+id/iv_arrow_right"
+        app:layout_constraintStart_toEndOf="@+id/iv_arrow_left"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout3" />
+
+    <ImageView
+        android:id="@+id/iv_arrow_right"
+        android:layout_width="20dp"
+        android:layout_height="30dp"
+        android:layout_marginEnd="10dp"
+        android:src="@drawable/shape_triangle"
+        app:layout_constraintBottom_toBottomOf="@+id/carousel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout3" />
+
+    <ScrollView
+        android:id="@+id/scrollView2"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/carousel">
+
+        <LinearLayout
+            android:id="@+id/ll_opciones"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:background="#fff"
+            android:orientation="vertical"
+            android:paddingLeft="50dp"
+            android:paddingBottom="50dp"
+            android:paddingRight="50dp">
+
+            <com.quispe.coagutest.custom.CustomButton
+                android:id="@+id/btnCalendario"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cb_icon_position="left"
+                app:cb_resource="@drawable/calendar"
+                app:cb_title="@string/calendario" />
+
+            <com.quispe.coagutest.custom.CustomButton
+                android:id="@+id/btnEstadisticas"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cb_icon_position="right"
+                app:cb_resource="@drawable/grafica"
+                app:cb_title="@string/tu_historial" />
+
+            <com.quispe.coagutest.custom.CustomButton
+                android:id="@+id/btnINR"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cb_icon_position="left"
+                app:cb_resource="@drawable/pen"
+                app:cb_title="@string/calcula_tu_inr" />
+
+            <com.quispe.coagutest.custom.CustomButton
+                android:id="@+id/btnGmap"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cb_icon_position="right"
+                app:cb_resource="@drawable/place"
+                app:cb_title="@string/farmacias_cercanas" />
+
+            <com.quispe.coagutest.custom.CustomButton
+                android:id="@+id/btnConsejos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cb_icon_position="left"
+                app:cb_resource="@drawable/question_mark"
+                app:cb_title="@string/consejos_y_dudas" />
+
+            <com.quispe.coagutest.custom.CustomButton
+                android:id="@+id/btnAjustes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cb_icon_position="right"
+                app:cb_resource="@drawable/settings"
+                app:cb_title="@string/configuracion" />
+        </LinearLayout>
+
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>
