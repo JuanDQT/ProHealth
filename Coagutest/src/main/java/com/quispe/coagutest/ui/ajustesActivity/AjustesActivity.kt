@@ -21,8 +21,6 @@ import com.quispe.coagutest.databinding.ActivityAjustesBinding
 import com.quispe.coagutest.repository.ControlRepository
 import com.quispe.coagutest.repository.UserRepository
 import com.quispe.coagutest.ui.common.alert
-import io.github.lucasfsc.html2pdf.Html2Pdf
-import java.io.File
 
 
 class AjustesActivity : AppCompatActivity() {
@@ -51,7 +49,7 @@ class AjustesActivity : AppCompatActivity() {
 
         binding.tvContactos.setOnClickListener { viewModel.loadUserEmailInfo() }
         binding.frameNotificaciones.setOnClickListener { viewModel.loadUserAlarmForAlert() }
-        binding.tvExportar.setOnClickListener { doExportarMail() }
+        binding.tvExportar.setOnClickListener { viewModel.prepareExportControls(externalCacheDir, this) }
         binding.tvReconfigurarInr.setOnClickListener { doReconfigurarINR() }
     }
 
@@ -82,6 +80,10 @@ class AjustesActivity : AppCompatActivity() {
         }
         viewModel.getUserEmailInfo().observe(this) {
             doAskMail(it)
+        }
+
+        viewModel.getExportControls().observe(this) {
+            doExportarMail(it)
         }
     }
 
@@ -125,28 +127,6 @@ class AjustesActivity : AppCompatActivity() {
         builder.create().show()
     }
 
-    // TODO: continuar
-    fun generateExportFile(callback: (String?) -> Unit) {
-
-        val tempFile = File(externalCacheDir, "resultado.pdf")
-        /*
-        // Lets to transorm to PDF
-        Html2Pdf.Companion.Builder()
-            .context(this)
-            .html(Control.exportDataMail())
-            .file(tempFile)
-            .build().convertToPdf(object : Html2Pdf.OnCompleteConversion {
-                override fun onFailed() {
-                    return callback(null)
-                }
-
-                override fun onSuccess() {
-                    return callback(tempFile.absolutePath)
-                }
-            })
-         */
-    }
-
     fun doReconfigurarINR() {
         alert(getString(R.string.alerta), getString(R.string.alert_message_restart_inr), getString(R.string.yes),
             { dialogInterface, i ->
@@ -157,25 +137,22 @@ class AjustesActivity : AppCompatActivity() {
             })
     }
 
-    fun doExportarMail() {
-        generateExportFile {
-            it?.let {
-                val emailIntent = Intent(
-                    Intent.ACTION_SENDTO,
-                    Uri.fromParts("mailto", MySharedPreferences.shared.getString("emails"), null)
-                )
-                emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.send_email_subject))
-                emailIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + it))
-                emailIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.send_email_body))
-                startActivity(Intent.createChooser(emailIntent, getString(R.string.send_email)))
-                return@generateExportFile
-            }
+    fun doExportarMail(generateExportFile: String?) {
+        generateExportFile?.let {
+            val emailIntent = Intent(
+                Intent.ACTION_SENDTO,
+                Uri.fromParts("mailto", MySharedPreferences.shared.getString("emails"), null)
+            )
+            emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.send_email_subject))
+            emailIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + it))
+            emailIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.send_email_body))
+            startActivity(Intent.createChooser(emailIntent, getString(R.string.send_email)))
+        } ?: kotlin.run {
             Toast.makeText(
                 this@AjustesActivity,
                 getString(R.string.send_email_error),
                 Toast.LENGTH_SHORT
             ).show()
         }
-
     }
 }

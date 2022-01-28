@@ -236,11 +236,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                     irnNew.text.toString().toFloat(),
                     nivelyDias["nivel"].toString().toInt(),
                     dataNiveles.toTypedArray(),
-                    Control()
+                    Control(),
+                    btnMails.isChecked
                 )
-                if (btnMails.isChecked) {
-                    sendPlanningEmail()
-                }
                 inrAlertDialog.cancel()
             }
         }
@@ -315,6 +313,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             lastBloodValues = values
         }
 
+        viewModel.mPlanningEmails.observe(this) {
+            sendPlanningEmail(it)
+        }
+
         viewModel.checkPendingControls.observe(this, { isPendingControls ->
             if (isPendingControls) flashBar.show()
             else Log.i("IsPendingControls", "Doesn't have pending controls")
@@ -381,18 +383,15 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-    // TODO: continuar
-    private fun sendPlanningEmail() {
-        /*
-        val data = Html.fromHtml(RealmControl.getActiveControlListToEmail())
+    private fun sendPlanningEmail(pair: Pair<String, String>) {
+        val data = Html.fromHtml(pair.first)
         val emailIntent = Intent(
             Intent.ACTION_SENDTO,
-            Uri.fromParts("mailto", MySharedPreferences.shared.getString("emails"), null)
+            Uri.fromParts("mailto", pair.second, null)
         )
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Planificacion IRN")
         emailIntent.putExtra(Intent.EXTRA_TEXT, data)
         startActivity(Intent.createChooser(emailIntent, "Enviar mail..."))
-         */
     }
 
     private fun checkIfExistGmapsApp(namePackage: String, context: Context): Boolean {

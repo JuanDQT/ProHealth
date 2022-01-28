@@ -12,6 +12,7 @@ import com.quispe.coagutest.repository.UserRepository
 import com.quispe.coagutest.repository.ValidationRepository
 import com.quispe.coagutest.ui.common.addDays
 import com.quispe.coagutest.ui.common.clearTime
+import com.quispe.coagutest.ui.common.customFormat
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -39,6 +40,9 @@ class MainViewModel(
 
     private var _currentActiveControls = MutableLiveData<List<Control>>()
     val currentActiveControls: LiveData<List<Control>> get() = _currentActiveControls
+
+    private var _mPlanningEmails = MutableLiveData<Pair<String, String>>()
+    val mPlanningEmails: LiveData<Pair<String, String>> get() = _mPlanningEmails
 
     init {
         getLastBloodValues()
@@ -79,7 +83,8 @@ class MainViewModel(
         bloodValue: Float,
         doseLevel: Int,
         planning: Array<String>,
-        control: Control
+        control: Control,
+        sendWithEmail: Boolean
     ) {
         viewModelScope.launch {
             val currentUser = userRepository.getCurrentUser()
@@ -97,6 +102,8 @@ class MainViewModel(
                 groupControl
             )
             getControlsToFillCarousel()
+            if (sendWithEmail)
+                prepareSendPlanningEmail()
         }
     }
 
@@ -138,6 +145,31 @@ class MainViewModel(
             _currentActiveControls.value = activeControls
             updateInfoPanelUi(user)
             MyWorkManager.setWorkers(activeControls, user.hourAlarm, user.minuteAlarm)
+        }
+    }
+
+    fun getMedicadoResult(resourceValue: String): String {
+        return when (resourceValue) {
+            "0" -> "No corresponde"
+            else -> resourceValue
+        }
+    }
+
+    fun getActiveControlListToEmail(controls: List<Control>): String {
+        if (controls.count() > 0) {
+            var body = "<h1>Control IRN</h1><br/><br/>"
+            for (x in controls) {
+                body += "<p>Fecha: ${x.executionDate.customFormat("dd/MM/yyyy")}. Dosis: ${getMedicadoResult(x.resource)}</p><br/>"
+            }
+            return body
+        } else return "No hay datos"
+    }
+
+    fun prepareSendPlanningEmail() {
+        viewModelScope.launch {
+            val userEmails = userRepository.getCurrentUser().trustEmails
+            val controls = controlRepository.getAllControls()
+            _mPlanningEmails.postValue(Pair(getActiveControlListToEmail(controls), userEmails))
         }
     }
 }
