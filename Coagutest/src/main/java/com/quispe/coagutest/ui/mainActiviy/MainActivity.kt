@@ -135,7 +135,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
         // Buscamos si hay historial..
 
-        if (lastBloodValues.count() > 0) {
+        if (viewModel.hasLatestBloodValue()) {
             val layoutHistorico = view.findViewById<LinearLayout>(R.id.ll_historico)
             layoutHistorico.visibility = View.VISIBLE
             val chipGroup = view.findViewById<ChipGroup>(R.id.chipGroup)

@@ -66,6 +66,9 @@ class MainViewModel(
         }
     }
 
+    fun hasLatestBloodValue() = chipsBloodValues.value?.any() ?: false
+
+
     fun getLastBloodValues() {
         viewModelScope.launch {
             val lastBloodValues = controlRepository.getLastBloodValues()
