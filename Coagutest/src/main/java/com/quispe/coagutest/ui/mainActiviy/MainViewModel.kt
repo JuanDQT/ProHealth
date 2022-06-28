@@ -86,7 +86,6 @@ class MainViewModel(
         bloodValue: Float,
         doseLevel: Int,
         planning: Array<String>,
-        control: Control,
         sendWithEmail: Boolean
     ) {
         viewModelScope.launch {
@@ -98,7 +97,6 @@ class MainViewModel(
 
             addControlsToUser(
                 planning,
-                control,
                 bloodValue,
                 doseLevel,
                 currentUser.id,
@@ -112,13 +110,13 @@ class MainViewModel(
 
     private suspend fun addControlsToUser(
         resourcePlanning: Array<String>,
-        control: Control,
         bloodValue: Float,
         doseLevel: Int,
         idUser: Int,
         groupControl: Int
     ) {
         for (x in 0 until resourcePlanning.size) {
+            val control = Control()
             control.executionDate = Date().addDays(x).clearTime()
             control.startDate = Date().clearTime()
             control.endDate = Date().addDays(resourcePlanning.size - 1).clearTime()
