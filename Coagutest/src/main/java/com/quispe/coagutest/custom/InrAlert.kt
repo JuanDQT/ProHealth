@@ -119,12 +119,6 @@ class InrAlert(activity: Activity, layoutInflater: LayoutInflater) {
                 nivelyDias["dias"].toString()
             )
 
-            // TODO: continue optimizate:
-            // 1. Clear
-            // 2. Prepare listeners
-            // 3. Delegate controls to class ControlManager
-            // 4. Connect with viewModel
-            // levantamos segunda vista
             btnAccept.text = activity.getString(R.string.button_planificar)
             initialLayoutView.visibility = View.GONE
             secondaryLayoutView.visibility = View.VISIBLE
