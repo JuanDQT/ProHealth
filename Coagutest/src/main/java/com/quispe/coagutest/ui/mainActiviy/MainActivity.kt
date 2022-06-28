@@ -22,6 +22,8 @@ import com.google.android.material.chip.ChipGroup
 import com.gtomato.android.ui.transformer.FlatMerryGoRoundTransformer
 import com.quispe.coagutest.*
 import com.quispe.coagutest.custom.CustomButton
+import com.quispe.coagutest.custom.InrAlert
+import com.quispe.coagutest.custom.InrAlertImp
 import com.quispe.coagutest.data.local.SharedPreference
 import com.quispe.coagutest.data.local.StorageValidationDataSource
 import com.quispe.coagutest.database.room.Control
@@ -39,7 +41,7 @@ import kotlinx.android.synthetic.main.custom_button.view.*
 import java.util.*
 
 
-class MainActivity : AppCompatActivity(), View.OnClickListener {
+class MainActivity : AppCompatActivity(), View.OnClickListener, InrAlertImp {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var viewModel: MainViewModel
@@ -50,7 +52,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     private val flashBar: Flashbar by lazy { instanceFlashBar() }
     private lateinit var userResourceImage: String
-    private val inrAlertDialog: AlertDialog by lazy { instanceINRAlertDialog() }
+    private lateinit var inrAlert: InrAlert
 
     private var lastBloodValues = emptyArray<Float>()
     private var currentBloodValue = 0f
@@ -75,6 +77,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         binding.btnCalendario.setOnClickListener(this)
         binding.btnAjustes.setOnClickListener(this)
         configureWidget()
+        inrAlert = InrAlert(this, layoutInflater)
+        inrAlert.alertDialogListener = this
     }
 
     // TODO: Para solucionar el error visual de las imagenes en el carousel que se van ocultando, podemos hacer 2 cosas:
@@ -119,140 +123,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 }
             })
             .build()
-    }
-
-    private fun instanceINRAlertDialog(): AlertDialog {
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle(R.string.title_introducir)
-        val view: LinearLayout =
-            layoutInflater.inflate(R.layout.ad_introducir_inr, null) as LinearLayout
-
-        val initialLayout = view.findViewById<LinearLayout>(R.id.frame_initial)
-        val secondLayout = view.findViewById<LinearLayout>(R.id.frame_final)
-
-        val editText = view.findViewById<EditText>(R.id.etValor)
-        val btnAccept = view.findViewById<Button>(R.id.btn_accept)
-
-        // Buscamos si hay historial..
-
-        if (lastBloodValues.count() > 0) {
-            val layoutHistorico = view.findViewById<LinearLayout>(R.id.ll_historico)
-            layoutHistorico.visibility = View.VISIBLE
-            val chipGroup = view.findViewById<ChipGroup>(R.id.chipGroup)
-
-            for (x in 0 until lastBloodValues.count()) {
-                val chip = getLayoutInflater().inflate(
-                    R.layout.layout_chip_choice,
-                    chipGroup,
-                    false
-                ) as Chip
-                chip.text = "${lastBloodValues[x]}"
-                chipGroup.addView(chip)
-
-                chip.setOnClickListener {
-                    editText.setText(chip.text)
-                }
-            }
-        }
-
-        editText.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(p0: Editable?) {
-                AppContext.validarInputTextSangre(editText.text.toString())?.let {
-                    btnAccept.isEnabled = true
-                    return
-                }
-                btnAccept.isEnabled = false
-            }
-
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-        })
-
-        btnAccept.setOnClickListener {
-            editText.hideKeyboard()
-            val valorSangreNumerico = editText.text.toString().replace(",", ".").toFloat()
-            val nomFichero = Control.getFicheroCorrespondiente(valorSangreNumerico)
-
-            val nivelyDias: Map<String, Int> = Control.getNivelCorrespondiente(valorSangreNumerico, viewModel.doseValue.value!!)
-
-            if (nivelyDias["nivel"]!! < 1) {
-                alert(message = "Consulte los datos con su MÉDICO")
-            }
-            val dataNiveles = AppContext.getNivelFromFichero(
-                nomFichero,
-                nivelyDias["nivel"].toString(),
-                nivelyDias["dias"].toString()
-            )
-
-            // levantamos segunda vista
-            btnAccept.text = getString(R.string.button_planificar)
-            initialLayout.visibility = View.GONE
-            secondLayout.visibility = View.VISIBLE
-            val irnActual = view.findViewById<TextView>(R.id.tvIRN)
-            val irnNew = view.findViewById<TextView>(R.id.tvIRNNew)
-            val btnMails = view.findViewById<CheckBox>(R.id.cb_mails)
-
-            irnActual.text = "${currentBloodValue}"
-            irnNew.text = "${AppContext.validarInputTextSangre(editText.text.toString())}"
-
-            val irnText = view.findViewById<TextView>(R.id.tvIRN_text)
-            val frameIRN = view.findViewById<FrameLayout>(R.id.frame_IRN)
-            if (currentBloodValue == 0f) {
-                irnText.visibility = View.GONE
-                frameIRN.visibility = View.GONE
-            } else {
-                irnText.visibility = View.VISIBLE
-                frameIRN.visibility = View.VISIBLE
-            }
-
-
-            for (x in 0 until 7) {
-                val layout = view.findViewWithTag<LinearLayout>("l${x}")
-
-                if (x >= dataNiveles.size) {
-                    layout.visibility = View.GONE
-                    continue
-                }
-
-                layout.visibility = View.VISIBLE
-
-                // sobrescribimos valor
-                val textView = view.findViewWithTag<TextView>("t${x}")
-                textView.text = if (dataNiveles[x].isNullOrEmpty()) "No toca" else dataNiveles[x]
-
-                // sobreescribimos imagen
-                if (!dataNiveles[x].isNullOrEmpty()) {
-                    val imageView = view.findViewWithTag<ImageView>("i${x}")
-                    imageView.setBackgroundResource(AppContext.getImageNameByJSON(dataNiveles[x]))
-                }
-            }
-            val btnFinish = view.findViewById<Button>(R.id.btn_finish)
-
-            btnFinish.setOnClickListener {
-                viewModel.updateUserData(
-                    irnNew.text.toString().toFloat(),
-                    nivelyDias["nivel"].toString().toInt(),
-                    dataNiveles.toTypedArray(),
-                    Control(),
-                    btnMails.isChecked
-                )
-                inrAlertDialog.cancel()
-            }
-        }
-
-        builder.setView(view)
-
-        val ad = builder.create()
-
-        ad.setOnCancelListener {
-            initialLayout.visibility = View.VISIBLE
-            secondLayout.visibility = View.GONE
-            editText.text = null
-        }
-        return ad
     }
 
     private fun reorderButtonList() {
@@ -300,9 +170,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         viewModel.bloodValue.observe(this) { value ->
             currentBloodValue = value
             binding.tvSangreValor.text = "${value.toString().replace(".", ",")}"
+            inrAlert.currentBloodValue = currentBloodValue
         }
         viewModel.doseValue.observe(this) { value ->
             binding.tvDosisValor.text = "${value}"
+            inrAlert.initialDose = value
         }
 
         viewModel.userResourceImage.observe(this) { resourceValue ->
@@ -311,6 +183,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
         viewModel.chipsBloodValues.observe(this) { values ->
             lastBloodValues = values
+            inrAlert.latestBloodValue = values
         }
 
         viewModel.mPlanningEmails.observe(this) {
@@ -351,12 +224,13 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         super.onResume()
         viewModel.getControlsToFillCarousel()
         viewModel.checkHasControlToday()
+        inrAlert.dismissAlert()
     }
 
     override fun onClick(view: View?) {
         view?.let {
             when (it.id) {
-                R.id.btnINR -> inrAlertDialog.show()
+                R.id.btnINR -> inrAlert.showAlert()
                 R.id.btnGmap -> checkPermissionLocation()
                 R.id.btnEstadisticas -> navigateToStatsGraphic()
                 R.id.btnCalendario -> navigateToCalendar()
@@ -427,5 +301,19 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             }
             .setNegativeButton("Deny") { dialog, _ -> dialog.cancel() }
             .show()
+    }
+
+    override fun doCreatePlanning(
+        bloodValue: Float,
+        doseLevel: Int,
+        planning: Array<String>,
+        sendWithEmail: Boolean
+    ) {
+        viewModel.updateUserData(bloodValue, doseLevel, planning, sendWithEmail)
+        inrAlert.dismissAlert()
+    }
+
+    override fun errorPlanning() {
+        alert(message = "Consulte los datos con su MÉDICO")
     }
 }
